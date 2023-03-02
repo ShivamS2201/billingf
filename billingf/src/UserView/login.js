@@ -7,8 +7,16 @@ const LOGIN = ()=>{
     console.log('LOGIN ENabled');
     return(
         <div>
-             <Navbar bg="light">
-        
+           <Navbar>
+          <Navbar.Brand href="#home">
+            <img
+              alt="nothong"
+              src={require('../imgs/email-logo.png')}
+              width="200"
+              height="50"
+              className="d-inline-block align-top"
+            />
+            </Navbar.Brand>
       </Navbar>
             
         </div>
