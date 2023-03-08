@@ -1,10 +1,21 @@
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import React from "react";
+import React,{ useState }  from "react";
 import { Navbar } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
+// import { useHistory } from "react-router";
+
+
+
 import "./css/login.css";
 const LOGIN = () => {
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  // const history = useHistory();
+  const handleLogin = (email, password) => {
+  }
+  
+
   console.log("LOGIN Enabled");
   return (
     <div>
@@ -23,26 +34,26 @@ const LOGIN = () => {
         <Card>
           <Card.Body>
             <div className="FormWrapper">
-            <Form>
+            <Form onSubmit={console.log("email")}>
               <div className="TextPay">
                 <div className="HeadTP">WELCOME TO PAY</div>
                 <br />
                 (A PRODUCT OF MAPROLE) 
               </div>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Group className="mb-3">
                 <Form.Label>Email :</Form.Label>
-                <Form.Control type="email" placeholder="Username" />
+                <Form.Control type="text" className="form-control" id="validationCustom01" placeholder="Username" required />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password :</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
+                <Form.Control type="password" placeholder="Password" required />
               </Form.Group>
               <div className="ButtonLogin">
                 <div className="FoPass">
                   Forgot Password ?
                 </div>
-              <Button type="submit">
+              <Button type="submit" onClick={console.log('LOGININGIN')}>
                 LOGIN
               </Button>
               </div>
