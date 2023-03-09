@@ -1,5 +1,11 @@
 .navbar_login{
     padding-left: 60px;
+    
+}
+.LoginWrapper{
+    display: absolute;
+    text-align: center;
+
 }
 *{
     font-family: "Source Sans Pro", sans-serif;

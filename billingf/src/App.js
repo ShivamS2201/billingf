@@ -3,7 +3,7 @@ import LOGIN from './UserView/login';
 function App() {
   return (
     <div className="App">
-      <LOGIN/>
+      APP JS
     </div>
   );
 }
