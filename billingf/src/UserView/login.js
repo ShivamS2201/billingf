@@ -1,7 +1,7 @@
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import React, { useState } from "react";
-import { Navbar } from "react-bootstrap";
+import Navb from "../Components/navbar";
 import Card from "react-bootstrap/Card";
 import {Navigate} from "react-router-dom";
 import "./css/login.css";
@@ -80,17 +80,7 @@ const LOGIN = () => {
   // Handles user submit event and takes specific action as per requirement.
   return (
     <div className="LoginWrapper">
-      <Navbar className="navbar_login">
-        <Navbar.Brand href="#home">
-          <img
-            alt="nothong"
-            src={require("../imgs/email-logo.png")}
-            width="200"
-            height="50"
-            className="d-inline-block align-top"
-          />
-        </Navbar.Brand>
-      </Navbar>
+      <Navb />
       <div className="BodyFooterContainer">
         {loadingMsg()}
         <Card>
@@ -138,8 +128,7 @@ const LOGIN = () => {
                         .then((data) => {
                           console.log("signin", data);
                           if (data.token){
-                            let sessiontoken = data.token;
-                            authenticate(sessiontoken,()=>{
+                            authenticate(data,()=>{
                               console.log("token added");
                               setvalues({...values,didNavigate:true})
                             })

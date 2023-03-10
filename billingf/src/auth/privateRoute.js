@@ -8,7 +8,7 @@ export default function PrivateRoutes({component:Component,...props}) {
     return <Component/>
   }
   return <Navigate to={{
-                pathname: "/register",
+                pathname: "/signin",
                 state: { from: props.location },
               }} />
   // return (

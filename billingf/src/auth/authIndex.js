@@ -1,4 +1,5 @@
 import { API } from "../backend";
+
 // USE THIS FOR USER REGISTERATION BUT NEED TO BUILD LOGIC FOR Permission of accessing and creating lower level user
 // export const signup= user =>{
 //     return fetch(`${API}user/`,{
@@ -36,7 +37,7 @@ export const SignIn = (user) => {
 
 export const authenticate = (data, next) => {
   if (typeof window !== undefined) {
-    localStorage.setItem("Sess-token", JSON.stringify(data));
+    localStorage.setItem("Data", JSON.stringify(data));
     next();
   }
 };
@@ -45,22 +46,24 @@ export const isAuthenticated = () => {
   if (typeof window == undefined) {
     return false;
   }
-  if (localStorage.getItem("Sess-token")) {
-    return JSON.parse(localStorage.getItem("Sess-token"));
+  if (localStorage.getItem("Data")) {
+    return JSON.parse(localStorage.getItem("Data"));
+
   } else {
     return false;
   }
 };
 
-export const SignOut = (next) => {
+export default function SignOut (next) {
   const UserID = isAuthenticated() && isAuthenticated().user.id;
 
   if (typeof window !== undefined) {
-    localStorage.removeItem("Sess-token");
+    localStorage.removeItem("Data");
     console.log("LOGOUT USER successful");
 
     return fetch(`${API}user/logout/${UserID}`, {
       method: "GET",
+      mode: 'no-cors' 
     })
       .then((response) => {
         console.log("SIGNOUT/ Nikalo");
