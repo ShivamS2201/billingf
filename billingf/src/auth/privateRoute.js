@@ -3,7 +3,6 @@ import { Route, Navigate, redirect, Routes } from "react-router-dom";
 import { isAuthenticated } from "./authIndex";
 
 export default function PrivateRoutes({component:Component,...props}) {
-  console.log("entered Dashborard",isAuthenticated())
   if (isAuthenticated()){
     return <Component/>
   }

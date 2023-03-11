@@ -13,11 +13,12 @@
 .BodyFooterContainer .card .card-body{
     background-color: rgb(33 36 177);
     color: white;
-    min-height: 75.8vh;
+    min-height: 75.6vh;
 }
 .BodyFooterContainer .card .card-footer{
     color:white;
     background-color: #ed4343;
+    text-align: center;
 }
 .FormWrapper>Form{
     border: rgb(33 36 177) 5px solid;

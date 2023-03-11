@@ -9,7 +9,7 @@ const Navb = (props)=>{
         <Navbar.Brand href="#home">
           <img
             alt="nothong"
-            src={require("../imgs/email-logo.png")}
+            src={require("../assets/images/email-logo.png")}
             width="200"
             height="50"
             className="d-inline-block align-top"

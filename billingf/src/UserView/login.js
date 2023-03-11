@@ -5,7 +5,9 @@ import Navb from "../Components/navbar";
 import Card from "react-bootstrap/Card";
 import {Navigate} from "react-router-dom";
 import "./css/login.css";
+import FooterC from "../Components/footer";
 import { authenticate, isAuthenticated, SignIn } from "../auth/authIndex";
+import Loader from "../Components/loader";
 /// take on submit error messgae suucess mesg onsubit
 const LOGIN = () => {
   const [values, setvalues] = useState({
@@ -22,10 +24,8 @@ const LOGIN = () => {
 
     const loadingMsg=()=>{
       return (
-        loading && (
-          <div className="alert alert-info">
-            Loading . . .
-        </div>)
+        loading && 
+          <Loader/>
       )
     }
   const successmsg = () => {
@@ -80,9 +80,9 @@ const LOGIN = () => {
   // Handles user submit event and takes specific action as per requirement.
   return (
     <div className="LoginWrapper">
+      {loadingMsg()}
       <Navb />
       <div className="BodyFooterContainer">
-        {loadingMsg()}
         <Card>
           <Card.Body>
             <div className="FormWrapper">
@@ -143,17 +143,13 @@ const LOGIN = () => {
                     }}
                   >
                     LOGIN
+                    {performNavigate()}
                   </Button>
                 </div>
               </Form>
             </div>
           </Card.Body>
-          <Card.Footer>
-            COPYRIGHT ©2017 - Click Pe Bill - All rights reserved <br />
-            MADE BY MAPROLE
-            {JSON.stringify(values)}
-            {performNavigate()}
-          </Card.Footer>
+          <FooterC />
         </Card>
       </div>
     </div>
