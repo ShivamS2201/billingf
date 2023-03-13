@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SignOut from '../auth/authIndex';
+import SignOut, { isAuthenticated } from '../auth/authIndex';
 import Navb from "../Components/navbar";
 import './css/userboard.css'
 import { GetRole } from "../auth/authIndex";
@@ -23,30 +23,30 @@ const SignoutNav = ()=>{
     return(
         
         distributor &&<div>
+            <div className="name__top">Welcome to Distributor {isAuthenticated().user.first_name}</div>
             <Navb component={<SignoutNav />}/>
-            <div className="bcak" style={{border:"2px solid red"}}>Dashborard</div>
             <Distributor/>
             <FooterC />            {/* Set up compoenwts for all roles separately and bring about functionalities */}
 
         </div>
         ||
         sales &&<div>
+            <div className="name__top">Welcome to Sales {isAuthenticated().user.first_name}</div>
             <Navb component={<SignoutNav />}/>
-            <div className="bcak" style={{border:"2px solid red"}}>Dashborard</div>
             {/* Set up compoenwts for all roles separately and bring about functionalities */}
 
         </div>
         ||
         headOffice &&<div>
+            <div className="name__top">Welcome to Head Office {isAuthenticated().user.first_name}</div>
             <Navb component={<SignoutNav />}/>
-            <div className="bcak" style={{border:"2px solid red"}}>Dashborard</div>
             {/* Set up compoenwts for all roles separately and bring about functionalities */}
 
         </div>
         ||
         Branch &&<div>
+            <div className="name__top">Welcome to Branch {isAuthenticated().user.first_name}</div>
             <Navb component={<SignoutNav />}/>
-            <div className="bcak" style={{border:"2px solid red"}}>Dashborard</div>
             {/* Set up compoenwts for all roles separately and bring about functionalities */}
 
         </div>

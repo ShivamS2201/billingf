@@ -1,0 +1,76 @@
+.distributorWrapper{
+}
+.beforeSelect{
+    background-color: blue;
+    color:white;
+    border-left: 5px solid #2088cb !important;}
+.afterSelect{
+    
+}
+.card1,.card2,.card3,.card4 {
+    min-height: inherit;
+    justify-content: center;
+    align-items: center;
+}
+.CardGrid{
+    display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 26px;
+  grid-row-gap: 16px;
+  min-height: 20vh;
+  }
+  .card1 { grid-area: 1 / 1 / 2 / 2; }
+  .card2 { grid-area: 1 / 2 / 2 / 3; }
+  .card3 { grid-area: 2 / 1 / 3 / 2; }
+  .card4 { grid-area: 2 / 2 / 3 / 3; }
+  
+.buttoncontentwrapper{
+}
+.buttoncontainer{
+    min-width: 20vw;
+    min-height: 20vh;
+}
+.buttonwrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    justify-content: center;
+    min-height: inherit;
+}
+.buttonwrapper button{
+    margin: 1px 0px 1px 0px;
+    height: 49px;
+    border: none;
+}
+.buttonwrapper button:hover{
+    background-color: 5px solid #2088cb !important;
+    transition: all 250ms ease-in;
+    border-left: 5px solid #2088cb !important;
+}
+
+.buttonwrapper button::selection{
+    background-color: blue;
+    color:white;
+    border-left: 5px solid #2088cb !important;
+}
+.buttonwrapper button:scope{
+    background-color: blue;
+    color:white;
+    border-left: 5px solid #2088cb !important;
+}
+
+.cardconatiner{
+    border: 2px solid yellow;
+    min-width: 60vw;
+}
+.tablewrapper{
+border:2px solid green;
+}
+.flexContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}

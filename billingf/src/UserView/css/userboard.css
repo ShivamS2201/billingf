@@ -3,7 +3,11 @@
     padding-right: 4vw;
     color:red;
 }
-
+.name__top{
+    background-color: black;
+    color:white;
+    padding-left:12px ;
+}
 .Signnout button{
     /* background-color: red; */
     background: none;

@@ -9,15 +9,15 @@ const Loader =()=>{
         className="loader1"
                 alt="nothong"
                 src={require("../assets/images/loader1.gif")}
-                height="150"
-                width="110"
+                height="130"
+                width="112"
               />
               <img
               className="loader2"
                 alt="nothong"
                 src={require("../assets/images/loader2.gif")}
-                height="60"
-                width="70"
+                height="40"
+                width="60"
               /> 
               </div>
         </>
