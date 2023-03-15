@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import "./css/distributor.css";
 
 const Distributor = () => {
+  const dataholder = 8;
   const [bstate, setbstate] = useState();
   const [states, setstates] = useState({
     distributor:true,
@@ -127,19 +128,68 @@ const Distributor = () => {
             </>}
             <div className="cardconatiner" style={{display:(states.profile?"none":"")}}>
         <div className='CardGrid'>
-          < div className='card card1'>
-           <i class="bi bi-person" style={{fontSize:"23px"}}></i> Sales
+          < div className='cards card1'>
+            <div className="cardWrapper">
+              <div className="imgcontainer">
+                <i className="bi bi-person" style={{fontSize:"3.8em"}}></i>
+              </div>
+              <div className="dataconatiner">
+            <div className="textholder">Sales
+            </div>
+            <div className="dataholder">
+              {dataholder}
+            </div>
+            
+            </div>
+           </div>
           </div>
-          < div className='card card2'>
-            SYSTEM
+          < div className='cards card2'>
+          <div className="cardWrapper">
+              <div className="imgcontainer">
+                <i className="bi bi-person" style={{fontSize:"3.8em"}}></i>
+              </div>
+              <div className="dataconatiner">
+            <div className="textholder"> SYSTEM
             SMS 
             Whatsup
+            </div>
+            <div className="dataholder">
+              {dataholder}
+            </div>
+            
+            </div>
+           </div>
+           
           </div>
-          < div className='card card3'>
-            Head Offices
+          < div className='cards card3'>
+          <div className="cardWrapper">
+              <div className="imgcontainer">
+                <i className="bi bi-person" style={{fontSize:"3.8em"}}></i>
+              </div>
+              <div className="dataconatiner">
+            <div className="textholder">Head Office
+            </div>
+            <div className="dataholder">
+              {dataholder}
+            </div>
+            
+            </div>
+           </div>
           </div>
-          < div className='card card4'>
-            Branhces
+          < div className='cards card4'>
+          <div className="cardWrapper">
+              <div className="imgcontainer">
+                <i className="bi bi-person" style={{fontSize:"3.8em"}}></i>
+              </div>
+              <div className="dataconatiner">
+            <div className="textholder">Branch
+            </div>
+            <div className="dataholder">
+              {dataholder}
+            </div>
+            
+            </div>
+           </div>
           </div>
       </div></div>
           </div>

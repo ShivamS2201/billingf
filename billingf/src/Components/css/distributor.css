@@ -1,24 +1,30 @@
 .distributorWrapper{
+    margin-top: 8vh;
 }
 .beforeSelect{
-    background-color: blue;
+    background-color: #2f3192;
     color:white;
     border-left: 5px solid #2088cb !important;}
-.afterSelect{
-    
-}
+
 .card1,.card2,.card3,.card4 {
     min-height: inherit;
     justify-content: center;
     align-items: center;
 }
+.cards{
+    background: #FFF;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 26%);
+    border: 12px solid;
+    border-color: rgba(204, 204, 204, 0.5);
+    padding: 9px;
+}
 .CardGrid{
     display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  grid-column-gap: 26px;
-  grid-row-gap: 16px;
-  min-height: 20vh;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 39px;
+    grid-row-gap: 12px;
+    min-height: 10vh;
   }
   .card1 { grid-area: 1 / 1 / 2 / 2; }
   .card2 { grid-area: 1 / 2 / 2 / 3; }
@@ -28,8 +34,10 @@
 .buttoncontentwrapper{
 }
 .buttoncontainer{
-    min-width: 20vw;
+    min-width: 25vw;
     min-height: 20vh;
+    box-shadow: none;
+    border: 1px solid #F1F1F1;
 }
 .buttonwrapper {
     display: flex;
@@ -41,9 +49,13 @@
 }
 .buttonwrapper button{
     margin: 1px 0px 1px 0px;
+    text-align: left;
+    padding-left: 13px;
     height: 49px;
-    border: none;
+    border: 0.3px seashell;
+    border-bottom: 1px solid #ebeae6;
 }
+
 .buttonwrapper button:hover{
     background-color: 5px solid #2088cb !important;
     transition: all 250ms ease-in;
@@ -62,15 +74,32 @@
 }
 
 .cardconatiner{
-    border: 2px solid yellow;
     min-width: 60vw;
 }
-.tablewrapper{
-border:2px solid green;
-}
+
 .flexContainer{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
 }
+
+.cardWrapper{
+    display: flex;
+    min-height: inherit;
+    min-width: -webkit-fill-available;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.dataconatiner{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.textholder{
+    font-size: 19px;
+    margin-right: 15px;
+}
+.dataholder{
+    font-size: 1.4rem;}
