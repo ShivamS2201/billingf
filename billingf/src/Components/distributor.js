@@ -123,9 +123,10 @@ const Distributor = () => {
                 </button>
               </div>
             </div>
-           { states.profile && <>
+           { states.profile && <div className="profileWrapper">
+
             PROFILE COmes here
-            </>}
+            </div>}
             <div className="cardconatiner" style={{display:(states.profile?"none":"")}}>
         <div className='CardGrid'>
           < div className='cards card1'>

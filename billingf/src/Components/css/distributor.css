@@ -37,7 +37,7 @@
     min-width: 25vw;
     min-height: 20vh;
     box-shadow: none;
-    border: 1px solid #F1F1F1;
+    /* border: 1px solid #F1F1F1; */
 }
 .buttonwrapper {
     display: flex;
@@ -81,7 +81,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    align-items: center;
 }
 
 .cardWrapper{
@@ -98,8 +97,13 @@
     align-items: center;
 }
 .textholder{
+    background:green;
     font-size: 19px;
     margin-right: 15px;
 }
 .dataholder{
     font-size: 1.4rem;}
+
+    .profileWrapper{
+        min-width: 60vw;
+    }
