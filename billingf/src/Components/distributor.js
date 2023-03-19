@@ -150,12 +150,30 @@ const Distributor = () => {
                 <i className="bi bi-person" style={{fontSize:"3.8em"}}></i>
               </div>
               <div className="dataconatiner">
-            <div className="textholder"> SYSTEM
-            SMS 
-            Whatsup
+<div className="dataconatinerMSG" style={{display:"flex"}}>
+            <div className="textholdermsg">
+            SYSTEM ({dataholder})
             </div>
-            <div className="dataholder">
+            <div className="dataholdermsg">
               {dataholder}
+            </div>
+</div>
+              <div className="dataconatinerMSG" style={{display:"flex"}}>
+
+            <div className="textholdermsg">
+            SMS ({dataholder})
+            </div>
+            <div className="dataholdermsg">
+              {dataholder}
+            </div></div>
+                          <div className="dataconatinerMSG" style={{display:"flex"}}>
+
+            <div className="textholdermsg">
+            Whatsup  ({dataholder})
+            </div>
+            <div className="dataholdermsg">
+              {dataholder}
+            </div>
             </div>
             
             </div>
