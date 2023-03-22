@@ -4,7 +4,10 @@ import { Card } from "react-bootstrap";
 
 const FooterC = () => {
   return (
-    <div className="BodyFooterContainer">
+    <div className="BodyFooterContainer" style={{position: "fixed",
+      left: "0",
+      bottom: "0",
+      width: "100%"}}>
       <Card>
         <Card.Footer>
           COPYRIGHT ©2017 - Click Pe Bill - All rights reserved <br />

@@ -11,9 +11,9 @@ import Loader from "../Components/loader";
 /// take on submit error messgae suucess mesg onsubit
 const LOGIN = () => {
   const [values, setvalues] = useState({
-    name: "ALPHA",
-    email: "al@gmail.com",
-    password: "test@123",
+    name: "",
+    email: "",
+    password: "",
     error: "",
     success: false,
     loading: false,
