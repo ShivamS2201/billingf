@@ -102,7 +102,7 @@ const LOGIN = () => {
                     type="text"
                     className="form-control"
                     id="validationCustom01"
-                    placeholder="Username"
+                    placeholder="Email"
                     required
                   />
                 </Form.Group>

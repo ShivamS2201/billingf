@@ -4,7 +4,7 @@ import { Card } from "react-bootstrap";
 
 const FooterC = () => {
   return (
-    <div className="BodyFooterContainer" style={{position: "fixed",
+    <div className="BodyFooterContainer" style={{position: "static",
       left: "0",
       bottom: "0",
       width: "100%"}}>

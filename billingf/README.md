@@ -12,3 +12,6 @@ LOGIN and LOGOUT needs to be more dynamically configured,,
 
 Need more functional approach towards building the application components.
 also setup a static and media folder in backend.
+
+
+Need to add a api call to check for Username or I can use handle chnge like function from - login.js

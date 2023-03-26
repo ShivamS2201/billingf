@@ -1,29 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { Nav } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { Link, Navigate, NavLink } from "react-router-dom";
+import { isAuthenticated } from "../auth/authIndex";
 import "./css/distributor.css";
+import { API } from "../backend";
 
 const Distributor = () => {
-  const dataholder = 8;
-  const [bstate, setbstate] = useState();
+  const [dataholder, changeDataholder] = useState([8]);
   const [states, setstates] = useState({
-    distributor:true,
+    distributor: true,
     profile: false,
     sales: false,
     Hoffice: false,
     Branch: false,
   });
+  const dataFetch = async () => {
+    return await fetch(
+      `${API}user/register/bill_info/getd/${isAuthenticated().user.id}`,
+      { method: "GET" }
+    )
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        changeDataholder(data[0]);
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // set state when the data received
+  };
   useEffect(() => {
-    setbstate("beforeSelect");
-  }, [states]);
+    dataFetch();
+    // fetch data
+  }, []);
+
   function DistributorClick() {
     return states.distributor && <>Distributor</>;
   }
-  function ProfileClick() { // Profile update form comes here.
+  function ProfileClick() {
+    // Profile update form comes here.
     return states.profile && <>Profile</>;
   }
   function SalesClick() {
-    return states.sales && <>Sales Table</>;
+    return states.sales && <>Sales Table
+    <div>
+    <Link to="/user/dashboard/register/addsales">
+      <button>
+       Add sales</button></Link>
+    </div>
+    </>;
   }
   function HofficeClick() {
     return states.Hoffice && <>Head Office Table</>;
@@ -38,179 +65,208 @@ const Distributor = () => {
           <div className="flexContainer">
             <div className="buttoncontainer">
               <div className="buttonwrapper">
-              <button
-                  className={states.distributor && bstate}
-                  onClick={(bstate) => {
+                <button
+                  style={{
+                    backgroundColor: states.distributor ? "#2f3192" : "",
+                    color: states.distributor ? "white" : "",
+                    borderLeft: states.distributor
+                      ? "5px solid #2088cb"
+                      : "",
+                  }}
+                  className="beforeSelect"
+                  onClick={() => {
                     setstates({
-                        distributor:true,
+                      distributor: true,
                       profile: false,
                       sales: false,
                       Hoffice: false,
                       Branch: false,
                     });
-                    setbstate((bstate) =>
-                      bstate === "beforeSelect" ? "afterSelect" : "beforeSelect"
-                    );
                   }}
                 >
                   Distributor
                 </button>
                 <button
-                  className={states.profile && bstate}
-                  onClick={(bstate) => {
+                  style={{
+                    backgroundColor: states.profile ? "#2f3192" : "",
+                    color: states.profile ? "white" : "",
+                    borderLeft: states.profile
+                      ? "5px solid #2088cb"
+                      : "",
+                  }}
+                  className="beforeSelect"
+                  onClick={() => {
                     setstates({
                       profile: true,
                       sales: false,
                       Hoffice: false,
                       Branch: false,
                     });
-                    setbstate((bstate) =>
-                      bstate === "beforeSelect" ? "afterSelect" : "beforeSelect"
-                    );
                   }}
                 >
                   Profile
                 </button>
                 <button
-                  className={states.sales && bstate}
-                  onClick={(bstate) => {
+                  style={{
+                    backgroundColor: states.sales ? "#2f3192" : "",
+                    color: states.sales ? "white" : "",
+                    borderLeft: states.sales
+                      ? "5px solid #2088cb"
+                      : "",
+                  }}
+                  className="beforeSelect"
+                  onClick={() => {
                     setstates({
                       sales: true,
                       profile: false,
                       Hoffice: false,
                       Branch: false,
                     });
-                    setbstate((bstate) =>
-                      bstate === "beforeSelect" ? "afterSelect" : "beforeSelect"
-                    );
-
                   }}
                 >
                   Sales
                 </button>
                 <button
-                  className={states.Hoffice && bstate}
-                  onClick={(bstate) => {
+                  style={{
+                    backgroundColor: states.Hoffice ? "#2f3192" : "",
+                    color: states.Hoffice ? "white" : "",
+                    borderLeft: states.Hoffice
+                      ? "5px solid #2088cb"
+                      : "",
+                  }}
+                  className="beforeSelect"
+                  onClick={() => {
                     setstates({
                       Hoffice: true,
                       profile: false,
                       sales: false,
                       Branch: false,
                     });
-                    setbstate((bstate) =>
-                      bstate === "beforeSelect" ? "afterSelect" : "beforeSelect"
-                    );
-
                   }}
                 >
                   Head Office
                 </button>
                 <button
-                  className={states.Branch && bstate}
-                  onClick={(bstate) => {
+                  style={{
+                    backgroundColor: states.Branch ? "#2f3192" : "",
+                    color: states.Branch ? "white" : "",
+                    borderLeft: states.Branch
+                      ? "5px solid #2088cb"
+                      : "",
+                  }}
+                  className="beforeSelect"
+                  onClick={() => {
                     setstates({
                       Branch: true,
                       profile: false,
                       sales: false,
                       Hoffice: false,
                     });
-                    setbstate((bstate) =>
-                      bstate === "beforeSelect" ? "afterSelect" : "beforeSelect"
-                    );
                   }}
                 >
                   Branch
                 </button>
               </div>
             </div>
-           { states.profile && <div className="profileWrapper">
-
-            PROFILE COmes here
-            </div>}
-            <div className="cardconatiner" style={{display:(states.profile?"none":"")}}>
-        <div className='CardGrid'>
-          < div className='cards card1'>
-            <div className="cardWrapper">
-              <div className="imgcontainer">
-                <i className="bi bi-person" style={{fontSize:"3.8em"}}></i>
+            {states.profile && (
+              <div className="profileWrapper">PROFILE Comes here</div>
+            )}
+            <div
+              className="cardconatiner"
+              style={{ display: states.profile ? "none" : "" }}
+            >
+              <div className="CardGrid">
+                <div className="cards card1">
+                  <div className="cardWrapper">
+                    <div className="imgcontainer">
+                      <i
+                        className="bi bi-person"
+                        style={{ fontSize: "3.8em" }}
+                      ></i>
+                    </div>
+                    <div className="dataconatiner">
+                      <div className="textholder">Sales</div>
+                      <div className="dataholder">
+                        {JSON.stringify(dataholder.sms_credit)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="cards card2">
+                  <div className="cardWrapper">
+                    <div className="imgcontainer">
+                      <i
+                        className="bi bi-person"
+                        style={{ fontSize: "3.8em" }}
+                      ></i>
+                    </div>
+                    <div className="dataconatiner">
+                      <div
+                        className="dataconatinerMSG"
+                        style={{ display: "flex" }}
+                      >
+                        <div className="textholdermsg">
+                          SYSTEM ({JSON.stringify(dataholder.system_credit)})
+                        </div>
+                        <div className="dataholdermsg">
+                          {JSON.stringify(dataholder.system_debit)}
+                        </div>
+                      </div>
+                      <div
+                        className="dataconatinerMSG"
+                        style={{ display: "flex" }}
+                      >
+                        <div className="textholdermsg">
+                          SMS ({JSON.stringify(dataholder.sms_credit)})
+                        </div>
+                        <div className="dataholdermsg">
+                          {JSON.stringify(dataholder.sms_debit)}
+                        </div>
+                      </div>
+                      <div
+                        className="dataconatinerMSG"
+                        style={{ display: "flex" }}
+                      >
+                        <div className="textholdermsg">
+                          Whatsup ({JSON.stringify(dataholder.whatsapp_credit)})
+                        </div>
+                        <div className="dataholdermsg">
+                          {JSON.stringify(dataholder.whatsapp_debit)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="cards card3">
+                  <div className="cardWrapper">
+                    <div className="imgcontainer">
+                      <i
+                        className="bi bi-person"
+                        style={{ fontSize: "3.8em" }}
+                      ></i>
+                    </div>
+                    <div className="dataconatiner">
+                      <div className="textholder">Head Office</div>
+                      <div className="dataholder">{JSON.stringify(9)}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="cards card4">
+                  <div className="cardWrapper">
+                    <div className="imgcontainer">
+                      <i
+                        className="bi bi-person"
+                        style={{ fontSize: "3.8em" }}
+                      ></i>
+                    </div>
+                    <div className="dataconatiner">
+                      <div className="textholder">Branch</div>
+                      <div className="dataholder">{JSON.stringify(9)}</div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="dataconatiner">
-            <div className="textholder">Sales
             </div>
-            <div className="dataholder">
-              {dataholder}
-            </div>
-            
-            </div>
-           </div>
-          </div>
-          < div className='cards card2'>
-          <div className="cardWrapper">
-              <div className="imgcontainer">
-                <i className="bi bi-person" style={{fontSize:"3.8em"}}></i>
-              </div>
-              <div className="dataconatiner">
-<div className="dataconatinerMSG" style={{display:"flex"}}>
-            <div className="textholdermsg">
-            SYSTEM ({dataholder})
-            </div>
-            <div className="dataholdermsg">
-              {dataholder}
-            </div>
-</div>
-              <div className="dataconatinerMSG" style={{display:"flex"}}>
-
-            <div className="textholdermsg">
-            SMS ({dataholder})
-            </div>
-            <div className="dataholdermsg">
-              {dataholder}
-            </div></div>
-                          <div className="dataconatinerMSG" style={{display:"flex"}}>
-
-            <div className="textholdermsg">
-            Whatsup  ({dataholder})
-            </div>
-            <div className="dataholdermsg">
-              {dataholder}
-            </div>
-            </div>
-            
-            </div>
-           </div>
-           
-          </div>
-          < div className='cards card3'>
-          <div className="cardWrapper">
-              <div className="imgcontainer">
-                <i className="bi bi-person" style={{fontSize:"3.8em"}}></i>
-              </div>
-              <div className="dataconatiner">
-            <div className="textholder">Head Office
-            </div>
-            <div className="dataholder">
-              {dataholder}
-            </div>
-            
-            </div>
-           </div>
-          </div>
-          < div className='cards card4'>
-          <div className="cardWrapper">
-              <div className="imgcontainer">
-                <i className="bi bi-person" style={{fontSize:"3.8em"}}></i>
-              </div>
-              <div className="dataconatiner">
-            <div className="textholder">Branch
-            </div>
-            <div className="dataholder">
-              {dataholder}
-            </div>
-            
-            </div>
-           </div>
-          </div>
-      </div></div>
           </div>
         </div>
         <div className="tablewrapper">
