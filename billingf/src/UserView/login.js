@@ -127,7 +127,7 @@ const LOGIN = () => {
                       SignIn({ email, password })
                         .then((data) => {
                           console.log("signin", data);
-                          if (data.token){
+                          if (data[0].token){
                             authenticate(data,()=>{
                               console.log("token added");
                               setvalues({...values,didNavigate:true})

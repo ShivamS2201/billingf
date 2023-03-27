@@ -1,124 +1,291 @@
-import React from "react";
+import React, { useState } from "react";
 import FooterC from "./footer";
 import Navb from "./navbar";
 import "./css/addsales.css";
 import { SignoutNav } from "../UserView/singoutnav";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import { isAuthenticated, RegisterUser,GetBillingInfo } from "../auth/authIndex";
 
 export function SalesForm() {
+  const [values, setvalues] = useState({
+    //For User Registeraion
+    first_name: "",
+    username: "",
+    email: "",
+    password: "",
+    password2: "",
+    role_id: 4,
+    role_id_creator: isAuthenticated().user.id,
+    // For Billing Info
+    system_credit: 0,
+    sms_credit: 0,
+    whatsap_credit: 0,
+    phone: "",
+    state: "",
+    GSTno: "",
+    pancardNo: "",
+    KYC_no: "",
+    address: "",
+    reason: "",
+    error: "",
+    success: false,
+    loading: false,
+    didNavigate: false,
+  });
+
+  const {
+    first_name,
+    username,
+    email,
+    password,
+    role_id,
+    role_id_creator,
+    system_credit,
+    sms_credit,
+    whatsap_credit,
+    phone,
+    state,
+    GSTno,
+    pancardNo,
+    KYC_no,
+    address,
+    reason,
+    error,
+    success,
+    loading,
+    didNavigate,
+  } = values;
+
+  const handleChange = (name) => (event) => {
+    setvalues({ ...values, error: false, [name]: event.target.value });
+  };
 
   return (
     <>
       <Navb component={<SignoutNav />} />
       <div className="FormSet">
         <div className="HeadingWrapper">
-          <h2>ADD SALES</h2>
+          <h2>ADD SALES</h2>...values
         </div>
         <div className="Formhandler">
-          <Form onSubmit={(event)=>{
- event.preventDefault()
- console.log("Content: "+ event.target.values);
-
-          }}>
+          <Form
+            onSubmit={(event) => {
+              event.preventDefault();
+              RegisterUser(
+               { email,
+                password,
+                password2: password,
+                first_name,
+                username,
+                role_id,
+                role_id_creator,
+                system_credit,
+                sms_credit,
+                whatsap_credit,
+                phone,
+                state,
+                GSTno,
+                pancardNo,
+                KYC_no,
+                address,
+                reason}
+              );
+            }}
+          >
             <div className="parent">
               <div className="pad div1">
-              <Form.Group >
+                <Form.Group>
                   <Form.Label>Email :</Form.Label>
                   <Form.Control
-                    size="sm" type="text"
+                    value={email}
+                    onChange={handleChange("email")}
+                    size="sm"
+                    type="text"
                     className="form-control"
                     placeholder="Email"
                     required
                   />
                 </Form.Group>
-                
               </div>
               <div className="pad div2">
                 <Form.Group
-                size="sm"
+                  size="sm"
                   controlId="formBasicPassword"
                   autoComplete="off"
                 >
-                  <Form.Label >Password</Form.Label>
+                  <Form.Label>Password</Form.Label>
                   <Form.Control
-                  size="sm" 
+                    value={password}
+                    onChange={handleChange("password")}
+                    size="sm"
                     type="password"
                     placeholder="Password"
                   />
                 </Form.Group>
               </div>
               <div className="pad div3">
-              <Form.Group>
-                  <Form.Label>Username</Form.Label>
+                <Form.Group>
+                  <Form.Label>Name</Form.Label>
                   <Form.Control
-                  size="sm"
+                    value={first_name}
+                    onChange={handleChange("first_name")}
+                    size="sm"
                     type="username"
                     placeholder="Username"
                     autoComplete="off"
                   />
                 </Form.Group>
-                </div>
-              <div className="pad div4"> <Form.Group>
-        <Form.Label>System (Data)</Form.Label>
-        <Form.Control size="sm" type="text" placeholder="System Credit" />
-      </Form.Group> </div>
-              <div className="pad div5"> <Form.Group>
-        <Form.Label>SMS ()</Form.Label>
-        <Form.Control size="sm" type="text" placeholder="SMS credit" />
-        
-      </Form.Group> </div>
-              <div className="pad div6"> <Form.Group>
-        <Form.Label>Whatsapp ()</Form.Label>
-        <Form.Control size="sm" type="text" placeholder="Whatsapp Credit" />
-        
-      </Form.Group> </div>
-              <div className="pad div7"> <Form.Group>
-        <Form.Label>Phone</Form.Label>
-        <Form.Control size="sm" type="text" placeholder="Phone Number" />
-        
-      </Form.Group> </div>
-              <div className="pad div8"> <Form.Group>
-        <Form.Label>State</Form.Label>
-        <Form.Select aria-label="Default select example">
-      <option>Open this select menu</option>
-      <option value="1">One</option>
-      <option value="2">Two</option>
-      <option value="3">Three</option>
-    </Form.Select>
-        
-      </Form.Group> </div>
-              <div className="pad div9"> <Form.Group>
-        <Form.Label>GST No.</Form.Label>
-        <Form.Control size="sm" type="text" placeholder="GST Number" />
-        
-      </Form.Group> </div>
-              <div className="pad div10"> <Form.Group>
-        <Form.Label>Pan Card No.</Form.Label>
-        <Form.Control size="sm" type="text" placeholder="Pancard number" />
-        
-      </Form.Group> </div>
-      <div className="pad div11"> <Form.Group>
-        <Form.Label>KYC No.</Form.Label>
-        <Form.Control size="sm" type="text" placeholder="KYC Number" />
-        
-      </Form.Group> </div>
-      <div className="pad div12"> <Form.Group  controlId="formGridAddress1">
-        <Form.Label>Address</Form.Label>
-        <Form.Control size="sm" type="text" placeholder="Address" />
-        
-      </Form.Group> </div>
-      <div className="pad div13"> <Form.Group>
-        <Form.Label>Reason</Form.Label>
-        <Form.Control as="textarea" />
-        
-      </Form.Group> </div>
+              </div>
+              <div className="pad div4">
+                <Form.Group>
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control
+                    value={username}
+                    onChange={handleChange("username")}
+                    size="sm"
+                    type="username"
+                    placeholder="Username"
+                    autoComplete="off"
+                  />
+                </Form.Group>
+              </div>
+              <div className="pad div5">
+                {" "}
+                <Form.Group>
+                  <Form.Label>System ({JSON.stringify(GetBillingInfo()['system_credit'])})</Form.Label>
+                  <Form.Control // Needs Constrint!!
+                    value={system_credit}
+                    onChange={handleChange("system_credit")}
+                    size="sm"
+                    type="text"
+                    placeholder="System Credit"
+                  />
+                </Form.Group>{" "}
+              </div>
+              <div className="pad div6">
+                {" "}
+                <Form.Group>
+                  <Form.Label>SMS ({JSON.stringify(GetBillingInfo()['sms_credit'])})</Form.Label>
+                  <Form.Control
+                    value={sms_credit}
+                    onChange={handleChange("sms_credit")}
+                    size="sm"
+                    type="text"
+                    placeholder="SMS credit"
+                  />
+                </Form.Group>{" "}
+              </div>
+              <div className="pad div7">
+                {" "}
+                <Form.Group>
+                  <Form.Label>Whatsapp ({JSON.stringify(GetBillingInfo()['whatsapp_credit'])})</Form.Label>
+                  <Form.Control
+                    value={whatsap_credit}
+                    onChange={handleChange("whatsap_credit")}
+                    size="sm"
+                    type="text"
+                    placeholder="Whatsapp Credit"
+                  />
+                </Form.Group>{" "}
+              </div>
+              <div className="pad div8">
+                {" "}
+                <Form.Group>
+                  <Form.Label>Phone</Form.Label>
+                  <Form.Control
+                    value={phone}
+                    onChange={handleChange("phone")}
+                    size="sm"
+                    type="text"
+                    placeholder="Phone Number"
+                  />
+                </Form.Group>{" "}
+              </div>
+              <div className="pad div9">
+                {" "}
+                <Form.Group>
+                  <Form.Label>State</Form.Label>
+                  <Form.Select
+                    aria-label="Default select example"
+                    value={state}
+                    onChange={handleChange("state")}
+                  >
+                    <option>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </Form.Select>
+                </Form.Group>{" "}
+              </div>
+              <div className="pad div10">
+                {" "}
+                <Form.Group>
+                  <Form.Label>GST No.</Form.Label>
+                  <Form.Control
+                    value={GSTno}
+                    onChange={handleChange("GSTno")}
+                    size="sm"
+                    type="text"
+                    placeholder="GST Number"
+                  />
+                </Form.Group>{" "}
+              </div>
+              <div className="pad div11">
+                {" "}
+                <Form.Group>
+                  <Form.Label>Pan Card No.</Form.Label>
+                  <Form.Control
+                    value={pancardNo}
+                    onChange={handleChange("pancardNo")}
+                    size="sm"
+                    type="text"
+                    placeholder="Pancard number"
+                  />
+                </Form.Group>{" "}
+              </div>
+              <div className="pad div12">
+                {" "}
+                <Form.Group>
+                  <Form.Label>KYC No.</Form.Label>
+                  <Form.Control
+                    value={KYC_no}
+                    onChange={handleChange("KYC_no")}
+                    size="sm"
+                    type="text"
+                    placeholder="KYC Number"
+                  />
+                </Form.Group>{" "}
+              </div>
+              <div className="pad div13">
+                {" "}
+                <Form.Group controlId="formGridAddress1">
+                  <Form.Label>Address</Form.Label>
+                  <Form.Control
+                    value={address}
+                    onChange={handleChange("address")}
+                    size="sm"
+                    type="text"
+                    placeholder="Address"
+                  />
+                </Form.Group>{" "}
+              </div>
+              <div className="pad div14">
+                {" "}
+                <Form.Group>
+                  <Form.Label>Reason</Form.Label>
+                  <Form.Control
+                    value={reason}
+                    onChange={handleChange("reason")}
+                    as="textarea"
+                  />
+                </Form.Group>{" "}
+              </div>
             </div>
             <Button type="submit">Submit form</Button>
           </Form>
         </div>
       </div>
-
 
       <FooterC />
     </>

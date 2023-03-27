@@ -52,20 +52,43 @@ export const SignIn = (user) => {
     withCredentials: true,
   })
     .then((resp) => {
-      console.log("success", resp);
       return resp.json();
+    }).then(async (data)=>{
+      console.log(data.user.id);
+      let m = await fetch(`${API}user/register/bill_info/getd/${data.user.id}`).then((response)=>{
+      return response.json()
+      }).then((data)=>{
+        return data  
+        ;}).catch((err)=>{console.log(err)})
+
+      return [data,m];
     })
     .catch((err) => {
       console.log(err);
     });
-};
+}; // Returns a token to sign in the user and calls for user info and bill info, which is later used to do multiple tasks,like:
+// Add sales, show Number in credits and debits.
 
 export const authenticate = (data, next) => {
   if (typeof window !== undefined) {
-    localStorage.setItem("Data", JSON.stringify(data));
+    localStorage.setItem("Data", JSON.stringify(data[0]));
+    localStorage.setItem("BillingData", JSON.stringify(data[1][0]));
+
     next();
   }
-};
+};// returns current user details from user table
+
+export const GetBillingInfo = () => {
+  if (typeof window == undefined) {
+    return false;
+  }
+  if (localStorage.getItem("BillingData")) {
+    return JSON.parse(localStorage.getItem("BillingData"));
+  } else {
+    return false;
+  }
+}; // returns billing info for a signed in user from bill info table.
+
 
 export const isAuthenticated = () => {
   if (typeof window == undefined) {
@@ -97,4 +120,18 @@ export default function SignOut(next) {
         console.log(err);
       });
   }
+}
+
+export function RegisterUser(...user){
+  const formData = new FormData();
+
+  for (const name in user) {
+    formData.append(name, user[name]);
+  }
+
+  for (var key of formData.keys()) {
+    console.log("keys", key);
+  }
+  console.log(user);
+
 }
