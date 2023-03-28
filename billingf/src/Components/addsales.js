@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FooterC from "./footer";
 import Navb from "./navbar";
 import "./css/addsales.css";
 import { SignoutNav } from "../UserView/singoutnav";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import { isAuthenticated, RegisterUser,GetBillingInfo } from "../auth/authIndex";
+import {
+  isAuthenticated,
+  RegisterUser,
+  GetBillingInfo,
+} from "../auth/authIndex";
 
 export function SalesForm() {
+  const [lmtmsgsys, setlmmsgsys] = useState({ display: "none" });
+  const [lmtmsgsms, setlmmsgsms] = useState({ display: "none" });
+  const [lmtmsgwpp, setlmmsgwpp] = useState({ display: "none" });
   const [values, setvalues] = useState({
     //For User Registeraion
     first_name: "",
@@ -20,7 +27,7 @@ export function SalesForm() {
     // For Billing Info
     system_credit: 0,
     sms_credit: 0,
-    whatsap_credit: 0,
+    whatsapp_credit: 0,
     phone: "",
     state: "",
     GSTno: "",
@@ -33,7 +40,11 @@ export function SalesForm() {
     loading: false,
     didNavigate: false,
   });
+  const [validated, setValidated] = useState(false);
+useEffect(()=>{
+  setValidated(false);
 
+},[values]) // If error returns in register this saves from User prevent default from hatao all content and we use the useeffect to see any changes at all which make validated false at time when changes happen after a registerion request all though we will add a link to naviogate ot to sales page.
   const {
     first_name,
     username,
@@ -43,7 +54,7 @@ export function SalesForm() {
     role_id_creator,
     system_credit,
     sms_credit,
-    whatsap_credit,
+    whatsapp_credit,
     phone,
     state,
     GSTno,
@@ -58,9 +69,30 @@ export function SalesForm() {
   } = values;
 
   const handleChange = (name) => (event) => {
-    setvalues({ ...values, error: false, [name]: event.target.value });
+   
+    if (name === "sms_credit") {
+      if (event.target.value > GetBillingInfo().sms_credit) {
+        setvalues({
+          ...values,
+          error: false,
+          [name]: event.target.value === GetBillingInfo().sms_credit,
+        });
+      }
+    }
+   
+    if (name === "phone") {
+      if (event.target.value.slice(0) < 9 || event.target.value.slice(0) >= 0) {
+        setvalues({
+          ...values,
+          error: false,
+          [name]: event.target.value.slice(0, 10),
+        });
+      }
+    } else {
+      setvalues({ ...values, error: false, [name]: event.target.value });
+    }
   };
-
+  const handleSubmit = (event) => {};
   return (
     <>
       <Navb component={<SignoutNav />} />
@@ -70,27 +102,24 @@ export function SalesForm() {
         </div>
         <div className="Formhandler">
           <Form
+            noValidate
+            validated={validated}
             onSubmit={(event) => {
-              event.preventDefault();
+              const form = event.currentTarget;
+
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              else{
+                event.preventDefault()
+                setValidated(true);
               RegisterUser(
-               { email,
-                password,
-                password2: password,
-                first_name,
-                username,
-                role_id,
-                role_id_creator,
-                system_credit,
-                sms_credit,
-                whatsap_credit,
-                phone,
-                state,
-                GSTno,
-                pancardNo,
-                KYC_no,
-                address,
-                reason}
+                { ...values, password2: password }
               );
+              }
+              event.preventDefault();
+              
             }}
           >
             <div className="parent">
@@ -99,13 +128,16 @@ export function SalesForm() {
                   <Form.Label>Email :</Form.Label>
                   <Form.Control
                     value={email}
-                    onChange={handleChange("email")}
+                    onChange={handleChange("email")} // add change condition and function call to check for uniqueness from backend.
                     size="sm"
                     type="text"
                     className="form-control"
                     placeholder="Email"
                     required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Unique Email Required{" "}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </div>
               <div className="pad div2">
@@ -121,7 +153,11 @@ export function SalesForm() {
                     size="sm"
                     type="password"
                     placeholder="Password"
+                    required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Password required{" "}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </div>
               <div className="pad div3">
@@ -132,9 +168,13 @@ export function SalesForm() {
                     onChange={handleChange("first_name")}
                     size="sm"
                     type="username"
-                    placeholder="Username"
+                    placeholder="First Name"
                     autoComplete="off"
+                    required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    User needs a first name
+                  </Form.Control.Feedback>
                 </Form.Group>
               </div>
               <div className="pad div4">
@@ -147,46 +187,76 @@ export function SalesForm() {
                     type="username"
                     placeholder="Username"
                     autoComplete="off"
+                    required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Please choose a username.
+                  </Form.Control.Feedback>
                 </Form.Group>
               </div>
               <div className="pad div5">
                 {" "}
                 <Form.Group>
-                  <Form.Label>System ({JSON.stringify(GetBillingInfo()['system_credit'])})</Form.Label>
+                  <Form.Label>
+                    System ({JSON.stringify(GetBillingInfo()["system_credit"])})
+                  </Form.Label>
                   <Form.Control // Needs Constrint!!
-                    value={system_credit}
                     onChange={handleChange("system_credit")}
                     size="sm"
                     type="text"
                     placeholder="System Credit"
+                    required
+                    isInvalid={
+                      values.system_credit > GetBillingInfo().system_credit
+                    }
                   />
+                  <Form.Control.Feedback type="invalid">
+                    System credit should be in 0-({GetBillingInfo().sms_credit}
+                    ).
+                  </Form.Control.Feedback>
                 </Form.Group>{" "}
               </div>
               <div className="pad div6">
                 {" "}
                 <Form.Group>
-                  <Form.Label>SMS ({JSON.stringify(GetBillingInfo()['sms_credit'])})</Form.Label>
+                  <Form.Label>
+                    SMS ({JSON.stringify(GetBillingInfo()["sms_credit"])})
+                  </Form.Label>
                   <Form.Control
-                    value={sms_credit}
                     onChange={handleChange("sms_credit")}
                     size="sm"
                     type="text"
                     placeholder="SMS credit"
+                    required
+                    isInvalid={values.sms_credit > GetBillingInfo().sms_credit || values.sms_credit===0 }
+                    isValid = {values.sms_credit<GetBillingInfo().sms_credit && values.sms_credit>0}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Sms credit should be in 0-({GetBillingInfo().sms_credit}).
+                  </Form.Control.Feedback>
                 </Form.Group>{" "}
               </div>
               <div className="pad div7">
                 {" "}
                 <Form.Group>
-                  <Form.Label>Whatsapp ({JSON.stringify(GetBillingInfo()['whatsapp_credit'])})</Form.Label>
+                  <Form.Label>
+                    Whatsapp (
+                    {JSON.stringify(GetBillingInfo()["whatsapp_credit"])})
+                  </Form.Label>
                   <Form.Control
-                    value={whatsap_credit}
-                    onChange={handleChange("whatsap_credit")}
+                    onChange={handleChange("whatsapp_credit")}
                     size="sm"
                     type="text"
                     placeholder="Whatsapp Credit"
+                    required
+                    isInvalid={
+                      values.whatsapp_credit > GetBillingInfo().whatsapp_credit
+                    }
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Whatsapp credit should be in 0-(
+                    {GetBillingInfo().whatsapp_credit}).
+                  </Form.Control.Feedback>
                 </Form.Group>{" "}
               </div>
               <div className="pad div8">
@@ -194,12 +264,20 @@ export function SalesForm() {
                 <Form.Group>
                   <Form.Label>Phone</Form.Label>
                   <Form.Control
+                    name="phone"
                     value={phone}
                     onChange={handleChange("phone")}
                     size="sm"
                     type="text"
                     placeholder="Phone Number"
+                    required
+                    isInvalid={values.phone.length !== 10} //|| (values.phone.length < 10 && values.phone.length!==-1)   }
+                    // isValid={ values.phone.length===10 ||values.phone.length ===0 }
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Enter a valid phone number.
+                    {values.phone.length}
+                  </Form.Control.Feedback>
                 </Form.Group>{" "}
               </div>
               <div className="pad div9">
@@ -210,12 +288,18 @@ export function SalesForm() {
                     aria-label="Default select example"
                     value={state}
                     onChange={handleChange("state")}
+                    isInvalid={values.state === ""}
+                    isValid={values.state !== ""}
+                    required
                   >
                     <option>Open this select menu</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
                     <option value="3">Three</option>
                   </Form.Select>
+                  <Form.Control.Feedback type="invalid">
+                    Select a state code!
+                  </Form.Control.Feedback>
                 </Form.Group>{" "}
               </div>
               <div className="pad div10">
@@ -228,7 +312,11 @@ export function SalesForm() {
                     size="sm"
                     type="text"
                     placeholder="GST Number"
+                    required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Enter a valid GST no.
+                  </Form.Control.Feedback>
                 </Form.Group>{" "}
               </div>
               <div className="pad div11">
@@ -241,7 +329,11 @@ export function SalesForm() {
                     size="sm"
                     type="text"
                     placeholder="Pancard number"
+                    required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Enter a valid Pan Card no.
+                  </Form.Control.Feedback>
                 </Form.Group>{" "}
               </div>
               <div className="pad div12">
@@ -254,7 +346,11 @@ export function SalesForm() {
                     size="sm"
                     type="text"
                     placeholder="KYC Number"
+                    required
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Enter a valid KYC number.
+                  </Form.Control.Feedback>
                 </Form.Group>{" "}
               </div>
               <div className="pad div13">
@@ -286,7 +382,7 @@ export function SalesForm() {
           </Form>
         </div>
       </div>
-
+      {JSON.stringify(values)}
       <FooterC />
     </>
   );

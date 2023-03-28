@@ -1,14 +1,6 @@
 import { API } from "../backend";
 import { useState } from "react";
-// USE THIS FOR USER REGISTERATION BUT NEED TO BUILD LOGIC FOR Permission of accessing and creating lower level user
-// export const signup= user =>{
-//     return fetch(`${API}user/`,{
-//         method:"POST",
-//         headers:{
 
-//         }
-//     })
-// }
 export const GetRole = (roleID) => {
   const role = {'owner':false,'distributor': false,
   'sales':false,

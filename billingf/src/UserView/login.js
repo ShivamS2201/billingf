@@ -63,21 +63,6 @@ const LOGIN = () => {
       return <Navigate to='/user/dashboard'/>
     }
   }
-  // Handles the data as it is getting filled
-  // const submit = (event) => {
-  //   event.preventDefault();
-  //   setvalues({ ...values, error: false, loading: true });
-  //   SignIn({ email, password })
-  //     .then((data) => {
-  //       console.log("signin", data);
-        
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-  //   // Call to login api
-  // };
-  // Handles user submit event and takes specific action as per requirement.
   return (
     <div className="LoginWrapper">
       {loadingMsg()}
