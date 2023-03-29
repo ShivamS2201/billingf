@@ -23,7 +23,8 @@ export function SalesForm() {
     password: "",
     password2: "",
     role_id: 4,
-    role_id_creator: isAuthenticated().user.id,
+    role_id_of_creator: isAuthenticated().user.role_id, // 3 i.e distributor
+    creator_id:isAuthenticated().user.id,
     // For Billing Info
     system_credit: 0,
     sms_credit: 0,
@@ -98,7 +99,7 @@ useEffect(()=>{
       <Navb component={<SignoutNav />} />
       <div className="FormSet">
         <div className="HeadingWrapper">
-          <h2>ADD SALES</h2>...values
+          <h2>ADD SALES</h2>
         </div>
         <div className="Formhandler">
           <Form
@@ -118,7 +119,6 @@ useEffect(()=>{
                 { ...values, password2: password }
               );
               }
-              event.preventDefault();
               
             }}
           >
