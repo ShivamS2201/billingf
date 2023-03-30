@@ -120,6 +120,12 @@ export function RegisterUser(...user) {
   // role_id_of_creator: isAuthenticated().user.role_id, // 3 i.e distributor
   // creator_id:isAuthenticated().user.id,
   // User registeration data as form body
+  if (user[0].role_id===5){
+    formDataUser.append("dist_ID_data", user[0].dist_ID_data);
+    console.log("user is sales creating HOffice")
+  }
+
+
   formDataUser.append("email", user[0].email);
   formDataUser.append("password", user[0].password);
   formDataUser.append("password2", user[0].password2);

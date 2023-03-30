@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import FooterC from "./footer";
-import Navb from "./navbar";
-import "./css/addsales.css";
-import { SignoutNav } from "../UserView/singoutnav";
+import FooterC from "../footer";
+import Navb from "../navbar";
+import "../css/addsales.css";
+import { SignoutNav } from "../../UserView/singoutnav";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {
   isAuthenticated,
   RegisterUser,
   GetBillingInfo,
-} from "../auth/authIndex";
+} from "../../auth/authIndex";
 
 export function SalesForm() {
   const [lmtmsgsys, setlmmsgsys] = useState({ display: "none" });

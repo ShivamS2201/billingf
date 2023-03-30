@@ -42,9 +42,9 @@ const Salescomponent = () => {
   function SalesClick() {
     return states.sales && <>Sales Table
     <div>
-    <Link to="/user/dashboard/register/addsales">
+    <Link to="/user/dashboard/register/addHoffice">
       <button>
-       Add sales</button></Link>
+       Add Head Office</button></Link>
     </div>
     </>;
   }
