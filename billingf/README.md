@@ -24,3 +24,6 @@ also setup a static and media folder in backend.
  - Use handle change fucntion to compare system credit and pass on value in user registeration form.    &#x2713;
  - Make a choice from states coming through api and mapped in the opion field.
  - If error returns in register this saves from User prevent default from hatao all content and we use the useeffect to see any changes at all which make validated false at time when changes happen after a registerion request all though we will add a link to naviogate ot to sales page.
+
+
+ Able to add HO and Sales.
