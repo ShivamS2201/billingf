@@ -15,7 +15,7 @@ const RoutesD = () =>{
 
     <BrowserRouter>
     <Routes>
-    <Route path="/" exact element={<App />}></Route>
+    <Route path="/" exact element={<LOGIN />}></Route>
     <Route path="/signin" exact element={<LOGIN />} />
     <Route path="/register" exact element={<Register />} />
 
