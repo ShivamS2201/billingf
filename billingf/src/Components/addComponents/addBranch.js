@@ -5,16 +5,16 @@ import "../css/addsales.css";
 import { SignoutNav } from "../../UserView/singoutnav";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import { Navigate } from "react-router-dom";
 import {
   isAuthenticated,
   RegisterUser,
   GetBillingInfo,
 } from "../../auth/authIndex";
-import Loader from "../loader";
-export function SalesForm() {
-  
-  
+
+export function BranchForm() {
+  const [lmtmsgsys, setlmmsgsys] = useState({ display: "none" });
+  const [lmtmsgsms, setlmmsgsms] = useState({ display: "none" });
+  const [lmtmsgwpp, setlmmsgwpp] = useState({ display: "none" });
   const [values, setvalues] = useState({
     //For User Registeraion
     first_name: "",
@@ -22,9 +22,11 @@ export function SalesForm() {
     email: "",
     password: "",
     password2: "",
-    role_id: 4,
-    role_id_of_creator: isAuthenticated().user.role_id, // 3 i.e distributor
-    creator_id: isAuthenticated().user.id,
+    role_id: 6,// its sales
+    dist_ID_data:isAuthenticated().user.distID, // dist that made the sales which made this branch
+    role_id_of_creator: isAuthenticated().user.role_id, // 5 i.e head Office
+    creator_id:isAuthenticated().user.id, // Current user id
+    sales_ID_data:isAuthenticated().user.salesid,
     // For Billing Info
     system_credit: 0,
     sms_credit: 0,
@@ -42,17 +44,10 @@ export function SalesForm() {
     didNavigate: false,
   });
   const [validated, setValidated] = useState(false);
-  const loadingMsg = () => {
-    return loading && <Loader />;
-  };
-  const performNavigate = () => {
-    if (didNavigate) {
-      return <Navigate to="/user/dashboard" />;
-    }
-  };
-  useEffect(() => {
-    setValidated(false);
-  }, [values]); // If error returns in register this saves from User prevent default from hatao all content and we use the useeffect to see any changes at all which make validated false at time when changes happen after a registerion request all though we will add a link to naviogate ot to sales page.
+useEffect(()=>{
+  setValidated(false);
+
+},[values]) // If error returns in register this saves from User prevent default from hatao all content and we use the useeffect to see any changes at all which make validated false at time when changes happen after a registerion request all though we will add a link to naviogate ot to sales page.
   const {
     first_name,
     username,
@@ -77,6 +72,7 @@ export function SalesForm() {
   } = values;
 
   const handleChange = (name) => (event) => {
+   
     if (name === "sms_credit") {
       if (event.target.value > GetBillingInfo().sms_credit) {
         setvalues({
@@ -86,7 +82,7 @@ export function SalesForm() {
         });
       }
     }
-
+   
     if (name === "phone") {
       if (event.target.value.slice(0) < 9 || event.target.value.slice(0) >= 0) {
         setvalues({
@@ -102,42 +98,30 @@ export function SalesForm() {
   const handleSubmit = (event) => {};
   return (
     <>
-      {loadingMsg()}
       <Navb component={<SignoutNav />} />
       <div className="FormSet">
         <div className="HeadingWrapper">
-          <h2>ADD SALES</h2>
+          <h2>ADD Branch</h2>
         </div>
         <div className="Formhandler">
           <Form
             noValidate
             validated={validated}
             onSubmit={(event) => {
-              values.loading = true;
               const form = event.currentTarget;
+
               if (form.checkValidity() === false) {
-                event.preventDefault(); // refresh problem is here
-                event.stopPropagation();
-              } else {
                 event.preventDefault();
-                setValidated(true);
-                RegisterUser({ ...values, password2: password })
-                  .then((data) => {
-                    console.log(data)
-                    if (data) {
-                      //nav
-                      console.log(data)
-                      setvalues({ ...values, didNavigate: true,loading:false });
-                      <Navigate to="/user/dashboard" />;
-                    } else {
-                      console.log(data)
-                      setvalues({ ...values, loading: false });
-                    }
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
+                event.stopPropagation();
               }
+              else{
+                event.preventDefault()
+                setValidated(true);
+              RegisterUser(
+                { ...values, password2: password }
+              );
+              }
+              
             }}
           >
             <div className="parent">
@@ -246,14 +230,8 @@ export function SalesForm() {
                     type="text"
                     placeholder="SMS credit"
                     required
-                    isInvalid={
-                      values.sms_credit > GetBillingInfo().sms_credit ||
-                      values.sms_credit === 0
-                    }
-                    isValid={
-                      values.sms_credit < GetBillingInfo().sms_credit &&
-                      values.sms_credit > 0
-                    }
+                    isInvalid={values.sms_credit > GetBillingInfo().sms_credit || values.sms_credit===0 }
+                    isValid = {values.sms_credit<GetBillingInfo().sms_credit && values.sms_credit>0}
                   />
                   <Form.Control.Feedback type="invalid">
                     Sms credit should be in 0-({GetBillingInfo().sms_credit}).
@@ -402,12 +380,11 @@ export function SalesForm() {
                 </Form.Group>{" "}
               </div>
             </div>
-            <Button type="submit">Submit form
-            {performNavigate()}
-            </Button>
+            <Button type="submit">Submit form</Button>
           </Form>
         </div>
       </div>
+      {JSON.stringify(values)}
       <FooterC />
     </>
   );

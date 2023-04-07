@@ -4,18 +4,12 @@ import { Link, Navigate, NavLink } from "react-router-dom";
 import { isAuthenticated } from "../auth/authIndex";
 import "./css/distributor.css";
 import { API } from "../backend";
-import { SalesTable } from "./tables/tablesales";
-
-const Distributor = () => {
+// Before making add branch remeber to change role id values elese user won't be created
+const HeadOfficeComponent = () => {
   const [dataholder, changeDataholder] = useState([8]);
-  const [salesNum,setSN] = useState(0);
-  const [HONum,setHO] = useState(0);
-  const [BrNum,setBr] = useState(0);
   const [states, setstates] = useState({
-    distributor: true,
     profile: false,
-    sales: false,
-    Hoffice: false,
+    Hoffice: true,
     Branch: false,
   });
   const dataFetch = async () => {
@@ -35,86 +29,23 @@ const Distributor = () => {
       });
     // set state when the data received
   };
-  const salefetch =async ()=>{
-    return await fetch(
-      `${API}user/register/user/Getbydist/${isAuthenticated().user.id}/${4}`,
-      { method: "GET" }
-    )
-      .then((resp) => {
-        return resp.json();
-      })
-      .then((data) => {
-        setSN(data)
-        return data;
-
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-  const HOfetch =async ()=>{
-    return await fetch(
-      `${API}user/register/user/Getbydist/${isAuthenticated().user.id}/${5}`,
-      { method: "GET" }
-    )
-      .then((resp) => {
-        return resp.json();
-      })
-      .then((data) => {
-        setHO(data)
-        return data;
-
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-  const Branchfetch = async ()=>{
-    return await fetch(
-      `${API}user/register/user/Getbydist/${isAuthenticated().user.id}/${6}`,
-      { method: "GET" }
-    )
-      .then((resp) => {
-        return resp.json();
-      })
-      .then((data) => {
-        setBr(data)
-        return data;
-
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-  
   useEffect(() => {
     dataFetch();
-    salefetch();
-    HOfetch();
-    Branchfetch();
     // fetch data
   }, []);
 
-  function DistributorClick() {
-    return states.distributor && <>Distributor</>;
-  }
   function ProfileClick() {
     // Profile update form comes here.
     return states.profile && <>Profile</>;
   }
-  function SalesClick() {
-    return states.sales && <>Sales Table
+  function HofficeClick() {
+    return states.Hoffice && <>Sales Table
     <div>
-    <Link to="/user/dashboard/register/addsales">
+    <Link to="/user/dashboard/register/addBranch">
       <button>
-       Add sales</button></Link>
-
-       <SalesTable/>
+       Add Branch</button></Link>
     </div>
     </>;
-  }
-  function HofficeClick() {
-    return states.Hoffice && <>Head Office Table</>;
   }
   function BranchClick() {
     return states.Branch && <>Branch Table</>;
@@ -128,27 +59,6 @@ const Distributor = () => {
               <div className="buttonwrapper">
                 <button
                   style={{
-                    backgroundColor: states.distributor ? "#2f3192" : "",
-                    color: states.distributor ? "white" : "",
-                    borderLeft: states.distributor
-                      ? "5px solid #2088cb"
-                      : "",
-                  }}
-                  className="beforeSelect"
-                  onClick={() => {
-                    setstates({
-                      distributor: true,
-                      profile: false,
-                      sales: false,
-                      Hoffice: false,
-                      Branch: false,
-                    });
-                  }}
-                >
-                  Distributor
-                </button>
-                <button
-                  style={{
                     backgroundColor: states.profile ? "#2f3192" : "",
                     color: states.profile ? "white" : "",
                     borderLeft: states.profile
@@ -159,33 +69,12 @@ const Distributor = () => {
                   onClick={() => {
                     setstates({
                       profile: true,
-                      sales: false,
                       Hoffice: false,
                       Branch: false,
                     });
                   }}
                 >
                   Profile
-                </button>
-                <button
-                  style={{
-                    backgroundColor: states.sales ? "#2f3192" : "",
-                    color: states.sales ? "white" : "",
-                    borderLeft: states.sales
-                      ? "5px solid #2088cb"
-                      : "",
-                  }}
-                  className="beforeSelect"
-                  onClick={() => {
-                    setstates({
-                      sales: true,
-                      profile: false,
-                      Hoffice: false,
-                      Branch: false,
-                    });
-                  }}
-                >
-                  Sales
                 </button>
                 <button
                   style={{
@@ -200,7 +89,6 @@ const Distributor = () => {
                     setstates({
                       Hoffice: true,
                       profile: false,
-                      sales: false,
                       Branch: false,
                     });
                   }}
@@ -220,7 +108,6 @@ const Distributor = () => {
                     setstates({
                       Branch: true,
                       profile: false,
-                      sales: false,
                       Hoffice: false,
                     });
                   }}
@@ -248,7 +135,7 @@ const Distributor = () => {
                     <div className="dataconatiner">
                       <div className="textholder">Sales</div>
                       <div className="dataholder">
-                        {JSON.stringify(salesNum)}
+                        {JSON.stringify(dataholder.sms_credit)}
                       </div>
                     </div>
                   </div>
@@ -308,7 +195,7 @@ const Distributor = () => {
                     </div>
                     <div className="dataconatiner">
                       <div className="textholder">Head Office</div>
-                      <div className="dataholder">{JSON.stringify(HONum)}</div>
+                      <div className="dataholder">{JSON.stringify(9)}</div>
                     </div>
                   </div>
                 </div>
@@ -322,7 +209,7 @@ const Distributor = () => {
                     </div>
                     <div className="dataconatiner">
                       <div className="textholder">Branch</div>
-                      <div className="dataholder">{JSON.stringify(BrNum)}</div>
+                      <div className="dataholder">{JSON.stringify(9)}</div>
                     </div>
                   </div>
                 </div>
@@ -332,9 +219,7 @@ const Distributor = () => {
         </div>
         <div className="tablewrapper">
           Table
-          <DistributorClick />
           <ProfileClick />
-          <SalesClick />
           <HofficeClick />
           <BranchClick />
         </div>
@@ -343,4 +228,4 @@ const Distributor = () => {
   );
 };
 
-export default Distributor;
+export default HeadOfficeComponent;

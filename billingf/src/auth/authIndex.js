@@ -115,14 +115,18 @@ export default function SignOut(next) {
 export function RegisterUser(...user) {
   const formDataUser = new FormData();
   const formDataBilling = new FormData();
-  console.log(user[0]);
-  // role_id: 4,
-  // role_id_of_creator: isAuthenticated().user.role_id, // 3 i.e distributor
-  // creator_id:isAuthenticated().user.id,
   // User registeration data as form body
+
+  //When registeration is done by Sales
   if (user[0].role_id===5){
     formDataUser.append("dist_ID_data", user[0].dist_ID_data);
     console.log("user is sales creating HOffice")
+  }
+  //When registering is done by Head Office
+  if (user[0].role_id===6){
+    formDataUser.append("dist_ID_data", user[0].dist_ID_data);//dist id for branch
+    console.log("user is sales creating HOffice");
+    formDataUser.append("sales_ID_data",user[0].sales_ID_data);// sales id for branch 
   }
 
 
@@ -133,7 +137,7 @@ export function RegisterUser(...user) {
   formDataUser.append("first_name", user[0].first_name);
   formDataUser.append("role_id", user[0].role_id);
   formDataUser.append("role_id_of_creator", user[0].role_id_of_creator);
-  formDataUser.append("creator_id", user[0].creator_id);
+  formDataUser.append("creator_id", user[0].creator_id);//current user id 
   //Billing INfo data as body
   formDataBilling.append("system_credit",user[0].system_credit );
   formDataBilling.append("sms_credit",user[0].sms_credit );
@@ -154,10 +158,6 @@ export function RegisterUser(...user) {
   formDataBilling.append("shortname","Hey");
   formDataBilling.append("is_regdealer","true");
 
-  for (var k of formDataBilling.values() ) {
-    console.log(k);
-  }
-
   return fetch(`${API}user/register`, {
     method: "POST",
     body: formDataUser,
@@ -168,7 +168,6 @@ export function RegisterUser(...user) {
       return resp.json();
     })
     .then(async (data) => {
-      console.log(data); // as I am returning key from background
       formDataBilling.append("user_id",data);
       let m = await fetch(`${API}user/register/bill_info/${data}`, {
         method: "POST",
@@ -186,10 +185,7 @@ export function RegisterUser(...user) {
         .catch((err) => {
           console.log(err);
         });
-
-      console.log(data);
-
-      return data;
+      return [data,true];
     })
     .catch((err) => {
       console.log(err);

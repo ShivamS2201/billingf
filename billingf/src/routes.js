@@ -8,6 +8,7 @@ import LOGIN from "./UserView/login";
 import Notfound from "./Components/notfound";
 import { SalesForm } from "./Components/addComponents/addsales";
 import {HooficeForm} from "./Components/addComponents/addHoffice"
+import { BranchForm } from "./Components/addComponents/addBranch";
 
 const RoutesD = () =>{
   return(
@@ -21,6 +22,7 @@ const RoutesD = () =>{
     <Route path="/user/dashboard/*" element={<PrivateRoutes component={UserDashboard}/>}/>
     <Route path="/user/dashboard/register/addsales/*" exact element={<PrivateRoutes component={SalesForm}/>} />
     <Route path="/user/dashboard/register/addHoffice/*" exact element={<PrivateRoutes component={HooficeForm}/>} />
+    <Route path="/user/dashboard/register/addBranch/*" exact element={<PrivateRoutes component={BranchForm}/>} />
 
     {/* <PrivateRoutes path="/user/dashboard" exact component={UserDashboard}/> */}
     {/* <Route path="/signup" exact element={<App />}></Route> */}
