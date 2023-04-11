@@ -2,24 +2,50 @@
   min-height: 100%;
   min-width: 100%;
 }
-
+.Formhandler{
+  border: 1px solid #b3a7a7;
+    margin: 0 8vw 8vw 8vw;
+}
 .HeadingWrapper {
-  text-align: center;
+  text-align: left;
+  padding: 0 8.4vw;
+}
+.HeadingWrapper > h2{
+  display: inline-block;
+    border-bottom: 2px solid #2f3192;
+    font-size: 20px;
+    font-weight: 600;
+    padding: 10px 0;
+    position: relative;
+    text-transform: capitalize;
+    /* float: left; */
+    color: #242424;
+    /* margin-bottom: 0; */
+    font-family: 'Open Sans', sans-serif;
+    /* letter-spacing: 1px; */
+    line-height: 30px;
 }
 .pad{
     padding-right: 2vw;
     padding-left: 2vw;
 }
 .parent {
-    padding: 0px 5em 0px 5em;
-    margin-bottom: 3vh;
+    
      display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
+  margin-top: 14px;
 }
-
+.ButtonWrapper > button{
+  position: relative;
+    display: inline-flex;
+    z-index: 1;
+    position: relative;
+    left:72vw;
+    bottom: 12px;
+}
 .div1 {
   grid-area: 1 / 1 / 2 / 2;
 }

@@ -11,10 +11,10 @@ import {
   RegisterUser,
   GetBillingInfo,
 } from "../../auth/authIndex";
+import { API } from "../../backend";
 import Loader from "../loader";
 export function SalesForm() {
-  
-  
+  const [salesNum,setSN] = useState(0);
   const [values, setvalues] = useState({
     //For User Registeraion
     first_name: "",
@@ -50,9 +50,7 @@ export function SalesForm() {
       return <Navigate to="/user/dashboard" />;
     }
   };
-  useEffect(() => {
-    setValidated(false);
-  }, [values]); // If error returns in register this saves from User prevent default from hatao all content and we use the useeffect to see any changes at all which make validated false at time when changes happen after a registerion request all though we will add a link to naviogate ot to sales page.
+  // If error returns in register this saves from User prevent default from hatao all content and we use the useeffect to see any changes at all which make validated false at time when changes happen after a registerion request all though we will add a link to naviogate ot to sales page.
   const {
     first_name,
     username,
@@ -75,7 +73,27 @@ export function SalesForm() {
     loading,
     didNavigate,
   } = values;
+  const salefetch =async ()=>{
+    return await fetch(
+      `${API}user/register/user/Getbydist/${isAuthenticated().user.id}/${4}`,
+      { method: "GET" }
+    )
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        setSN(data)
+        return data;
 
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  useEffect(() => {
+    setValidated(false);
+    salefetch()
+  }, [values]);
   const handleChange = (name) => (event) => {
     if (name === "sms_credit") {
       if (event.target.value > GetBillingInfo().sms_credit) {
@@ -103,9 +121,29 @@ export function SalesForm() {
   return (
     <>
       {loadingMsg()}
+      <div className="name__top">Welcome to Distributor {isAuthenticated().user.first_name}</div>
       <Navb component={<SignoutNav />} />
+      <div className="CardContainer" style={{position:"relative",maxWidth: "28vw"}}>
+      <div className="cards card1" style={{padding: "2px",
+    position:" relative",left: "35vw",margin: "12px 0 12px"}}>
+                  <div className="cardWrapper">
+                    <div className="imgcontainer">
+                      <i
+                        className="bi bi-person"
+                        style={{ fontSize: "3.8em" }}
+                      ></i>
+                    </div>
+                    <div className="dataconatiner">
+                      <div className="textholder">Sales</div>
+                      <div className="dataholder">
+                        {JSON.stringify(salesNum)}
+                      </div>
+                    </div>
+                  </div>
+                </div></div>
       <div className="FormSet">
         <div className="HeadingWrapper">
+        <hr/>
           <h2>ADD SALES</h2>
         </div>
         <div className="Formhandler">
@@ -402,9 +440,11 @@ export function SalesForm() {
                 </Form.Group>{" "}
               </div>
             </div>
+            <div className="ButtonWrapper">
             <Button type="submit">Submit form
             {performNavigate()}
             </Button>
+            </div>
           </Form>
         </div>
       </div>

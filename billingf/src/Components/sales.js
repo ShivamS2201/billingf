@@ -2,17 +2,55 @@ import React, { useEffect, useState } from "react";
 import { Nav } from "react-bootstrap";
 import { Link, Navigate, NavLink } from "react-router-dom";
 import { isAuthenticated } from "../auth/authIndex";
-import "./css/distributor.css";
+import "./css/sales.css";
 import { API } from "../backend";
+import { TableHO } from "./tables/tableHO";
+import { SalesBrtable } from "./tables/salesBranchTable";
 // Before making add branch remeber to change role id values elese user won't be created
 const Salescomponent = () => {
   const [dataholder, changeDataholder] = useState([8]);
+  const [salesNum,setSN] = useState(0);
+  const [BrNum,setBr] = useState(0);
   const [states, setstates] = useState({
     profile: false,
     sales: true,
     Hoffice: false,
     Branch: false,
   });
+  const HeadOfetch =async ()=>{
+    return await fetch(
+      `${API}user/register/user/Getbysales/${isAuthenticated().user.id}/5`,
+      { method: "GET" }
+    )
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        setSN(data)
+        return data;
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  const Branchfetch = async ()=>{
+    return await fetch(
+      `${API}user/register/user/Getbysales/${isAuthenticated().user.id}/${6}`,
+      { method: "GET" }
+    )
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        setBr(data)
+        return data;
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   const dataFetch = async () => {
     return await fetch(
       `${API}user/register/bill_info/getd/${isAuthenticated().user.id}`,
@@ -32,27 +70,34 @@ const Salescomponent = () => {
   };
   useEffect(() => {
     dataFetch();
+    HeadOfetch();
+    Branchfetch();
     // fetch data
-  }, []);
+  }, [states]);
 
   function ProfileClick() {
     // Profile update form comes here.
     return states.profile && <>Profile</>;
   }
   function SalesClick() {
-    return states.sales && <>Sales Table
-    <div>
-    <Link to="/user/dashboard/register/addHoffice">
-      <button>
-       Add Head Office</button></Link>
-    </div>
+    return states.sales && <>
+    <br/>
+    <br/>
+    <br/>
+   
     </>;
   }
   function HofficeClick() {
-    return states.Hoffice && <>Head Office Table</>;
+    return states.Hoffice && <> <div>
+      <hr/>
+       <TableHO/>
+    </div></>;
   }
   function BranchClick() {
-    return states.Branch && <>Branch Table</>;
+    return states.Branch && <>
+    <hr/>
+    <SalesBrtable/>
+    </>;
   }
   return (
     <>
@@ -61,6 +106,26 @@ const Salescomponent = () => {
           <div className="flexContainer">
             <div className="buttoncontainer">
               <div className="buttonwrapper">
+              <button
+                  style={{
+                    backgroundColor: states.sales ? "#2f3192" : "",
+                    color: states.sales ? "white" : "",
+                    borderLeft: states.sales
+                      ? "5px solid #2088cb"
+                      : "",
+                  }}
+                  className="beforeSelect"
+                  onClick={() => {
+                    setstates({
+                      sales: true,
+                      profile: false,
+                      Hoffice: false,
+                      Branch: false,
+                    });
+                  }}
+                >
+                  Sales
+                </button>
                 <button
                   style={{
                     backgroundColor: states.profile ? "#2f3192" : "",
@@ -81,26 +146,7 @@ const Salescomponent = () => {
                 >
                   Profile
                 </button>
-                <button
-                  style={{
-                    backgroundColor: states.sales ? "#2f3192" : "",
-                    color: states.sales ? "white" : "",
-                    borderLeft: states.sales
-                      ? "5px solid #2088cb"
-                      : "",
-                  }}
-                  className="beforeSelect"
-                  onClick={() => {
-                    setstates({
-                      sales: true,
-                      profile: false,
-                      Hoffice: false,
-                      Branch: false,
-                    });
-                  }}
-                >
-                  Sales
-                </button>
+                
                 <button
                   style={{
                     backgroundColor: states.Hoffice ? "#2f3192" : "",
@@ -150,8 +196,8 @@ const Salescomponent = () => {
               className="cardconatiner"
               style={{ display: states.profile ? "none" : "" }}
             >
-              <div className="CardGrid">
-                <div className="cards card1">
+              <div className="CardGridsa">
+                {/* <div className="cardsales cardsales1">
                   <div className="cardWrapper">
                     <div className="imgcontainer">
                       <i
@@ -166,8 +212,8 @@ const Salescomponent = () => {
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="cards card2">
+                </div> */}
+                <div className="cardsales cardsales2">
                   <div className="cardWrapper">
                     <div className="imgcontainer">
                       <i
@@ -212,7 +258,7 @@ const Salescomponent = () => {
                     </div>
                   </div>
                 </div>
-                <div className="cards card3">
+                <div className="cardsales cardsales3">
                   <div className="cardWrapper">
                     <div className="imgcontainer">
                       <i
@@ -222,11 +268,11 @@ const Salescomponent = () => {
                     </div>
                     <div className="dataconatiner">
                       <div className="textholder">Head Office</div>
-                      <div className="dataholder">{JSON.stringify(9)}</div>
+                      <div className="dataholder">{JSON.stringify(salesNum)}</div>
                     </div>
                   </div>
                 </div>
-                <div className="cards card4">
+                <div className="cardsales cardsales4">
                   <div className="cardWrapper">
                     <div className="imgcontainer">
                       <i
@@ -236,7 +282,7 @@ const Salescomponent = () => {
                     </div>
                     <div className="dataconatiner">
                       <div className="textholder">Branch</div>
-                      <div className="dataholder">{JSON.stringify(9)}</div>
+                      <div className="dataholder">{JSON.stringify(BrNum)}</div>
                     </div>
                   </div>
                 </div>
@@ -245,7 +291,6 @@ const Salescomponent = () => {
           </div>
         </div>
         <div className="tablewrapper">
-          Table
           <ProfileClick />
           <SalesClick />
           <HofficeClick />

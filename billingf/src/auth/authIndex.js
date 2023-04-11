@@ -29,7 +29,6 @@ export const SignIn = (user) => {
   for (const name in user) {
     formData.append(name, user[name]);
   }
-  console.log(formData.values("email"));
   return fetch(`${API}user/login/`, {
     method: "POST",
     body: formData,
@@ -40,7 +39,6 @@ export const SignIn = (user) => {
       return resp.json();
     })
     .then(async (data) => {
-      console.log(data.user.id);
       let m = await fetch(`${API}user/register/bill_info/getd/${data.user.id}`)
         .then((response) => {
           return response.json();
@@ -103,7 +101,6 @@ export default function SignOut(next) {
       mode: "no-cors",
     })
       .then((response) => {
-        console.log("SIGNOUT/ Nikalo");
         next();
       })
       .catch((err) => {
@@ -120,12 +117,10 @@ export function RegisterUser(...user) {
   //When registeration is done by Sales
   if (user[0].role_id===5){
     formDataUser.append("dist_ID_data", user[0].dist_ID_data);
-    console.log("user is sales creating HOffice")
   }
   //When registering is done by Head Office
   if (user[0].role_id===6){
     formDataUser.append("dist_ID_data", user[0].dist_ID_data);//dist id for branch
-    console.log("user is sales creating HOffice");
     formDataUser.append("sales_ID_data",user[0].sales_ID_data);// sales id for branch 
   }
 

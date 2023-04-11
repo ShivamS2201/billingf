@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { API } from "../../backend";
 import { Link } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
-import { isAuthenticated } from "../../auth/authIndex";
 import paginationFactory, {
   PaginationListStandalone,
 } from "react-bootstrap-table2-paginator";
@@ -11,6 +10,7 @@ import "./css/tablesales.css";
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min";
+import { isAuthenticated } from "../../auth/authIndex";
 require("react-bootstrap-table-next/dist/react-bootstrap-table2.min.css");
 const columns = [
   {
@@ -77,13 +77,13 @@ const columns = [
     )
   },
 ];
-export function SalesTable() {
+export function DistHOtable() {
   let icon1 = require("../../assets/images/icon1.png");
   let icon2 = require("../../assets/images/icon2.png");
 
   const [TableValue, SetTableValue] = useState();
   const SalesTableData = async () => {
-    await fetch(`${API}user/register/salesdata/${isAuthenticated().user.id}/4`, {
+    await fetch(`${API}user/register/salesdata/${isAuthenticated().user.id}/5`, {
       method: "GET",
     })
       .then((resp) => {
@@ -174,12 +174,8 @@ export function SalesTable() {
   return (
     <>
       <div className="ButtonTextWrapper">
-        <div className="LOS">List of Sales</div>
-        <div className="ButtonContainer">
-          <Link to="/user/dashboard/register/addsales">
-            <button>Add sales Manager</button>
-          </Link>
-        </div>{" "}
+        <div className="LOS">List of Head Office</div>
+        
       </div>
       {TableValue && (
         <div className="TableContainer" style={{}}>

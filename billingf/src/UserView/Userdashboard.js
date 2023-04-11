@@ -4,6 +4,7 @@ import Navb from "../Components/navbar";
 import './css/userboard.css'
 import { GetRole } from "../auth/authIndex";
 import Distributor from "../Components/distributor";
+import Owner from "../Components/owner";
 import Salescomponent from "../Components/sales";
 import HeadOfficeComponent from "../Components/headOffice";
 import FooterC from "../Components/footer"
@@ -13,7 +14,14 @@ const UserDashboard = (props)=>{
     const {owner,distributor,sales,headOffice,Branch,Cust} = Role
 
     return(
-        
+        owner &&<div>
+            <div className="name__top">Welcome to Owner {isAuthenticated().user.first_name}</div>
+            <Navb component={<SignoutNav />}/>
+            <Owner/>
+            <FooterC />            {/* Set up compoenwts for all roles separately and bring about functionalities */}
+
+        </div>
+        ||
         distributor &&<div>
             <div className="name__top">Welcome to Distributor {isAuthenticated().user.first_name}</div>
             <Navb component={<SignoutNav />}/>

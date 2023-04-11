@@ -71,19 +71,23 @@ const columns = [
     formatter: (cell, row, rowIndex, extraData) => (
       <div>
         <span>
-          {JSON.stringify(row["joining_date"]).slice(1,11).split("-",3).reverse().join("-")}
+          {JSON.stringify(row["joining_date"])
+            .slice(1, 11)
+            .split("-", 3)
+            .reverse()
+            .join("-")}
         </span>
       </div>
-    )
+    ),
   },
 ];
-export function SalesTable() {
+export function TableHO() {
   let icon1 = require("../../assets/images/icon1.png");
   let icon2 = require("../../assets/images/icon2.png");
 
   const [TableValue, SetTableValue] = useState();
-  const SalesTableData = async () => {
-    await fetch(`${API}user/register/salesdata/${isAuthenticated().user.id}/4`, {
+  const HODataFetch = async () => {
+    await fetch(`${API}user/register/hodata/${isAuthenticated().user.id}/5`, {
       method: "GET",
     })
       .then((resp) => {
@@ -97,7 +101,7 @@ export function SalesTable() {
       });
   };
   useEffect(() => {
-    SalesTableData();
+    HODataFetch();
   }, []);
   const customTotal = (from, to, size) => (
     <span className="react-bootstrap-table-pagination-total">
@@ -124,10 +128,7 @@ export function SalesTable() {
       return null;
     },
   };
-  const rowStyle = { 
-  
-
-};
+  const rowStyle = {};
 
   const options = {
     paginationSize: 2,
@@ -174,10 +175,10 @@ export function SalesTable() {
   return (
     <>
       <div className="ButtonTextWrapper">
-        <div className="LOS">List of Sales</div>
+        <div className="LOS">List of Head Office</div>
         <div className="ButtonContainer">
-          <Link to="/user/dashboard/register/addsales">
-            <button>Add sales Manager</button>
+          <Link to="/user/dashboard/register/addHoffice">
+            <button>Add Head Office</button>
           </Link>
         </div>{" "}
       </div>
@@ -189,38 +190,32 @@ export function SalesTable() {
             columns={columns}
             search
           >
-            {
-              (props) => (
-                <div className="TableBarWrapper">
-                  <div className="ButtonSearchCont">
-                    <SearchBar {...props.searchProps} />
-                  </div>
-                  <div className="TableWrapper">
-                    <BootstrapTable
-                      bootstrap4
-                      striped
-                      hover
-                      selectRow={selectRow}
-                      keyField="first_name"
-                      data={TableValue}
-                      columns={columns}
-                      pagination={paginationFactory(options)}
-                      sort={sortOption}
-                      noDataIndication={"Loading..."}
-                      {...props.baseProps}
-                      rowStyle={ rowStyle }
-                    />
-                  </div>
+            {(props) => (
+              <div className="TableBarWrapper">
+                <div className="ButtonSearchCont">
+                  <SearchBar {...props.searchProps} />
                 </div>
-              )
-            }
+                <div className="TableWrapper">
+                  <BootstrapTable
+                    bootstrap4
+                    striped
+                    hover
+                    selectRow={selectRow}
+                    keyField="first_name"
+                    data={TableValue}
+                    columns={columns}
+                    pagination={paginationFactory(options)}
+                    sort={sortOption}
+                    noDataIndication={"Loading..."}
+                    {...props.baseProps}
+                    rowStyle={rowStyle}
+                  />
+                </div>
+              </div>
+            )}
           </ToolkitProvider>
         </div>
       )}
     </>
   );
 }
-// https://react-bootstrap-table.github.io/react-bootstrap-table2/storybook/index.html?selectedKind=Pagination&selectedStory=Custom%20Pagination%20with%20Search&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%2Factions%2Factions-panel
-              // for making the required type of table with custom pagination and search bar
-              // and hooks to chnages: https://react-bootstrap-table.github.io/react-bootstrap-table2/storybook/index.html?selectedKind=Row%20Selection&selectedStory=Selection%20Hooks&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%2Factions%2Factions-panel
-              

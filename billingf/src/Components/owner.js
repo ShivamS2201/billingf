@@ -7,19 +7,20 @@ import { API } from "../backend";
 import { SalesTable } from "./tables/tablesales";
 import { DistHOtable } from "./tables/distHOtable";
 import { DistBrtable } from "./tables/distBranchtable";
-const Distributor = () => {
+const Owner = () => {
   const [dataholder, changeDataholder] = useState([8]);
   const [salesNum,setSN] = useState(0);
   const [HONum,setHO] = useState(0);
   const [BrNum,setBr] = useState(0);
   const [states, setstates] = useState({
-    distributor: true,
+    owner:true,
+    distributor: false,
     profile: false,
     sales: false,
     Hoffice: false,
     Branch: false,
   });
-  const dataFetch = async () => {
+  const BillingdataFetch = async () => {
     return await fetch(
       `${API}user/register/bill_info/getd/${isAuthenticated().user.id}`,
       { method: "GET" }
@@ -89,13 +90,21 @@ const Distributor = () => {
   }
   
   useEffect(() => {
-    dataFetch();
+    BillingdataFetch();
     salefetch();
     HOfetch();
     Branchfetch();
     // fetch data
   }, []);
 
+  function OwnerClick() {
+    return states.owner && <>
+    OWNER Functions
+    <br />
+    <br />
+    <br />
+    </>;
+  }
   function DistributorClick() {
     return states.distributor && <>
     <br />
@@ -107,6 +116,7 @@ const Distributor = () => {
     // Profile update form comes here.
     return states.profile && <>Profile</>;
   }
+  //Put a boolean prop for seeing if the user renders has
   function SalesClick() {
     return states.sales && <>
     <div>
@@ -138,6 +148,29 @@ const Distributor = () => {
           <div className="flexContainer">
             <div className="buttoncontainer">
               <div className="buttonwrapper">
+              <button
+                  style={{
+                    backgroundColor: states.owner ? "#2f3192" : "",
+                    color: states.owner ? "white" : "",
+                    borderLeft: states.owner
+                      ? "5px solid #2088cb"
+                      : "",
+                  }}
+                  className="beforeSelect"
+                  onClick={() => {
+                    setstates({
+                        owner:false,
+                      owner: true,
+                      distributor:false,
+                      profile: false,
+                      sales: false,
+                      Hoffice: false,
+                      Branch: false,
+                    });
+                  }}
+                >
+                  Owner
+                </button>
                 <button
                   style={{
                     backgroundColor: states.distributor ? "#2f3192" : "",
@@ -149,6 +182,7 @@ const Distributor = () => {
                   className="beforeSelect"
                   onClick={() => {
                     setstates({
+                        owner:false,
                       distributor: true,
                       profile: false,
                       sales: false,
@@ -170,6 +204,7 @@ const Distributor = () => {
                   className="beforeSelect"
                   onClick={() => {
                     setstates({
+                        owner:false,
                       profile: true,
                       sales: false,
                       Hoffice: false,
@@ -190,6 +225,7 @@ const Distributor = () => {
                   className="beforeSelect"
                   onClick={() => {
                     setstates({
+                        owner:false,
                       sales: true,
                       profile: false,
                       Hoffice: false,
@@ -210,6 +246,7 @@ const Distributor = () => {
                   className="beforeSelect"
                   onClick={() => {
                     setstates({
+                        owner:false,
                       Hoffice: true,
                       profile: false,
                       sales: false,
@@ -230,6 +267,7 @@ const Distributor = () => {
                   className="beforeSelect"
                   onClick={() => {
                     setstates({
+                        owner:false,
                       Branch: true,
                       profile: false,
                       sales: false,
@@ -343,6 +381,7 @@ const Distributor = () => {
           </div>
         </div>
         <div className="tablewrapper">
+            <OwnerClick/>
           <DistributorClick />
           <ProfileClick />
           <SalesClick />
@@ -354,4 +393,4 @@ const Distributor = () => {
   );
 };
 
-export default Distributor;
+export default Owner;

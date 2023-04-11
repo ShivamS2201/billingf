@@ -77,13 +77,13 @@ const columns = [
     )
   },
 ];
-export function SalesTable() {
+export function SalesBrtable() {
   let icon1 = require("../../assets/images/icon1.png");
   let icon2 = require("../../assets/images/icon2.png");
 
   const [TableValue, SetTableValue] = useState();
   const SalesTableData = async () => {
-    await fetch(`${API}user/register/salesdata/${isAuthenticated().user.id}/4`, {
+    await fetch(`${API}user/register/hodata/${isAuthenticated().user.id}/6`, {
       method: "GET",
     })
       .then((resp) => {
@@ -174,12 +174,8 @@ export function SalesTable() {
   return (
     <>
       <div className="ButtonTextWrapper">
-        <div className="LOS">List of Sales</div>
-        <div className="ButtonContainer">
-          <Link to="/user/dashboard/register/addsales">
-            <button>Add sales Manager</button>
-          </Link>
-        </div>{" "}
+        <div className="LOS">List of Branch</div>
+        
       </div>
       {TableValue && (
         <div className="TableContainer" style={{}}>

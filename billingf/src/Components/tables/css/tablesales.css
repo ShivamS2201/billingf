@@ -1,0 +1,92 @@
+.TableContainer{
+    font-size: 13px;
+    background-color: #fff;
+    border: 1px solid #f1f1f1;
+    padding-top: 10px;
+    position: relative;
+    margin-bottom: 30px;
+}
+.react-bootstrap-table{
+    overflow: hidden;
+}
+tbody,thead,tr{
+        border-style: hidden;
+}
+tbody, td, tfoot, th, thead {
+    border-color: inherit;
+    border-style: hidden;
+    border-width: 0;
+}
+.react-bootstrap-table tbody > tr{
+
+    border-top: 1px solid black;
+
+}
+
+.ButtonSearchCont{
+    padding: 0 7px;
+}
+.ButtonTextWrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2vh;
+}
+.LOS{
+    background-color: #fff;
+    border-bottom: 2px solid #2f3192;
+    font-size: 20px;
+    font-weight: 600;
+    padding: 20px 0;
+    position: relative;
+    text-transform: capitalize;
+    float: left;
+    color: #242424;
+    margin-bottom: 0;
+    font-family: 'Open Sans', sans-serif;
+    letter-spacing: 1px;
+    line-height: 30px;
+}
+.ButtonContainer button{
+    font-family: 'Open Sans', sans-serif;
+    background: #292c8f ;
+    color:white;
+    margin-bottom: 2px;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.ButtonContainer button:hover{
+    background: #f24e52 !important;
+    border: 1px solid #f24e52 !important;
+    color: #fff !important;
+    text-decoration: none !important;
+
+}
+#search-bar-0-label{
+display:none;
+}
+#search-bar-0{
+    height: 4.7vh;
+    width: 8vw;
+}
+.TableBarWrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+/* Roe formatter
+border-top: 1px solid #ddd;
+border-bottom: 1px solid #111;
+*/

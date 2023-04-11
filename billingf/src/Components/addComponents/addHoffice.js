@@ -5,16 +5,43 @@ import "../css/addsales.css";
 import { SignoutNav } from "../../UserView/singoutnav";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import { Navigate } from "react-router-dom";
+
 import {
   isAuthenticated,
   RegisterUser,
   GetBillingInfo,
 } from "../../auth/authIndex";
+import Loader from "../loader";
+import { API } from "../../backend";
 
 export function HooficeForm() {
-  const [lmtmsgsys, setlmmsgsys] = useState({ display: "none" });
-  const [lmtmsgsms, setlmmsgsms] = useState({ display: "none" });
-  const [lmtmsgwpp, setlmmsgwpp] = useState({ display: "none" });
+  const [HOnum,setHO] = useState(0);
+  const HeadOfetch =async ()=>{
+    return await fetch(
+      `${API}user/register/user/Getbysales/${isAuthenticated().user.id}/5`,
+      { method: "GET" }
+    )
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        setHO(data)
+        return data;
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  const loadingMsg = () => {
+    return loading && <Loader />;
+  };
+  const performNavigate = () => {
+    if (didNavigate) {
+      return <Navigate to="/user/dashboard" />;
+    }
+  };
   const [values, setvalues] = useState({
     //For User Registeraion
     first_name: "",
@@ -45,6 +72,7 @@ export function HooficeForm() {
   const [validated, setValidated] = useState(false);
 useEffect(()=>{
   setValidated(false);
+  HeadOfetch()
 
 },[values]) // If error returns in register this saves from User prevent default from hatao all content and we use the useeffect to see any changes at all which make validated false at time when changes happen after a registerion request all though we will add a link to naviogate ot to sales page.
   const {
@@ -97,10 +125,30 @@ useEffect(()=>{
   const handleSubmit = (event) => {};
   return (
     <>
+     {loadingMsg()}
+      <div className="name__top">Welcome to Sales {isAuthenticated().user.first_name}</div>
       <Navb component={<SignoutNav />} />
+      <div className="CardContainer" style={{position:"relative",maxWidth: "28vw"}}>
+      <div className="cards card1" style={{padding: "2px",
+    position:" relative",left: "35vw",margin: "12px 0 12px"}}>
+                  <div className="cardWrapper">
+                    <div className="imgcontainer">
+                      <i
+                        className="bi bi-person"
+                        style={{ fontSize: "3.8em" }}
+                      ></i>
+                    </div>
+                    <div className="dataconatiner">
+                      <div className="textholder">Head Office</div>
+                      <div className="dataholder">
+                        {JSON.stringify(HOnum)}
+                      </div>
+                    </div>
+                  </div>
+                </div></div>
       <div className="FormSet">
         <div className="HeadingWrapper">
-          <h2>ADD Hoffice</h2>
+          <h2>Add Head Office</h2>
         </div>
         <div className="Formhandler">
           <Form
@@ -119,6 +167,7 @@ useEffect(()=>{
               RegisterUser(
                 { ...values, password2: password }
               );
+              setvalues({...values,didNavigate:true})
               }
               
             }}
@@ -379,11 +428,14 @@ useEffect(()=>{
                 </Form.Group>{" "}
               </div>
             </div>
-            <Button type="submit">Submit form</Button>
+            <div className="ButtonWrapper">
+            <Button type="submit">Submit form
+            {performNavigate()}
+            </Button>
+            </div>
           </Form>
         </div>
       </div>
-      {JSON.stringify(values)}
       <FooterC />
     </>
   );
