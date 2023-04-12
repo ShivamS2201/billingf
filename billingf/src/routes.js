@@ -9,7 +9,7 @@ import Notfound from "./Components/notfound";
 import { SalesForm } from "./Components/addComponents/addsales";
 import {HooficeForm} from "./Components/addComponents/addHoffice"
 import { BranchForm } from "./Components/addComponents/addBranch";
-
+import { DistributorForm } from "./Components/addComponents/addDistributor";
 const RoutesD = () =>{
   return(
 
@@ -20,6 +20,7 @@ const RoutesD = () =>{
     <Route path="/register" exact element={<Register />} />
 
     <Route path="/user/dashboard/*" element={<PrivateRoutes component={UserDashboard}/>}/>
+    <Route path="/user/dashboard/register/addDistributor/*" exact element={<PrivateRoutes component={DistributorForm}/>} />
     <Route path="/user/dashboard/register/addsales/*" exact element={<PrivateRoutes component={SalesForm}/>} />
     <Route path="/user/dashboard/register/addHoffice/*" exact element={<PrivateRoutes component={HooficeForm}/>} />
     <Route path="/user/dashboard/register/addBranch/*" exact element={<PrivateRoutes component={BranchForm}/>} />

@@ -94,6 +94,7 @@ export default function SignOut(next) {
 
   if (typeof window !== undefined) {
     localStorage.removeItem("Data");
+    localStorage.removeItem("BillingData")
     console.log("LOGOUT USER successful");
 
     return fetch(`${API}user/logout/${UserID}`, {
@@ -113,15 +114,29 @@ export function RegisterUser(...user) {
   const formDataUser = new FormData();
   const formDataBilling = new FormData();
   // User registeration data as form body
-
+//When registeration is done by owner
+if (user[0].role_id===3){
+  // formDataUser.append("dist_ID_data", user[0].dist_ID_data);
+  formDataUser.append("creator_id", user[0].creator_id);//current user id 
+}
+//When registeration is done by distribtuor
+if (user[0].role_id===4){
+  // formDataUser.append("dist_ID_data", user[0].dist_ID_data);
+  formDataUser.append("owner_id_data",user[0].owner_id_data);
+  formDataUser.append("creator_id", user[0].creator_id);//current user id 
+}
   //When registeration is done by Sales
   if (user[0].role_id===5){
     formDataUser.append("dist_ID_data", user[0].dist_ID_data);
+    formDataUser.append("owner_id_data",user[0].owner_id_data);
+    formDataUser.append("creator_id", user[0].creator_id);//current user id 
   }
   //When registering is done by Head Office
   if (user[0].role_id===6){
     formDataUser.append("dist_ID_data", user[0].dist_ID_data);//dist id for branch
     formDataUser.append("sales_ID_data",user[0].sales_ID_data);// sales id for branch 
+    formDataUser.append("owner_id_data",user[0].owner_id_data);
+    formDataUser.append("creator_id", user[0].creator_id);//current user id 
   }
 
 
@@ -132,7 +147,6 @@ export function RegisterUser(...user) {
   formDataUser.append("first_name", user[0].first_name);
   formDataUser.append("role_id", user[0].role_id);
   formDataUser.append("role_id_of_creator", user[0].role_id_of_creator);
-  formDataUser.append("creator_id", user[0].creator_id);//current user id 
   //Billing INfo data as body
   formDataBilling.append("system_credit",user[0].system_credit );
   formDataBilling.append("sms_credit",user[0].sms_credit );

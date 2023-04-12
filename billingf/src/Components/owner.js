@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Nav } from "react-bootstrap";
 import { Link, Navigate, NavLink } from "react-router-dom";
 import { isAuthenticated } from "../auth/authIndex";
-import "./css/distributor.css";
+import "./css/owner.css";
 import { API } from "../backend";
-import { SalesTable } from "./tables/tablesales";
-import { DistHOtable } from "./tables/distHOtable";
-import { DistBrtable } from "./tables/distBranchtable";
+import { OwnerSalesTable } from "./tables/OwnerSalestable";
+import {OwnerHOTable} from "./tables/OwnerHOtable";
+import {OwnerBrTable} from "./tables/OwnerBrTable";
+import {OwnerDistTable} from "./tables/OwnerDistTable"
 const Owner = () => {
   const [dataholder, changeDataholder] = useState([8]);
+  const [distNum,setDN] = useState(0);
   const [salesNum,setSN] = useState(0);
   const [HONum,setHO] = useState(0);
   const [BrNum,setBr] = useState(0);
@@ -37,9 +39,26 @@ const Owner = () => {
       });
     // set state when the data received
   };
+  const distfetch =async ()=>{
+    return await fetch(
+      `${API}user/register/user/Getbyowner/${isAuthenticated().user.id}/${3}`,
+      { method: "GET" }
+    )
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        setDN(data)
+        return data;
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   const salefetch =async ()=>{
     return await fetch(
-      `${API}user/register/user/Getbydist/${isAuthenticated().user.id}/${4}`,
+      `${API}user/register/user/Getbyowner/${isAuthenticated().user.id}/${4}`,
       { method: "GET" }
     )
       .then((resp) => {
@@ -56,7 +75,7 @@ const Owner = () => {
   }
   const HOfetch =async ()=>{
     return await fetch(
-      `${API}user/register/user/Getbydist/${isAuthenticated().user.id}/${5}`,
+      `${API}user/register/user/Getbyowner/${isAuthenticated().user.id}/${5}`,
       { method: "GET" }
     )
       .then((resp) => {
@@ -73,7 +92,7 @@ const Owner = () => {
   }
   const Branchfetch = async ()=>{
     return await fetch(
-      `${API}user/register/user/Getbydist/${isAuthenticated().user.id}/${6}`,
+      `${API}user/register/user/Getbyowner/${isAuthenticated().user.id}/${6}`,
       { method: "GET" }
     )
       .then((resp) => {
@@ -94,6 +113,7 @@ const Owner = () => {
     salefetch();
     HOfetch();
     Branchfetch();
+    distfetch();
     // fetch data
   }, []);
 
@@ -107,9 +127,8 @@ const Owner = () => {
   }
   function DistributorClick() {
     return states.distributor && <>
-    <br />
-    <br />
-    <br />
+    <hr />
+    <OwnerDistTable/>
     </>;
   }
   function ProfileClick() {
@@ -121,7 +140,7 @@ const Owner = () => {
     return states.sales && <>
     <div>
       <hr />
-       <SalesTable/>
+       <OwnerSalesTable/>
     </div>
     </>;
   }
@@ -129,7 +148,7 @@ const Owner = () => {
     return states.Hoffice && <>
     <div >
       <hr/>
-      <DistHOtable />
+      <OwnerHOTable />
     </div>
     </>;
   }
@@ -137,7 +156,7 @@ const Owner = () => {
     return states.Branch && <>
     <div >
       <hr/>
-      <DistBrtable />
+      <OwnerBrTable />
     </div>
     </>;
   }
@@ -173,6 +192,27 @@ const Owner = () => {
                 </button>
                 <button
                   style={{
+                    backgroundColor: states.profile ? "#2f3192" : "",
+                    color: states.profile ? "white" : "",
+                    borderLeft: states.profile
+                      ? "5px solid #2088cb"
+                      : "",
+                  }}
+                  className="beforeSelect"
+                  onClick={() => {
+                    setstates({
+                        owner:false,
+                      profile: true,
+                      sales: false,
+                      Hoffice: false,
+                      Branch: false,
+                    });
+                  }}
+                >
+                  Profile
+                </button>
+                <button
+                  style={{
                     backgroundColor: states.distributor ? "#2f3192" : "",
                     color: states.distributor ? "white" : "",
                     borderLeft: states.distributor
@@ -192,27 +232,6 @@ const Owner = () => {
                   }}
                 >
                   Distributor
-                </button>
-                <button
-                  style={{
-                    backgroundColor: states.profile ? "#2f3192" : "",
-                    color: states.profile ? "white" : "",
-                    borderLeft: states.profile
-                      ? "5px solid #2088cb"
-                      : "",
-                  }}
-                  className="beforeSelect"
-                  onClick={() => {
-                    setstates({
-                        owner:false,
-                      profile: true,
-                      sales: false,
-                      Hoffice: false,
-                      Branch: false,
-                    });
-                  }}
-                >
-                  Profile
                 </button>
                 <button
                   style={{
@@ -287,7 +306,21 @@ const Owner = () => {
               style={{ display: states.profile ? "none" : "" }}
             >
               <div className="CardGrid">
-                <div className="cards card1">
+              <div className="cards card1">
+                  <div className="cardWrapper">
+                    <div className="imgcontainer">
+                      <i
+                        className="bi bi-person"
+                        style={{ fontSize: "3.8em" }}
+                      ></i>
+                    </div>
+                    <div className="dataconatiner">
+                      <div className="textholder">Distributor</div>
+                      <div className="dataholder">{JSON.stringify(distNum)}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="cards card2">
                   <div className="cardWrapper">
                     <div className="imgcontainer">
                       <i
@@ -303,7 +336,7 @@ const Owner = () => {
                     </div>
                   </div>
                 </div>
-                <div className="cards card2">
+                {/* <div className="cards card2">
                   <div className="cardWrapper">
                     <div className="imgcontainer">
                       <i
@@ -347,7 +380,7 @@ const Owner = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div className="cards card3">
                   <div className="cardWrapper">
                     <div className="imgcontainer">
@@ -381,7 +414,7 @@ const Owner = () => {
           </div>
         </div>
         <div className="tablewrapper">
-            <OwnerClick/>
+          <OwnerClick/>
           <DistributorClick />
           <ProfileClick />
           <SalesClick />
