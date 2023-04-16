@@ -7,6 +7,7 @@ import { API } from "../backend";
 import { SalesTable } from "./tables/tablesales";
 import { DistHOtable } from "./tables/distHOtable";
 import { DistBrtable } from "./tables/distBranchtable";
+import { Updater } from "./updateuser";
 const Distributor = () => {
   const [dataholder, changeDataholder] = useState([8]);
   const [salesNum,setSN] = useState(0);
@@ -105,7 +106,7 @@ const Distributor = () => {
   }
   function ProfileClick() {
     // Profile update form comes here.
-    return states.profile && <>Profile</>;
+    return states.profile && <><Updater/></>;
   }
   function SalesClick() {
     return states.sales && <>
@@ -242,7 +243,8 @@ const Distributor = () => {
               </div>
             </div>
             {states.profile && (
-              <div className="profileWrapper">PROFILE Comes here</div>
+              <div className="profileWrapper"><ProfileClick />
+              </div>
             )}
             <div
               className="cardconatiner"
@@ -344,7 +346,6 @@ const Distributor = () => {
         </div>
         <div className="tablewrapper">
           <DistributorClick />
-          <ProfileClick />
           <SalesClick />
           <HofficeClick />
           <BranchClick />

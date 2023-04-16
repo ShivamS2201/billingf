@@ -28,13 +28,12 @@ also setup a static and media folder in backend.
 ----------------<br>
 <u>To do:8/04/23</u>
 
-1. Build Update,put and <i><u>delete</i></u> api for changing data.&#x2713;
+1. Build Update,put and <i><u>delete</i></u> api for changing data.&#x2713;&#x2713;
 
 2. Make hooks for table to send edit or active status. <b>13/04 PT 7</b>
 
-3. Create css for styling &#x2713;
 
-4. Seek the sms and mail functionality to be used to tie up in frontend and backend along with system messageing Table.
+3. Seek the sms and mail functionality to be used to tie up in frontend and backend along with system messageing Table.
 <br>
  Able to add HO ,BR,SA,and Dist. though forms.&#x2713;
 
@@ -45,7 +44,7 @@ also setup a static and media folder in backend.
  1. Make a base model for making HO and BR masters as their default template is same.
  2. Create another app for handling all banks and HO and BR functionalities as it could be harnessed easily.
  3. implement this functionality in the image for Owner.<img src="../Picture1.png" height=180 width=290>.
- 4. Add the updation functionality for Changing data of users and to update the database. (Need to handle permissions and put constraints.)
- 5. Add sales,dist and HO for each user in tables by creating an extra query in Serializer.
+ 4. Add the updation functionality for Changing data of users and to update the database. (Need to handle permissions and put constraints.)&#x2713;
+ 5. Add sales,dist and HO for each user in tables by creating an extra query in Serializer. &#x2713;
  6. Put a username, and email instant check in forms.
  7. Make hooks for table to send edit or active status. Need!

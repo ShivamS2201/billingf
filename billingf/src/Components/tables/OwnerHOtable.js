@@ -76,6 +76,16 @@ const columns = [
       </div>
     )
   },
+  {
+    sort: true,
+    dataField: "first_name_sales",
+    text: "Sales",
+  },
+  {
+    sort: true,
+    dataField: "first_name_dist",
+    text: "Distributor",
+  },
 ];
 export function OwnerHOTable() {
   let icon1 = require("../../assets/images/icon1.png");

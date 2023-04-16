@@ -88,6 +88,16 @@ export const isAuthenticated = () => {
     return false;
   }
 };
+export const isAuthenticatedBilling = () => {
+  if (typeof window == undefined) {
+    return false;
+  }
+  if (localStorage.getItem("BillingData")) {
+    return JSON.parse(localStorage.getItem("BillingData"));
+  } else {
+    return false;
+  }
+};
 
 export default function SignOut(next) {
   const UserID = isAuthenticated() && isAuthenticated().user.id;
@@ -166,6 +176,7 @@ if (user[0].role_id===4){
   formDataBilling.append("cin_number","12");
   formDataBilling.append("shortname","Hey");
   formDataBilling.append("is_regdealer","true");
+  
 
   return fetch(`${API}user/register`, {
     method: "POST",
@@ -199,4 +210,64 @@ if (user[0].role_id===4){
     .catch((err) => {
       console.log(err);
     });
+}
+
+export async function UpdateUser(user,bill){
+
+  const formDataUser = new FormData();
+  const formDataBill = new FormData();
+
+  formDataUser.append("password",user.password)
+  formDataUser.append("first_name",user.first_name)
+  formDataUser.append("user_name",user.user_name)
+  formDataUser.append("role_id",user.role_id)
+  formDataUser.append("email",user.email)
+  formDataBill.append("landlineNUM",bill.landlineNUM)
+  formDataBill.append("system_credit",bill.system_credit );
+  formDataBill.append("sms_credit",bill.sms_credit );
+  formDataBill.append("whatsapp_credit",bill.whatsapp_credit );
+  formDataBill.append("stateCode",bill.stateCode);
+  formDataBill.append("gstNum",bill.gstNum);
+  formDataBill.append("pan_card",bill.pan_card);
+  formDataBill.append("kyc",bill.kyc);
+  formDataBill.append("reason",bill.reason );
+  formDataBill.append("actual_billQty",bill.actual_billQty); // pass values as they won't have any effect on backend just need to be there reomve or append as per convinece and code.
+  formDataBill.append("edit_status",bill.edit_status);
+  formDataBill.append("reg_dealer_type",bill.reg_dealer_type);
+  formDataBill.append("pin_code",bill.pin_code);
+  formDataBill.append("status_type",bill.status_type);
+  formDataBill.append("cin_number",bill.cin_number);
+  formDataBill.append("shortname",bill.shortname);
+  formDataBill.append("is_regdealer",bill.is_regdealer);
+
+
+  try {
+    const resp = await fetch(`${API}user/update/${user.id}`, {
+      method: "PUT",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data = await resp.json();
+    formDataBill.append("user_id", data);
+    let m = await fetch(`${API}user/update/Bill/${data}`, {
+      method: "PUT",
+      body: formDataBill,
+      headers: { Authorization: null },
+      withCredentials: true,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data_1) => {
+        return data_1;
+      })
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
+    return true;
+  } catch (err_1) {
+    console.log(err_1);
+  }
 }

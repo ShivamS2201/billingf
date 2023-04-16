@@ -6,6 +6,7 @@ import "./css/sales.css";
 import { API } from "../backend";
 import { TableHO } from "./tables/tableHO";
 import { SalesBrtable } from "./tables/salesBranchTable";
+import { Updater } from "./updateuser";
 // Before making add branch remeber to change role id values elese user won't be created
 const Salescomponent = () => {
   const [dataholder, changeDataholder] = useState([8]);
@@ -77,7 +78,7 @@ const Salescomponent = () => {
 
   function ProfileClick() {
     // Profile update form comes here.
-    return states.profile && <>Profile</>;
+    return states.profile && <><Updater/></>;
   }
   function SalesClick() {
     return states.sales && <>
@@ -190,7 +191,8 @@ const Salescomponent = () => {
               </div>
             </div>
             {states.profile && (
-              <div className="profileWrapper">PROFILE Comes here</div>
+              <div className="profileWrapper"><ProfileClick />
+              </div>
             )}
             <div
               className="cardconatiner"
@@ -291,7 +293,6 @@ const Salescomponent = () => {
           </div>
         </div>
         <div className="tablewrapper">
-          <ProfileClick />
           <SalesClick />
           <HofficeClick />
           <BranchClick />

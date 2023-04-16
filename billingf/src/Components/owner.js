@@ -7,7 +7,8 @@ import { API } from "../backend";
 import { OwnerSalesTable } from "./tables/OwnerSalestable";
 import {OwnerHOTable} from "./tables/OwnerHOtable";
 import {OwnerBrTable} from "./tables/OwnerBrTable";
-import {OwnerDistTable} from "./tables/OwnerDistTable"
+import {OwnerDistTable} from "./tables/OwnerDistTable";
+import { Updater } from "./updateuser";
 const Owner = () => {
   const [dataholder, changeDataholder] = useState([8]);
   const [distNum,setDN] = useState(0);
@@ -22,6 +23,7 @@ const Owner = () => {
     Hoffice: false,
     Branch: false,
   });
+ 
   const BillingdataFetch = async () => {
     return await fetch(
       `${API}user/register/bill_info/getd/${isAuthenticated().user.id}`,
@@ -133,7 +135,7 @@ const Owner = () => {
   }
   function ProfileClick() {
     // Profile update form comes here.
-    return states.profile && <>Profile</>;
+    return states.profile && <><Updater/></>;
   }
   //Put a boolean prop for seeing if the user renders has
   function SalesClick() {
@@ -299,7 +301,7 @@ const Owner = () => {
               </div>
             </div>
             {states.profile && (
-              <div className="profileWrapper">PROFILE Comes here</div>
+              <div className="profileWrapper"><ProfileClick/></div>
             )}
             <div
               className="cardconatiner"
@@ -416,7 +418,6 @@ const Owner = () => {
         <div className="tablewrapper">
           <OwnerClick/>
           <DistributorClick />
-          <ProfileClick />
           <SalesClick />
           <HofficeClick />
           <BranchClick />
