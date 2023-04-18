@@ -6,7 +6,7 @@ import "./css/sales.css";
 import { API } from "../backend";
 import { TableHO } from "./tables/tableHO";
 import { SalesBrtable } from "./tables/salesBranchTable";
-import { Updater } from "./updateuser";
+import { Updater } from "./updateuserself";
 // Before making add branch remeber to change role id values elese user won't be created
 const Salescomponent = () => {
   const [dataholder, changeDataholder] = useState([8]);

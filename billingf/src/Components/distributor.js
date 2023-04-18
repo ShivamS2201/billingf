@@ -7,7 +7,7 @@ import { API } from "../backend";
 import { SalesTable } from "./tables/tablesales";
 import { DistHOtable } from "./tables/distHOtable";
 import { DistBrtable } from "./tables/distBranchtable";
-import { Updater } from "./updateuser";
+import { Updater } from "./updateuserself";
 const Distributor = () => {
   const [dataholder, changeDataholder] = useState([8]);
   const [salesNum,setSN] = useState(0);

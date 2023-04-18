@@ -10,6 +10,7 @@ import { SalesForm } from "./Components/addComponents/addsales";
 import {HooficeForm} from "./Components/addComponents/addHoffice"
 import { BranchForm } from "./Components/addComponents/addBranch";
 import { DistributorForm } from "./Components/addComponents/addDistributor";
+import { UpdateMadeUser } from "./Components/updateusermade";
 const RoutesD = () =>{
   return(
 
@@ -24,6 +25,8 @@ const RoutesD = () =>{
     <Route path="/user/dashboard/register/addsales/*" exact element={<PrivateRoutes component={SalesForm}/>} />
     <Route path="/user/dashboard/register/addHoffice/*" exact element={<PrivateRoutes component={HooficeForm}/>} />
     <Route path="/user/dashboard/register/addBranch/*" exact element={<PrivateRoutes component={BranchForm}/>} />
+    <Route path="/user/dashboard/edit/user/:id" exact element={<PrivateRoutes component={UpdateMadeUser}/>} />
+
 
     {/* <PrivateRoutes path="/user/dashboard" exact component={UserDashboard}/> */}
     {/* <Route path="/signup" exact element={<App />}></Route> */}

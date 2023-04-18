@@ -8,7 +8,7 @@ import { OwnerSalesTable } from "./tables/OwnerSalestable";
 import {OwnerHOTable} from "./tables/OwnerHOtable";
 import {OwnerBrTable} from "./tables/OwnerBrTable";
 import {OwnerDistTable} from "./tables/OwnerDistTable";
-import { Updater } from "./updateuser";
+import { Updater } from "./updateuserself";
 const Owner = () => {
   const [dataholder, changeDataholder] = useState([8]);
   const [distNum,setDN] = useState(0);
