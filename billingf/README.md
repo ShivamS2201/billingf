@@ -28,7 +28,7 @@ also setup a static and media folder in backend.
 ----------------<br>
 <u>To do:8/04/23</u>
 
-1. Build Update,put and <i><u>delete</i></u> api for changing data.&#x2713;&#x2713;
+1. Build Update,put and <i><u>delete</i></u> api for changing data.&#x2713;&#x2713;&#x2713;
 
 2. Make hooks for table to send edit or active status. <b>13/04 PT 7</b>
 

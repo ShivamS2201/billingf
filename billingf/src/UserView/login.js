@@ -42,14 +42,14 @@ const LOGIN = () => {
     );
   };
   const errormsg = () => {
-    return (
+    return (error &&
       <div>
         <div
           className="alert alert-danger"
-          style={{ display: error ? "" : "none" }}
+          style={{ display: error ? "contents" : "none" }}
         >
           {" "}
-          {error} caused
+          {error} Login Unsuccessful!
         </div>
       </div>
     );
@@ -123,7 +123,11 @@ const LOGIN = () => {
                           }
                         })
                         .catch((e) => {
-                          console.log(e);
+                          setvalues({...values,error:true,loading:false})
+                          setTimeout(() => {
+                            setvalues({...values,error:false});
+                         }, 3000);
+                          console.log("Error during login",e);
                         });
                     }}
                   >

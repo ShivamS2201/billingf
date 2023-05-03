@@ -2,26 +2,56 @@ import React, { useEffect, useState } from "react";
 import { API } from "../../backend";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
-import { isAuthenticated } from "../../auth/authIndex";
+import Dropdown from "react-bootstrap/Dropdown";
+import { UpdateRY,isAuthenticated } from "../../auth/authIndex";
 import paginationFactory, {
   PaginationListStandalone,
 } from "react-bootstrap-table2-paginator";
-import { Button, Table } from "react-bootstrap";
+import { Button, Form, Table } from "react-bootstrap";
 import "./css/tablesales.css";
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min";
 require("react-bootstrap-table-next/dist/react-bootstrap-table2.min.css");
 
-
 export function OwnerDistTable() {
+  const [TableValue, SetTableValue] = useState();
+  const [sendTableDt,setTableSend] = useState();
+
+  const handleChange = (name,idx)=>(event)=>{
+    if (name === "renew_year") {
+    if (window.confirm(`Renew ${TableValue[idx].first_name} by ${event.target.value} year`)){
+      alert("Changed")
+      UpdateRY({...TableValue[idx], "renew_year":event.target.value})
+    }
+    else{
+      alert("Not changed")
+    }
+}
+}
   const nav = useNavigate();
+  function JdateGet(JD){
+    return new Date(JSON.stringify(JD).slice(0, 11).split("-", 3).join("-")).toLocaleDateString("en-IN")
+  }
+  function getExpiry(dt, rnyr) {
+    const Jdate = new Date(
+      JSON.stringify(dt).slice(0, 11).split("-", 3).join("-")
+    );
+    const Edate = new Date(
+      Jdate.getFullYear() + rnyr,
+      Jdate.getMonth(),
+      Jdate.getDate()
+    );
+
+    return Edate.toLocaleDateString("en-IN");
+  }
 
   const columns = [
     {
       sort: true,
       dataField: "first_name",
       text: "Name",
+      innerWidth:"2px"
     },
     {
       sort: true,
@@ -76,10 +106,23 @@ export function OwnerDistTable() {
       formatter: (cell, row, rowIndex, extraData) => (
         <div>
           <span>
-            {JSON.stringify(row["joining_date"]).slice(1,11).split("-",3).reverse().join("-")}
+            {JSON.stringify(JdateGet(row["joining_date"]))}
           </span>
         </div>
-      )
+      ),
+    },
+    ,
+    {
+      sort: true,
+      dataField: "renew_year",
+      text: "Expiry Date",
+      formatter: (cell, row, rowIndex, extraData) => (
+        <div>
+          <span>
+            {JSON.stringify(getExpiry(row["joining_date"], row["renew_year"]))}
+          </span>
+        </div>
+      ),
     },
     {
       sort: true,
@@ -88,16 +131,64 @@ export function OwnerDistTable() {
       formatter: (cell, row, rowIndex, extraData) => (
         <div>
           <span>
-            {(row["is_active"]===true) &&<>
-            <Button variant="success" >{JSON.stringify(row["is_active"])}</Button>
-            <i className="bi bi-pencil-fill" style={{cursor:"pointer"}} onClick={()=>{nav(`/user/dashboard/edit/user/${row.id}`)}}> </i>
-            </>
-            ||
-            (row["is_active"]===false) &&<>
-            <Button variant="light">{JSON.stringify(row["is_active"])}</Button>
-            <i className="bi bi-pencil-fill" style={{cursor:"pointer"}} onClick={()=>{nav(`/user/dashboard/edit/user/${row.id}`)}}> </i>
-
-            </>}
+            {(row["is_active"] === true && (
+              <div className="tableOptions">
+                <Button variant="success">
+                  {JSON.stringify(row["is_active"])}
+                </Button>
+                <i
+                  className="bi bi-pencil-fill"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    nav(`/user/dashboard/edit/user/${row.id}`);
+                  }}
+                >
+                </i>
+                <Form.Group>
+                  <Form.Select size="sm"
+                    aria-label="Default select example"
+                    value={TableValue.renew_year}
+                    onChange={handleChange("renew_year",rowIndex)}
+                    required
+                  >
+                   <option value="1">Renew</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </Form.Select>
+                </Form.Group>
+              </div>
+            )) ||
+              (row["is_active"] === false && (
+                <div className="tableOptions">
+                  <Button variant="light">
+                    {JSON.stringify(row["is_active"])}
+                  </Button>
+                  <i
+                    className="bi bi-pencil-fill"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      nav(`/user/dashboard/edit/user/${row.id}`);
+                    }}
+                  >
+                    {" "}
+                  </i>
+                  <Form.Group>
+                  <Form.Select size="sm"
+                    aria-label="Default select example"
+                    value={TableValue.renew_year}
+                    onChange={handleChange("renew_year",rowIndex)}
+                    required
+                    title="Renew Year"
+                  >
+                    <option value="1">Renew</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </Form.Select>
+                </Form.Group>
+                </div>
+              ))}
           </span>
         </div>
       ),
@@ -105,11 +196,15 @@ export function OwnerDistTable() {
   ];
   let icon1 = require("../../assets/images/icon1.png");
   let icon2 = require("../../assets/images/icon2.png");
-  const [TableValue, SetTableValue] = useState();
   const DistTableData = async () => {
-    await fetch(`${API}user/register/ownerdistributordata/${isAuthenticated().user.id}/${3}`, {
-      method: "GET",
-    })
+    await fetch(
+      `${API}user/register/ownerdistributordata/${
+        isAuthenticated().user.id
+      }/${3}`,
+      {
+        method: "GET",
+      }
+    )
       .then((resp) => {
         return resp.json();
       })
@@ -148,10 +243,7 @@ export function OwnerDistTable() {
       return null;
     },
   };
-  const rowStyle = { 
-  
-
-};
+  const rowStyle = {};
 
   const options = {
     paginationSize: 2,
@@ -199,12 +291,12 @@ export function OwnerDistTable() {
     <>
       <div className="ButtonTextWrapper">
         <div className="LOS">List of Distributors</div>
-      <div className="ButtonContainer">
+        <div className="ButtonContainer">
           <Link to="/user/dashboard/register/addDistributor">
             <button>Add Distributor</button>
           </Link>
         </div>
-        </div>
+      </div>
 
       {TableValue && (
         <div className="TableContainer" style={{}}>
@@ -214,31 +306,29 @@ export function OwnerDistTable() {
             columns={columns}
             search
           >
-            {
-              (props) => (
-                <div className="TableBarWrapper">
-                  <div className="ButtonSearchCont">
-                    <SearchBar {...props.searchProps} />
-                  </div>
-                  <div className="TableWrapper">
-                    <BootstrapTable
-                      bootstrap4
-                      striped
-                      hover
-                      selectRow={selectRow}
-                      keyField="first_name"
-                      data={TableValue}
-                      columns={columns}
-                      pagination={paginationFactory(options)}
-                      sort={sortOption}
-                      noDataIndication={"Loading..."}
-                      {...props.baseProps}
-                      rowStyle={ rowStyle }
-                    />
-                  </div>
+            {(props) => (
+              <div className="TableBarWrapper">
+                <div className="ButtonSearchCont">
+                  <SearchBar {...props.searchProps} />
                 </div>
-              )
-            }
+                <div className="TableWrapper">
+                  <BootstrapTable
+                    bootstrap4
+                    striped
+                    hover
+                    selectRow={selectRow}
+                    keyField="first_name"
+                    data={TableValue}
+                    columns={columns}
+                    pagination={paginationFactory(options)}
+                    sort={sortOption}
+                    noDataIndication={"Loading..."}
+                    {...props.baseProps}
+                    rowStyle={rowStyle}
+                  />
+                </div>
+              </div>
+            )}
           </ToolkitProvider>
         </div>
       )}
@@ -246,6 +336,5 @@ export function OwnerDistTable() {
   );
 }
 // https://react-bootstrap-table.github.io/react-bootstrap-table2/storybook/index.html?selectedKind=Pagination&selectedStory=Custom%20Pagination%20with%20Search&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%2Factions%2Factions-panel
-              // for making the required type of table with custom pagination and search bar
-              // and hooks to chnages: https://react-bootstrap-table.github.io/react-bootstrap-table2/storybook/index.html?selectedKind=Row%20Selection&selectedStory=Selection%20Hooks&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%2Factions%2Factions-panel
-              
+// for making the required type of table with custom pagination and search bar
+// and hooks to chnages: https://react-bootstrap-table.github.io/react-bootstrap-table2/storybook/index.html?selectedKind=Row%20Selection&selectedStory=Selection%20Hooks&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%2Factions%2Factions-panel

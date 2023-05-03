@@ -167,7 +167,7 @@ export function Updater() {
                   <Form.Label>Email :</Form.Label>
                   <Form.Control
                     value={email}
-                    onChange={handleChange("password")} // add change condition and function call to check for uniqueness from backend.
+                    onChange={handleChange("email")} // add change condition and function call to check for uniqueness from backend.
                     size="sm"
                     type="text"
                     className="form-control"

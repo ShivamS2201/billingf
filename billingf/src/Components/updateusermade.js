@@ -3,54 +3,44 @@ import { Form, Button } from "react-bootstrap";
 import "./css/updateuser.css";
 import SignOut, {
   GetBillingInfo,
-  UpdateUser,
+  UpdateMadeUserRq,
   isAuthenticated,
   isAuthenticatedBilling,SignIn,authenticate
 } from "../auth/authIndex";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Navb from "./navbar";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
+import { API } from "../backend";
+import Loader from "./loader";
 export function UpdateMadeUser(props) {
   const {id} = useParams()
     //Need to set the details as per user data being sent 
   const [success,setSuccess] = useState(false)
-  const [values, setvalues] = useState(isAuthenticated().user); // remove this 
+  const [values, setvalues] = useState("[]"); // remove this 
   const [didNavigate, SetNavigate] = useState(false);
-  const [valuesBill, setBvalues] = useState(isAuthenticatedBilling()); // remove this 
-  // {
-  //     //For User Registeraion
-  //     first_name: "",
-  //     username: "",
-  //     email: "",
-  //     password: "",
-  //     password2: "",
-  //     role_id: 6,// its sales
-  //     dist_ID_data:isAuthenticated().user.distID, // dist that made the sales which made this branch
-  //     role_id_of_creator: isAuthenticated().user.role_id, // 5 i.e head Office
-  //     creator_id:isAuthenticated().user.id, // Current user id
-  //     sales_ID_data:isAuthenticated().user.salesid,
-  //     // For Billing Info
-  //     system_credit: 0,
-  //     sms_credit: 0,
-  //     whatsapp_credit: 0,
-  //     phone: "",
-  //     state: "",
-  //     GSTno: "",
-  //     pancardNo: "",
-  //     KYC_no: "",
-  //     address: "",
-  //     reason: "",
-  //     error: "",
-  //     success: false,
-  //     loading: false,
-  //     didNavigate: false,
-  //   });
+
   const [validated, setValidated] = useState(false);
+
+  const fetchUserMade = async () => {
+    return await fetch(`${API}user/getbyid/userform/${id}`, {
+      method: "GET",
+    })
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        setvalues(data[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
+    fetchUserMade()
     setValidated(false);
     SetNavigate(false);
-  }, [values]);
+  }, []);
   const successmsg = () => {
     return (
       <div>
@@ -64,32 +54,14 @@ export function UpdateMadeUser(props) {
     );
    
   };
-//   const performNavigate = () => {
-//     if (didNavigate) {
-//       SignOut(()=>{
-//         SignIn({ email, password })
-//         .then((data) => {
-//           if (data[0].token) {
-//             authenticate(data, () => {
-//               setvalues({ ...values, didNavigate: true });
-//               setSuccess(true)
-//             });
-//           } else {
-//             setvalues({ ...values, loading: false });
-//           }
-//         })
-//         .catch((e) => {
-//           console.log(e);
-//         });
-//         setTimeout(() => {
-//           setSuccess(false);
-//        }, 5000);
-//      })
+  const performNavigate = () => {
+    if (didNavigate) {
+      console.log("Navigate")
       
-//     }
-//   };
-  const { password, first_name, user_name, email } = values;
-  const { landlineNUM } = valuesBill;
+    }
+  };
+  const {first_name, user_name, email,bill_manage_info__landlineNUM ,bill_manage_info__system_credit,bill_manage_info__system_debit,bill_manage_info__sms_credit,bill_manage_info__sms_debit,bill_manage_info__whatsapp_credit,bill_manage_info__whatsapp_debit,bill_manage_info__reason,bill_manage_info__kyc,bill_manage_info__gstNum,bill_manage_info__pan_card,password,bill_manage_info__stateCode} = values;
+  
   const Tool =()=>{
     const renderTooltip = (props) => (
       <Tooltip id="button-tooltip" {...props}>
@@ -106,32 +78,55 @@ export function UpdateMadeUser(props) {
     )
   }
   const handleChange = (name) => (event) => {
-    if (name === "sms_credit") {
-      if (event.target.value > GetBillingInfo().sms_credit) {
+    if (name === "bill_manage_info__sms_debit") {
+      if (event.target.value < bill_manage_info__sms_credit) {
         setvalues({
           ...values,
           error: false,
-          [name]: event.target.value === GetBillingInfo().sms_credit,
+          [name]: event.target.value === bill_manage_info__sms_debit,
         });
       }
     }
 
-    if (name === "landlineNUM") {
+    if (name === "bill_manage_info__system_debit") {
+      if (event.target.value > bill_manage_info__system_debit) {
+        setvalues({
+          ...values,
+          error: false,
+          [name]: event.target.value === bill_manage_info__system_debit,
+        });
+      }
+    }
+    if (name === "bill_manage_info__whatsapp_debit") {
+      if (event.target.value > bill_manage_info__whatsapp_debit) {
+        setvalues({
+          ...values,
+          error: false,
+          [name]: event.target.value === bill_manage_info__whatsapp_debit,
+        });
+      }
+    }
+
+    if (name === "bill_manage_info__landlineNUM") {
       if (
         event.target.value.slice(0) <= 9 ||
         event.target.value.slice(0) >= 0
       ) {
-        setBvalues({
-          ...valuesBill,
-          error: false,
-          [name]: event.target.value.slice(0, 10),
-        });
+       setvalues({ ...values, error: false,[name]: event.target.value.slice(0, 10)});
       }
     } else {
       setvalues({ ...values, error: false, [name]: event.target.value });
     }
+    if (name === "password"){
+      setvalues({...values,error:false,[name]:event.target.value});
+    }
   };
   return (
+    values === "[]" &&<>
+    <Loader/>
+    </>
+    ||
+    values !=="[]" &&
     <>
     <Navb/>
     {successmsg()}
@@ -142,26 +137,27 @@ export function UpdateMadeUser(props) {
             validated={validated}
             onSubmit={(event) => {
               const form = event.currentTarget;
-              // if (form.checkValidity() === false) {
-              //   event.preventDefault();
-              //   event.stopPropagation();
-              // } else {
-              //   event.preventDefault();
-              //   setValidated(true);
-              //   UpdateUser(values, valuesBill)
-              //     .then((response) => {
-              //       return response;
-              //     })
-              //     .then((data_1) => {
-              //       if (data_1) {
-              //         SetNavigate(true);
-              //       }
-              //       return data_1;
-              //     })
-              //     .catch((err) => {
-              //       console.log(err);
-              //     });
-              // }
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              } else {
+                event.preventDefault();
+                setValidated(true);
+                console.log(values)
+                UpdateMadeUserRq(values)
+                  .then((response) => {
+                    return response;
+                  })
+                  .then((data_1) => {
+                    if (data_1) {
+                      console.log(data_1)
+                    }
+                    return data_1;
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }
             }}
           >
             <div className="parent">
@@ -170,7 +166,7 @@ export function UpdateMadeUser(props) {
                   <Form.Label>Email :</Form.Label>
                   <Form.Control
                     value={email}
-                    onChange={handleChange("password")} // add change condition and function call to check for uniqueness from backend.
+                    onChange={handleChange("email")} // add change condition and function call to check for uniqueness from backend.
                     size="sm"
                     type="text"
                     className="form-control"
@@ -196,7 +192,7 @@ export function UpdateMadeUser(props) {
                     required
                   />
                   <Form.Control.Feedback type="invalid">
-                    Unique Email Required{" "}
+                    Need Password
                   </Form.Control.Feedback>
                 </Form.Group>
               </div>
@@ -238,8 +234,8 @@ export function UpdateMadeUser(props) {
                 <Form.Group>
                   <Form.Label>Phone</Form.Label>
                   <Form.Control
-                    value={landlineNUM}
-                    onChange={handleChange("landlineNUM")}
+                    value={bill_manage_info__landlineNUM}
+                    onChange={handleChange("bill_manage_info__landlineNUM")}
                     size="sm"
                     type="username"
                     placeholder="Phone"
@@ -251,13 +247,149 @@ export function UpdateMadeUser(props) {
                   </Form.Control.Feedback>
                 </Form.Group>
               </div>
+              <div className="pad div6">
+                <Form.Group>
+                  <Form.Label>System(Credit - <span style={{color:"green"}}>{bill_manage_info__system_credit}</span>)</Form.Label>
+                  <Form.Control
+                    value={bill_manage_info__system_debit}
+                    onChange={handleChange("bill_manage_info__system_debit")} // add change condition and function call to check for uniqueness from backend.
+                    size="sm"
+                    type="text"
+                    className="form-control"
+                    placeholder="System debit"
+                    isInvalid = {bill_manage_info__system_debit > bill_manage_info__system_credit}
+
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Debit cannot be more than credit
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+              <div className="pad div7">
+                <Form.Group>
+                  <Form.Label>SMS(Credit - <span style={{color:"green"}}>{bill_manage_info__sms_credit}</span>)</Form.Label>
+                  <Form.Control
+                    value={bill_manage_info__sms_debit}
+                    onChange={handleChange("bill_manage_info__sms_debit")} // add change condition and function call to check for uniqueness from backend.
+                    size="sm"
+                    type="text"
+                    className="form-control"
+                    placeholder="SMS debit"
+                    isInvalid = {bill_manage_info__sms_debit > bill_manage_info__sms_credit}
+
+                  />
+                   <Form.Control.Feedback type="invalid">
+                      Debit cannot be more than credit
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+              <div className="pad div8">
+                <Form.Group>
+                  <Form.Label>Whatsapp(Credit - <span style={{color:"green"}}>{bill_manage_info__whatsapp_credit}</span>)</Form.Label>
+                  <Form.Control
+                    value={bill_manage_info__whatsapp_debit}
+                    onChange={handleChange("bill_manage_info__whatsapp_debit")} // add change condition and function call to check for uniqueness from backend.
+                    size="sm"
+                    type="text"
+                    className="form-control"
+                    placeholder="Whatsapp Debit"
+                    isInvalid = {bill_manage_info__whatsapp_debit > bill_manage_info__whatsapp_credit}
+
+                  />
+                  <Form.Control.Feedback type="invalid">
+                  Debit cannot be more than credit
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+              <div className="pad div9">
+                <Form.Group>
+                  <Form.Label>GST No. :</Form.Label>
+                  <Form.Control
+                    value={bill_manage_info__gstNum}
+                    onChange={handleChange("bill_manage_info__gstNum")} // add change condition and function call to check for uniqueness from backend.
+                    size="sm"
+                    type="text"
+                    className="form-control"
+                    placeholder="GST No."
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Unique Email Required{" "}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+              <div className="pad div10">
+                <Form.Group>
+                  <Form.Label>State Code :</Form.Label>
+                  <Form.Select
+                    aria-label="Default select example"
+                    value={bill_manage_info__stateCode}
+                    onChange={handleChange("bill_manage_info__stateCode")}
+                    isInvalid={values.state === ""}
+                    isValid={values.state !== ""}
+                    required
+                  >
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </Form.Select>
+                </Form.Group>
+              </div>
+              <div className="pad div11">
+                <Form.Group>
+                  <Form.Label>Pan Card No. :</Form.Label>
+                  <Form.Control
+                    value={bill_manage_info__pan_card}
+                    onChange={handleChange("bill_manage_info__pan_card")} // add change condition and function call to check for uniqueness from backend.
+                    size="sm"
+                    type="text"
+                    className="form-control"
+                    placeholder="Pan card Number"
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Unique Email Required{" "}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+              <div className="pad div12">
+                <Form.Group>
+                  <Form.Label>KYC No. :</Form.Label>
+                  <Form.Control
+                    value={bill_manage_info__kyc}
+                    onChange={handleChange("bill_manage_info__kyc")} // add change condition and function call to check for uniqueness from backend.
+                    size="sm"
+                    type="text"
+                    className="form-control"
+                    placeholder="KYC Number"
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Unique Email Required{" "}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+              <div className="pad div13">
+                <Form.Group>
+                  <Form.Label>Reason :</Form.Label>
+                  <Form.Control
+                    value={bill_manage_info__reason}
+                    onChange={handleChange("bill_manage_info__reason")} // add change condition and function call to check for uniqueness from backend.
+                    size="sm"
+                    type="text"
+                    className="form-control"
+                    placeholder="Reason"
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Unique Email Required{" "}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
               <div
-                className="pad div6"
+                className="pad div14"
                 style={{ textAlign: "center", marginTop: "25px" }}
               >
                 <Button type="submit">Update</Button>
               </div>
             </div>
+            {JSON.stringify(values)}
           </Form>
         </div>
       </div>

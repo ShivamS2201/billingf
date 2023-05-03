@@ -75,13 +75,14 @@ export function DistributorForm() {
   } = values;
   const distfetch =async ()=>{
     return await fetch(
-      `${API}user/register/user/Getbyowner/${isAuthenticated().user.owner_id}/${3}`,
+      `${API}user/register/user/Getbyowner/${isAuthenticated().user.id}/${3}`,
       { method: "GET" }
     )
       .then((resp) => {
         return resp.json();
       })
       .then((data) => {
+        console.log(data)
         setSN(data)
         return data;
 
@@ -100,7 +101,7 @@ export function DistributorForm() {
         setvalues({
           ...values,
           error: false,
-          [name]: event.target.value === GetBillingInfo().sms_credit,
+          [name]: event.target.value,
         });
       }
     }
@@ -134,7 +135,7 @@ export function DistributorForm() {
                       ></i>
                     </div>
                     <div className="dataconatiner">
-                      <div className="textholder">Sales</div>
+                      <div className="textholder">Distributor</div>
                       <div className="dataholder">
                         {JSON.stringify(salesNum)}
                       </div>

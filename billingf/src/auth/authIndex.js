@@ -132,7 +132,7 @@ if (user[0].role_id===3){
 //When registeration is done by distribtuor
 if (user[0].role_id===4){
   // formDataUser.append("dist_ID_data", user[0].dist_ID_data);
-  formDataUser.append("owner_id_data",user[0].owner_id_data);
+  formDataUser.append("owner_id_data",user[0].owner_id_data); // id of owner
   formDataUser.append("creator_id", user[0].creator_id);//current user id 
 }
   //When registeration is done by Sales
@@ -211,7 +211,94 @@ if (user[0].role_id===4){
       console.log(err);
     });
 }
+export async function UpdateMadeUserRq(user){
+  const formDataUser = new FormData();
+  const formDataBill = new FormData();
 
+  formDataUser.append("password",user.password)
+  formDataUser.append("first_name",user.first_name)
+  formDataUser.append("user_name",user.user_name)
+  formDataUser.append("role_id",user.role_id)
+  formDataUser.append("email",user.email)
+  formDataUser.append("role_id",user.role_id)
+
+  formDataBill.append("user_id",user.id)
+  formDataBill.append("landlineNUM",user.bill_manage_info__landlineNUM)
+  formDataBill.append("system_credit",user.bill_manage_info__system_credit );
+  formDataBill.append("system_debit",user.bill_manage_info__system_debit);
+  formDataBill.append("sms_credit",user.bill_manage_info__sms_credit );
+  formDataBill.append("sms_debit",user.bill_manage_info__sms_debit );
+  formDataBill.append("whatsapp_credit",user.bill_manage_info__whatsapp_credit );
+  formDataBill.append("whatsapp_debit",user.bill_manage_info__whatsapp_debit );
+  formDataBill.append("stateCode",user.bill_manage_info__stateCode);
+  formDataBill.append("gstNum",user.bill_manage_info__gstNum);
+  formDataBill.append("pan_card",user.bill_manage_info__pan_card);
+  formDataBill.append("kyc",user.bill_manage_info__kyc);
+  formDataBill.append("reason",user.bill_manage_info__reason );
+  formDataBill.append("actual_billQty",user.bill_manage_info__actual_billQty); // pass values as they won't have any effect on backend just need to be there reomve or append as per convinece and code.
+  formDataBill.append("edit_status",user.bill_manage_info__edit_status);
+  formDataBill.append("reg_dealer_type",user.bill_manage_info__reg_dealer_type);
+  formDataBill.append("pin_code",user.bill_manage_info__pin_code);
+  formDataBill.append("status_type",user.bill_manage_info__status_type);
+  formDataBill.append("cin_number",user.bill_manage_info__cin_number);
+  formDataBill.append("shortname",user.bill_manage_info__shortname);
+  formDataBill.append("is_regdealer",user.bill_manage_info__is_regdealer);
+
+
+  try {
+    const resp = await fetch(`${API}user/update/${user.id}`, {
+      method: "PUT",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data = await resp.json();
+    let m = await fetch(`${API}user/update/Bill/${user.id}`, {
+      method: "PUT",
+      body: formDataBill,
+      headers: { Authorization: null },
+      withCredentials: true,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data_1) => {
+        return data_1;
+      })
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
+    return true;
+  }catch (err_1) {
+    console.log(err_1);
+  }
+
+}
+export async function UpdateRY(user){
+  const formDataUser = new FormData();
+
+  formDataUser.append("password",user.password)
+  formDataUser.append("first_name",user.first_name)
+  // formDataUser.append("user_name",user.user_name)
+  formDataUser.append("role_id",user.role_id)
+  formDataUser.append("email",user.email)
+  formDataUser.append("role_id",user.role_id)
+  formDataUser.append("renew_year",user.renew_year)
+  console.log(user)
+  try {
+    const resp = await fetch(`${API}user/update/${user.id}`, {
+      method: "PUT",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    return resp.json();
+  }catch (err_1) {
+    console.log(err_1);
+  }
+
+}
 export async function UpdateUser(user,bill){
 
   const formDataUser = new FormData();
@@ -222,6 +309,7 @@ export async function UpdateUser(user,bill){
   formDataUser.append("user_name",user.user_name)
   formDataUser.append("role_id",user.role_id)
   formDataUser.append("email",user.email)
+
   formDataBill.append("landlineNUM",bill.landlineNUM)
   formDataBill.append("system_credit",bill.system_credit );
   formDataBill.append("sms_credit",bill.sms_credit );
