@@ -76,6 +76,22 @@ const columns = [
       </div>
     )
   },
+  {
+    sort: true,
+    dataField: "first_name_HO",
+    text: "Head Office",
+  },
+  {
+    sort: true,
+    dataField: "first_name_sales",
+    text: "Sales",
+  },
+  {
+    sort: true,
+    dataField: "first_name_dist",
+    text: "Distributor",
+  },
+  
 ];
 export function DistBrtable() {
   let icon1 = require("../../assets/images/icon1.png");
@@ -83,7 +99,7 @@ export function DistBrtable() {
 
   const [TableValue, SetTableValue] = useState();
   const SalesTableData = async () => {
-    await fetch(`${API}user/register/salesdata/${isAuthenticated().user.id}/6`, {
+    await fetch(`${API}user/register/distBrdata/${isAuthenticated().user.id}/6`, {
       method: "GET",
     })
       .then((resp) => {

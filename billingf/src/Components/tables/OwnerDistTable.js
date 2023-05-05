@@ -3,7 +3,7 @@ import { API } from "../../backend";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import Dropdown from "react-bootstrap/Dropdown";
-import { UpdateRY,isAuthenticated } from "../../auth/authIndex";
+import { JdateGet, UpdateRY,getExpiry,isAuthenticated } from "../../auth/authIndex";
 import paginationFactory, {
   PaginationListStandalone,
 } from "react-bootstrap-table2-paginator";
@@ -16,7 +16,6 @@ require("react-bootstrap-table-next/dist/react-bootstrap-table2.min.css");
 
 export function OwnerDistTable() {
   const [TableValue, SetTableValue] = useState();
-  const [sendTableDt,setTableSend] = useState();
 
   const handleChange = (name,idx)=>(event)=>{
     if (name === "renew_year") {
@@ -30,22 +29,6 @@ export function OwnerDistTable() {
 }
 }
   const nav = useNavigate();
-  function JdateGet(JD){
-    return new Date(JSON.stringify(JD).slice(0, 11).split("-", 3).join("-")).toLocaleDateString("en-IN")
-  }
-  function getExpiry(dt, rnyr) {
-    const Jdate = new Date(
-      JSON.stringify(dt).slice(0, 11).split("-", 3).join("-")
-    );
-    const Edate = new Date(
-      Jdate.getFullYear() + rnyr,
-      Jdate.getMonth(),
-      Jdate.getDate()
-    );
-
-    return Edate.toLocaleDateString("en-IN");
-  }
-
   const columns = [
     {
       sort: true,

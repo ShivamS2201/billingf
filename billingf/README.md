@@ -48,3 +48,8 @@ also setup a static and media folder in backend.
  5. Add sales,dist and HO for each user in tables by creating an extra query in Serializer. &#x2713;
  6. Put a username, and email instant check in forms.
  7. Make hooks for table to send edit or active status. Need!
+
+
+Change The credit debit logi in backend to see count the numbers and allow access
+
+Also give add capability and make logic according ot the is _active status

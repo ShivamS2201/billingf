@@ -281,7 +281,6 @@ export async function UpdateRY(user){
   formDataUser.append("password",user.password)
   formDataUser.append("first_name",user.first_name)
   // formDataUser.append("user_name",user.user_name)
-  formDataUser.append("role_id",user.role_id)
   formDataUser.append("email",user.email)
   formDataUser.append("role_id",user.role_id)
   formDataUser.append("renew_year",user.renew_year)
@@ -358,4 +357,20 @@ export async function UpdateUser(user,bill){
   } catch (err_1) {
     console.log(err_1);
   }
+}
+
+export function JdateGet(JD){
+  return new Date(JSON.stringify(JD).slice(0, 11).split("-", 3).join("-")).toLocaleDateString("en-IN")
+}
+export function getExpiry(dt, rnyr) {
+  const Jdate = new Date(
+    JSON.stringify(dt).slice(0, 11).split("-", 3).join("-")
+  );
+  const Edate = new Date(
+    Jdate.getFullYear() + rnyr,
+    Jdate.getMonth(),
+    Jdate.getDate()
+  );
+
+  return Edate.toLocaleDateString("en-IN");
 }

@@ -76,6 +76,16 @@ const columns = [
       </div>
     )
   },
+  {
+    sort: true,
+    dataField: "first_name_sales",
+    text: "Sales",
+  },
+  {
+    sort: true,
+    dataField: "first_name_dist",
+    text: "Distributor",
+  },
 ];
 export function DistHOtable() {
   let icon1 = require("../../assets/images/icon1.png");
@@ -83,7 +93,7 @@ export function DistHOtable() {
 
   const [TableValue, SetTableValue] = useState();
   const SalesTableData = async () => {
-    await fetch(`${API}user/register/salesdata/${isAuthenticated().user.id}/5`, {
+    await fetch(`${API}user/register/distHOdata/${isAuthenticated().user.id}/5`, {
       method: "GET",
     })
       .then((resp) => {
