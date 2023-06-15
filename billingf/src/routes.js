@@ -11,6 +11,20 @@ import {HooficeForm} from "./Components/addComponents/addHoffice"
 import { BranchForm } from "./Components/addComponents/addBranch";
 import { DistributorForm } from "./Components/addComponents/addDistributor";
 import { UpdateMadeUser } from "./Components/updateusermade";
+import {MasterRoute } from "./MasterComponents/bank";
+import { Transport } from "./MasterComponents/transport";
+import { Stock } from "./MasterComponents/stock";
+import { Adjustment } from "./MasterComponents/adjustment";
+import { SaleR } from "./MasterComponents/sale";
+import { Receipt } from "./MasterComponents/receipt";
+import { Purchase } from "./MasterComponents/purchase";
+import { Production } from "./MasterComponents/production";
+import { Place } from "./MasterComponents/place";
+import { Payements } from "./MasterComponents/payment";
+import { Customer } from "./MasterComponents/customer";
+import { Master } from "./MasterComponents/master";
+import { CDebit } from "./MasterComponents/CDebit";
+
 const RoutesD = () =>{
   return(
 
@@ -18,14 +32,28 @@ const RoutesD = () =>{
     <Routes>
     <Route path="/" exact element={<LOGIN />}></Route>
     <Route path="/signin" exact element={<LOGIN />} />
-    <Route path="/register" exact element={<Register />} />
-
+    <Route path="*" exact element={<Notfound/>} />
     <Route path="/user/dashboard/*" element={<PrivateRoutes component={UserDashboard}/>}/>
     <Route path="/user/dashboard/register/addDistributor/*" exact element={<PrivateRoutes component={DistributorForm}/>} />
     <Route path="/user/dashboard/register/addsales/*" exact element={<PrivateRoutes component={SalesForm}/>} />
     <Route path="/user/dashboard/register/addHoffice/*" exact element={<PrivateRoutes component={HooficeForm}/>} />
     <Route path="/user/dashboard/register/addBranch/*" exact element={<PrivateRoutes component={BranchForm}/>} />
     <Route path="/user/dashboard/edit/user/:id" exact element={<PrivateRoutes component={UpdateMadeUser}/>} />
+
+    <Route path="/user/dashboard/headOffice/bank/*" exact element={<PrivateRoutes component={MasterRoute}/>} />
+    <Route path="/user/dashboard/headOffice/payment/*" exact element={<PrivateRoutes component={Payements}/>} />
+    <Route path="/user/dashboard/headOffice/master/*" exact element={<PrivateRoutes component={Master}/>} />
+    <Route path="/user/dashboard/headOffice/customer/*" exact element={<PrivateRoutes component={Customer}/>} />
+    <Route path="/user/dashboard/headOffice/stock/*" exact element={<PrivateRoutes component={Stock}/>} />
+    <Route path="/user/dashboard/headOffice/receipt/*" exact element={<PrivateRoutes component={Receipt}/>} />
+    <Route path="/user/dashboard/headOffice/place/*" exact element={<PrivateRoutes component={Place}/>} />
+    <Route path="/user/dashboard/headOffice/sale/*" exact element={<PrivateRoutes component={SaleR}/>} />
+    <Route path="/user/dashboard/headOffice/transport/*" exact element={<PrivateRoutes component={Transport}/>} />
+    <Route path="/user/dashboard/headOffice/purchase/*" exact element={<PrivateRoutes component={Purchase}/>} />
+    <Route path="/user/dashboard/headOffice/production/*" exact element={<PrivateRoutes component={Production}/>} />
+    <Route path="/user/dashboard/headOffice/adjustment/*" exact element={<PrivateRoutes component={Adjustment}/>} />
+    <Route path="/user/dashboard/headOffice/creddeb/*" exact element={<PrivateRoutes component={CDebit}/>} />
+
 
 
     {/* <PrivateRoutes path="/user/dashboard" exact component={UserDashboard}/> */}

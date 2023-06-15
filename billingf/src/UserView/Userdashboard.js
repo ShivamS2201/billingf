@@ -41,7 +41,7 @@ const UserDashboard = (props)=>{
         ||
         headOffice &&<div>
             <div className="name__top">Welcome to Head Office {isAuthenticated().user.first_name}</div>
-            <Navb component={<SignoutNav />}/>
+            <Navb component={<SignoutNav />} state = {"headOffice"}/>
             <HeadOfficeComponent/>
             <FooterC/>
             {/* Set up compoenwts for all roles separately and bring about functionalities */}
@@ -50,7 +50,7 @@ const UserDashboard = (props)=>{
         ||
         Branch &&<div>
             <div className="name__top">Welcome to Branch {isAuthenticated().user.first_name}</div>
-            <Navb component={<SignoutNav />}/>
+            <Navb component={<SignoutNav />} state = {"Branch"} />
             {/* Set up compoenwts for all roles separately and bring about functionalities */}
 
         </div>

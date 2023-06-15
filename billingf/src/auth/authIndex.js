@@ -24,37 +24,34 @@ export const GetRole = (roleID) => {
     return { ...role, Cust: true };
   }
 };
-export const SignIn = (user) => {
+export const SignIn = async (user) => {
   const formData = new FormData();
   for (const name in user) {
+    console.log(name,user[name])
     formData.append(name, user[name]);
   }
-  return fetch(`${API}user/login/`, {
-    method: "POST",
-    body: formData,
-    headers: { Authorization: null },
-    withCredentials: true,
-  })
-    .then((resp) => {
-      return resp.json();
-    })
-    .then(async (data) => {
-      let m = await fetch(`${API}user/register/bill_info/getd/${data.user.id}`)
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          return data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      return [data, m];
-    })
-    .catch((err) => {
-      console.log(err);
+  try {
+    const resp = await fetch(`${API}user/login/`, {
+      method: "POST",
+      body: formData,
+      headers: { Authorization: null },
+      withCredentials: true,
     });
+    const data_1 = await resp.json();
+    let m = await fetch(`${API}user/register/bill_info/getd/${data_1.user.id}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data_2) => {
+        return data_2;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return await [data_1, m];
+  } catch (err_1) {
+    console.log(err_1);
+  }
 }; // Returns a token to sign in the user and calls for user info and bill info, which is later used to do multiple tasks,like:
 // Add sales, show Number in credits and debits.
 

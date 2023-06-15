@@ -1,229 +1,218 @@
 import React, { useEffect, useState } from "react";
-import { Nav } from "react-bootstrap";
-import { Link, Navigate, NavLink } from "react-router-dom";
-import { isAuthenticated } from "../auth/authIndex";
-import "./css/distributor.css";
-import { API } from "../backend";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import "./css/heado.css";
+import Carousel from "react-bootstrap/Carousel";
+import Card from "react-bootstrap/Card";
+import { Stack } from "react-bootstrap";
+import { Link } from "react-router-dom";
+
 // Before making add branch remeber to change role id values elese user won't be created
 const HeadOfficeComponent = () => {
-  const [dataholder, changeDataholder] = useState([8]);
-  const [states, setstates] = useState({
-    profile: false,
-    Hoffice: true,
-    Branch: false,
-  });
-  const dataFetch = async () => {
-    return await fetch(
-      `${API}user/register/bill_info/getd/${isAuthenticated().user.id}`,
-      { method: "GET" }
-    )
-      .then((resp) => {
-        return resp.json();
-      })
-      .then((data) => {
-        changeDataholder(data[0]);
-        return data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    // set state when the data received
-  };
-  useEffect(() => {
-    dataFetch();
-    // fetch data
-  }, []);
-
-  function ProfileClick() {
-    // Profile update form comes here.
-    return states.profile && <>Profile</>;
-  }
-  function HofficeClick() {
-    return states.Hoffice && <>Sales Table
-    <div>
-    <Link to="/user/dashboard/register/addBranch">
-      <button>
-       Add Branch</button></Link>
-    </div>
-    </>;
-  }
-  function BranchClick() {
-    return states.Branch && <>Branch Table</>;
-  }
   return (
     <>
-      <div className="distributorWrapper">
-        <div className="buttoncontentwrapper">
-          <div className="flexContainer">
-            <div className="buttoncontainer">
-              <div className="buttonwrapper">
-                <button
-                  style={{
-                    backgroundColor: states.profile ? "#2f3192" : "",
-                    color: states.profile ? "white" : "",
-                    borderLeft: states.profile
-                      ? "5px solid #2088cb"
-                      : "",
-                  }}
-                  className="beforeSelect"
-                  onClick={() => {
-                    setstates({
-                      profile: true,
-                      Hoffice: false,
-                      Branch: false,
-                    });
-                  }}
-                >
-                  Profile
-                </button>
-                <button
-                  style={{
-                    backgroundColor: states.Hoffice ? "#2f3192" : "",
-                    color: states.Hoffice ? "white" : "",
-                    borderLeft: states.Hoffice
-                      ? "5px solid #2088cb"
-                      : "",
-                  }}
-                  className="beforeSelect"
-                  onClick={() => {
-                    setstates({
-                      Hoffice: true,
-                      profile: false,
-                      Branch: false,
-                    });
-                  }}
-                >
-                  Head Office
-                </button>
-                <button
-                  style={{
-                    backgroundColor: states.Branch ? "#2f3192" : "",
-                    color: states.Branch ? "white" : "",
-                    borderLeft: states.Branch
-                      ? "5px solid #2088cb"
-                      : "",
-                  }}
-                  className="beforeSelect"
-                  onClick={() => {
-                    setstates({
-                      Branch: true,
-                      profile: false,
-                      Hoffice: false,
-                    });
-                  }}
-                >
-                  Branch
-                </button>
-              </div>
-            </div>
-            {states.profile && (
-              <div className="profileWrapper">PROFILE Comes here</div>
-            )}
-            <div
-              className="cardconatiner"
-              style={{ display: states.profile ? "none" : "" }}
-            >
-              <div className="CardGrid">
-                <div className="cards card1">
-                  <div className="cardWrapper">
-                    <div className="imgcontainer">
-                      <i
-                        className="bi bi-person"
-                        style={{ fontSize: "3.8em" }}
-                      ></i>
-                    </div>
-                    <div className="dataconatiner">
-                      <div className="textholder">Sales</div>
-                      <div className="dataholder">
-                        {JSON.stringify(dataholder.sms_credit)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="cards card2">
-                  <div className="cardWrapper">
-                    <div className="imgcontainer">
-                      <i
-                        className="bi bi-person"
-                        style={{ fontSize: "3.8em" }}
-                      ></i>
-                    </div>
-                    <div className="dataconatiner">
-                      <div
-                        className="dataconatinerMSG"
-                        style={{ display: "flex" }}
-                      >
-                        <div className="textholdermsg">
-                          SYSTEM ({JSON.stringify(dataholder.system_credit)})
-                        </div>
-                        <div className="dataholdermsg">
-                          {JSON.stringify(dataholder.system_debit)}
-                        </div>
-                      </div>
-                      <div
-                        className="dataconatinerMSG"
-                        style={{ display: "flex" }}
-                      >
-                        <div className="textholdermsg">
-                          SMS ({JSON.stringify(dataholder.sms_credit)})
-                        </div>
-                        <div className="dataholdermsg">
-                          {JSON.stringify(dataholder.sms_debit)}
-                        </div>
-                      </div>
-                      <div
-                        className="dataconatinerMSG"
-                        style={{ display: "flex" }}
-                      >
-                        <div className="textholdermsg">
-                          Whatsup ({JSON.stringify(dataholder.whatsapp_credit)})
-                        </div>
-                        <div className="dataholdermsg">
-                          {JSON.stringify(dataholder.whatsapp_debit)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="cards card3">
-                  <div className="cardWrapper">
-                    <div className="imgcontainer">
-                      <i
-                        className="bi bi-person"
-                        style={{ fontSize: "3.8em" }}
-                      ></i>
-                    </div>
-                    <div className="dataconatiner">
-                      <div className="textholder">Head Office</div>
-                      <div className="dataholder">{JSON.stringify(9)}</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="cards card4">
-                  <div className="cardWrapper">
-                    <div className="imgcontainer">
-                      <i
-                        className="bi bi-person"
-                        style={{ fontSize: "3.8em" }}
-                      ></i>
-                    </div>
-                    <div className="dataconatiner">
-                      <div className="textholder">Branch</div>
-                      <div className="dataholder">{JSON.stringify(9)}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="tablewrapper">
-          Table
-          <ProfileClick />
-          <HofficeClick />
-          <BranchClick />
+      <div className="DashContainer">
+        <div className="DashboardBar">
+          <h3>Dashboard</h3>
         </div>
       </div>
+      <Container style={{ maxWidth: "100vw" }}>
+        <Row xs={2} md={4} lg={6}>
+          <Col id="col1">
+            <Carousel>
+              <Carousel.Item>
+                <Stack direction="horizontal" gap={3}>
+                  <Card style={{ width: "13rem", display: "table-cell" }}>
+                    <Card.Body id="card1">
+                      <Row id="cardHolder">
+                        <Col id="iconHolder">
+                          <i className="bi bi-cart3"></i>
+                        </Col>
+                        <Col id="dataholder">
+                          <Row id="nameH">Purchase</Row>
+                          <Row id="numH">8</Row>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                  <Card style={{ width: "13rem", display: "table-cell" }}>
+                    <Card.Body id="card1">
+                      <Row id="cardHolder">
+                        <Col id="iconHolder">
+                          <i className="bi bi-people-fill"></i>
+                        </Col>
+                        <Col id="dataholder">
+                          <Row id="nameH">Customer</Row>
+                          <Row id="numH">8</Row>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                </Stack>
+              </Carousel.Item>
+              <Carousel.Item>
+                <Stack direction="horizontal" gap={3}>
+                  <Card style={{ width: "13rem", display: "table-cell" }}>
+                    <Card.Body id="card1">
+                      <Row id="cardHolder">
+                        <Col id="iconHolder">
+                          <i className="bi bi-gift-fill"></i>
+                        </Col>
+                        <Col id="dataholder">
+                          <Row id="nameH">Stock</Row>
+                          <Row id="numH">8</Row>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                  <Card style={{ width: "13rem", display: "table-cell" }}>
+                    <Card.Body id="card1">
+                      <Row id="cardHolder">
+                        <Col id="iconHolder">
+                          <i className="bi bi-car-front-fill"></i>
+                        </Col>
+                        <Col id="dataholder">
+                          <Row id="nameH">Vehicle</Row>
+                          <Row id="numH">8</Row>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                </Stack>
+              </Carousel.Item>
+              <Carousel.Item>
+                <Stack direction="horizontal" gap={3}>
+                  <Card style={{ width: "13rem", display: "table-cell" }}>
+                    <Card.Body id="card1">
+                      <Row id="cardHolder">
+                        <Col id="iconHolder">
+                          <i className="bi bi-cash"></i>
+                        </Col>
+                        <Col id="dataholder">
+                          <Row
+                            id="nameH"
+                            style={{ fontSize: "13px", minWidth: "8vw" }}
+                          >
+                            Purchase Order
+                          </Row>
+                          <Row id="numH">8</Row>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                  <Card style={{ width: "13rem", display: "table-cell" }}>
+                    <Card.Body id="card1">
+                      <Row id="cardHolder">
+                        <Col id="iconHolder">
+                          <i className="bi bi-currency-rupee"></i>
+                        </Col>
+                        <Col id="dataholder">
+                          <Row id="nameH">Bank</Row>
+                          <Row id="numH">8</Row>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                </Stack>
+              </Carousel.Item>
+            </Carousel>
+          </Col>
+          <Col id="col2" style={{ padding: "0" }}>
+            <div className="parentHO">
+              <Link id="linkerho" to={"bank"}>
+                <div className="divHO1">
+                  <div className="iconHO">
+                    <i className="bi bi-receipt"></i>
+                  </div>
+                  <div className="textHO">Sales invoice</div>
+                </div>
+              </Link>
+
+              <Link id="linkerho" to={"bank"}>
+                <div className="divHO2">
+                  <div className="iconHO">
+                    <i className="bi bi-table"></i>
+                  </div>
+                  <div className="textHO">Purchase Invoice</div>
+                </div>
+              </Link>
+
+              <Link id="linkerho" to={"bank"}>
+                <div className="divHO3">
+                  <div className="iconHO">
+                    <i className="bi bi-person-fill"></i>{" "}
+                  </div>
+                  <div className="textHO">Edit Profile</div>
+                </div>
+              </Link>
+
+              <Link id="linkerho" to={"bank"}>
+                <div className="divHO4">
+                  <div className="iconHO">
+                    <i className="bi bi-collection-fill"></i>
+                  </div>
+                  <div className="textHO">Invoice Design</div>
+                </div>
+              </Link>
+
+              <Link id="linkerho" to="headOffice/payment">
+                <div className="divHO5">
+                  <div className="iconHO">
+                    <i className="bi bi-credit-card-fill"></i>
+                  </div>
+                  <div className="textHO">Payements</div>
+                </div>
+              </Link>
+
+              <Link id="linkerho" to="headOffice/customer">
+                <div className="divHO6">
+                  <div className="iconHO">
+                    <i className="bi bi-people-fill"></i>{" "}
+                  </div>
+                  <div className="textHO">Customers</div>
+                </div>
+              </Link>
+
+              <Link id="linkerho" to="headOffice/product">
+                <div className="divHO7">
+                  <div className="iconHO">
+                    <i className="bi bi-gift-fill"></i>
+                  </div>
+                  <div className="textHO">Products</div>
+                </div>
+              </Link>
+
+              <Link id="linkerho" to="headOffice/bank">
+                <div className="divHO8">
+                  <div className="iconHO">
+                    <i className="bi bi-currency-rupee"></i>{" "}
+                  </div>
+                  <div className="textHO">Bank</div>
+                </div>
+              </Link>
+              <Link id="linkerho" to="headOffice/master">
+
+                <div className="divHO9">
+                  <div className="iconHO">
+                    <i className="bi bi-person-square"></i>{" "}
+                  </div>
+                  <div className="textHO">Master</div>
+                </div>
+              </Link>
+              <Link id="linkerho" to="headOffice/stock">
+
+              <div className="divHO10">
+                <div className="iconHO">
+                  <i className="bi bi-stack"></i>{" "}
+                </div>
+                <div className="textHO">Stock</div>
+              </div>
+              </Link>
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 };
