@@ -22,7 +22,7 @@
 
 }
 
-.BCContainerbutt > button:hover{
-    background-color: rgb(49, 52, 147);
+.BCContainerbutt > .BHObutt:hover{
+    background-color: #f24e52;
 
 }

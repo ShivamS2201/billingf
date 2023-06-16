@@ -1,12 +1,199 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navb from "../Components/navbar";
 import { SignoutNav } from "../UserView/singoutnav";
 import { isAuthenticated } from "../auth/authIndex";
-import "./css/bank.css"
+import { API } from "../backend.js";
+import { Link, useNavigate } from "react-router-dom";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory, {
+  PaginationListStandalone,
+} from "react-bootstrap-table2-paginator";
+import { Form, Button } from "react-bootstrap";
+import "../Components/tables/css/tablesales.css";
+import "./css/bank.css";
+import ToolkitProvider, {
+  Search,
+} from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min";
+require("react-bootstrap-table-next/dist/react-bootstrap-table2.min.css");
+
 export function MasterRoute() {
+  const [bankHOState, setBankSt] = useState({ bank: true, cash: false });
+  const [TableValue, SetTableValue] = useState();
+
+  const HOBankfetch = async () => {
+    await fetch(`${API}bill/getBank/HO/${isAuthenticated().user.id}`, {
+      method: "GET",
+    })
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        SetTableValue(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const nav = useNavigate();
+  const columns = [
+    {
+      sort: true,
+      dataField: "id",
+      text: "Name",
+    },
+    {
+      sort: true,
+      dataField: "bank_name",
+      text: "Bank",
+    },
+    {
+      sort: true,
+      dataField: "account_num",
+      text: "Account No.",
+    },
+    {
+      sort: true,
+      dataField: "open_balance",
+      text: "Bank Opening Balance",
+    },
+    {
+      sort: true,
+      dataField: "bank_name",
+      text: "State Name",
+    },
+    {
+      sort: true,
+      dataField: "bank_name",
+      text: "Date",
+    },
+   
+    {
+      sort: true,
+      dataField: "Primary_type",
+      text: "Actions",
+      formatter: (cell, row, rowIndex, extraData) => (
+        <div>
+          <span>
+            {(row["Primary_type"] === true && (
+              <div className="tableOptions">
+                <i
+                  className="bi bi-pencil-fill"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    nav(`/user/dashboard/edit/user/${row.id}`);
+                  }}
+                ></i>
+              </div>
+            )) ||
+              (row["Primary_type"] === false && (
+                <div className="tableOptions">
+                  <i
+                    className="bi bi-pencil-fill"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      nav(`/user/dashboard/edit/user/${row.id}`);
+                    }}
+                  ></i>
+                </div>
+              ))}
+          </span>
+        </div>
+      ),
+    },
+  ];
+  const handleChange = (name, idx) => (event) => {
+    // if (name === "renew_year") {
+    //   if (
+    //     window.confirm(
+    //       `Renew ${TableValue[idx].first_name} by ${event.target.value} year`
+    //     )
+    //   ) {
+    //     alert("Changed");
+    //     UpdateRY({ ...TableValue[idx], renew_year: event.target.value });
+    //   } else {
+    //     alert("Not changed");
+    //   }
+    // }
+  };
+  let icon1 = require("../assets/images/icon1.png");
+  let icon2 = require("../assets/images/icon2.png");
+  
+  useEffect(() => {
+    HOBankfetch()
+  }, []);
+  const customTotal = (from, to, size) => (
+    <span className="react-bootstrap-table-pagination-total">
+      Showing {from} to {to} of {size} Results
+    </span>
+  );
+  const sortOption = {
+    sortCaret: (order, column) => {
+      const sortIcon = !order
+        ? icon1
+        : order === "asc"
+        ? icon1
+        : order === "desc"
+        ? icon2
+        : null;
+      if (sortIcon !== null) {
+        return (
+          <span>
+            {" "}
+            <img src={sortIcon} width="10" height="10" alt="sortIcon" />{" "}
+          </span>
+        );
+      }
+      return null;
+    },
+  };
+  const rowStyle = {};
+
+  const options = {
+    paginationSize: 2,
+    pageStartIndex: 1,
+    // alwaysShowAllBtns: true, // Always show next and previous button
+    // withFirstAndLast: false, // Hide the going to First and Last page button
+    // hideSizePerPage: true, // Hide the sizePerPage dropdown always
+    hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
+    firstPageText: "First",
+    prePageText: "Back",
+    nextPageText: "Next",
+    lastPageText: "Last",
+    nextPageTitle: "First page",
+    prePageTitle: "Pre page",
+    firstPageTitle: "Next page",
+    lastPageTitle: "Last page",
+    showTotal: true,
+    disablePageTitle: true,
+    paginationTotalRenderer: customTotal,
+    sizePerPageList: [
+      {
+        text: "5",
+        value: 5,
+      },
+      {
+        text: "10",
+        value: 10,
+      },
+      {
+        text: "All",
+        value: TableValue ? TableValue.length : 0,
+      },
+    ], // A numeric array is also available. the purpose of above example is custom the text
+  };
+  const { SearchBar } = Search;
+  const selectRow = {
+    mode: "checkBox",
+
+    clickToSelect: true,
+
+    style: { background: "#def3ff" },
+  };
+
   return (
     <>
-      <div className="name__top" style={{background:"#313493"}}>
+      <div className="name__top" style={{ background: "#313493" }}>
         Welcome to Head Office {isAuthenticated().user.first_name}
       </div>
 
@@ -18,10 +205,81 @@ export function MasterRoute() {
       </div>
       <div className="BankContainer">
         <div className="BCContainer">
-        <div className="BCContainerbutt">
-            <button>BANK</button>
-            <button>CASH</button>
+          <div className="BCContainerbutt">
+            <button
+              className="BHObutt"
+              style={{
+                backgroundColor: bankHOState.bank
+                  ? "#f24e52"
+                  : "rgb(49, 52, 147)",
+              }}
+              onClick={() => {
+                setBankSt({ bank: true, cash: false });
+              }}
+            >
+              BANK
+            </button>
+            <button
+              className="BHObutt"
+              style={{
+                backgroundColor: bankHOState.cash
+                  ? "#f24e52"
+                  : "rgb(49, 52, 147)",
+              }}
+              onClick={() => {
+                setBankSt({ bank: false, cash: true });
+              }}
+            >
+              CASH
+            </button>
+          </div>
         </div>
+
+        <div className="tablecontainer">
+          <div className="ButtonTextWrapper">
+            <div className="LOS">List of Head Office</div>
+            <div className="ButtonContainer">
+              <Link to="/user/dashboard/register/addHoffice">
+                <button>Add Head Office</button>
+              </Link>
+            </div>{" "}
+          </div>
+          {TableValue && (
+            <div className="TableContainer" style={{}}>
+              <ToolkitProvider
+                keyField="first_name"
+                data={TableValue}
+                columns={columns}
+                search
+              >
+                {(props) => (
+                  <div className="TableBarWrapper">
+                    <div className="ButtonSearchCont">
+                      <SearchBar {...props.searchProps} />
+                    </div>
+                    <div className="TableWrapper">
+                      <BootstrapTable
+                        bootstrap4
+                        striped
+                        hover
+                        selectRow={selectRow}
+                        keyField="first_name"
+                        data={TableValue}
+                        columns={columns}
+                        pagination={paginationFactory(options)}
+                        sort={sortOption}
+                        noDataIndication={"Loading..."}
+                        {...props.baseProps}
+                        rowStyle={rowStyle}
+                      />
+                    </div>
+                  </div>
+                )}
+              </ToolkitProvider>
+            </div>
+          )}
+          Table <br />
+          {JSON.stringify(TableValue)}
         </div>
       </div>
     </>
