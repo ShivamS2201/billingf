@@ -371,3 +371,30 @@ export function getExpiry(dt, rnyr) {
 
   return Edate.toLocaleDateString("en-IN");
 }
+
+export async function AddBankHO(user){
+  const formDataUser = new FormData();
+  formDataUser.append("user_id",user.user_id)
+  formDataUser.append("bank_name",user.bank_name)
+  formDataUser.append("account_num",user.account_num)
+  formDataUser.append("ifsc_code",user.ifsc_code)
+  formDataUser.append("Branch",user.Branch)
+  formDataUser.append("StateCode",user.StateCode)
+  formDataUser.append("gstNumber",user.gstNumber)
+  formDataUser.append("account_type",user.account_type)
+  formDataUser.append("open_balance",user.open_balance)
+  formDataUser.append("Primary_type",user.Primary_type)
+
+  try {
+    const response = await fetch(`${API}bill/bank/HO/addbank/${user.user_id}`, {
+      method: "POST",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data_1 = await response.json();
+    return data_1;
+  } catch (err) {
+    console.log(err);
+  }
+}

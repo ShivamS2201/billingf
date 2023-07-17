@@ -29,6 +29,7 @@ export function MasterRoute() {
       })
       .then((data) => {
         SetTableValue(data);
+        console.log(data);
       })
       .catch((err) => {
         console.log(err);
@@ -239,8 +240,8 @@ export function MasterRoute() {
           <div className="ButtonTextWrapper">
             <div className="LOS">List of Head Office</div>
             <div className="ButtonContainer">
-              <Link to="/user/dashboard/register/addHoffice">
-                <button>Add Head Office</button>
+              <Link to="/user/dashboard/headOffice/addbank/">
+                <button>Add Bank</button>
               </Link>
             </div>{" "}
           </div>
