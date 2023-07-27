@@ -85,7 +85,7 @@ export function OwnerBrTable() {
       formatter: (cell, row, rowIndex, extraData) => (
         <div>
           <span>
-          {JSON.stringify(JdateGet(row["joining_date"]))}
+          {JdateGet(row["joining_date"])}
           </span>
         </div>
       )

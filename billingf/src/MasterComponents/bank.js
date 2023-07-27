@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navb from "../Components/navbar";
 import { SignoutNav } from "../UserView/singoutnav";
-import { isAuthenticated } from "../auth/authIndex";
+import { JdateGet, isAuthenticated } from "../auth/authIndex";
 import { API } from "../backend.js";
 import { Link, useNavigate } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
@@ -14,11 +14,13 @@ import "./css/bank.css";
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min";
+import FooterC from "../Components/footer";
 require("react-bootstrap-table-next/dist/react-bootstrap-table2.min.css");
 
 export function MasterRoute() {
   const [bankHOState, setBankSt] = useState({ bank: true, cash: false });
-  const [TableValue, SetTableValue] = useState();
+  const [BankTable, SetBankTable] = useState();
+  const [CashTable, SetCashTable] = useState();
 
   const HOBankfetch = async () => {
     await fetch(`${API}bill/getBank/HO/${isAuthenticated().user.id}`, {
@@ -28,7 +30,7 @@ export function MasterRoute() {
         return resp.json();
       })
       .then((data) => {
-        SetTableValue(data);
+        SetBankTable(data);
         console.log(data);
       })
       .catch((err) => {
@@ -38,11 +40,6 @@ export function MasterRoute() {
 
   const nav = useNavigate();
   const columns = [
-    {
-      sort: true,
-      dataField: "id",
-      text: "Name",
-    },
     {
       sort: true,
       dataField: "bank_name",
@@ -61,12 +58,19 @@ export function MasterRoute() {
     {
       sort: true,
       dataField: "bank_name",
-      text: "State Name",
+      text: "State Name", // Change backend data to bring the State Name along
     },
     {
       sort: true,
-      dataField: "bank_name",
+      dataField: "created_at", // Created at changed to creater form
       text: "Date",
+      formatter: (cell, row, rowIndex, extraData) => (
+        <div>
+          <span>
+          {JdateGet(row["created_at"])} 
+          </span>
+        </div>
+      )////JdateGet(row["created_at"]).slice(0,row["created_at"].length))}
     },
    
     {
@@ -82,7 +86,7 @@ export function MasterRoute() {
                   className="bi bi-pencil-fill"
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    nav(`/user/dashboard/edit/user/${row.id}`);
+                    nav(`/user/dashboard/headOffice/editbank/${row.id}`);
                   }}
                 ></i>
               </div>
@@ -93,7 +97,7 @@ export function MasterRoute() {
                     className="bi bi-pencil-fill"
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      nav(`/user/dashboard/edit/user/${row.id}`);
+                      nav(`/user/dashboard/headOffice/editbank/${row.id}`);
                     }}
                   ></i>
                 </div>
@@ -107,11 +111,11 @@ export function MasterRoute() {
     // if (name === "renew_year") {
     //   if (
     //     window.confirm(
-    //       `Renew ${TableValue[idx].first_name} by ${event.target.value} year`
+    //       `Renew ${BankTable[idx].first_name} by ${event.target.value} year`
     //     )
     //   ) {
     //     alert("Changed");
-    //     UpdateRY({ ...TableValue[idx], renew_year: event.target.value });
+    //     UpdateRY({ ...BankTable[idx], renew_year: event.target.value });
     //   } else {
     //     alert("Not changed");
     //   }
@@ -179,7 +183,7 @@ export function MasterRoute() {
       },
       {
         text: "All",
-        value: TableValue ? TableValue.length : 0,
+        value: BankTable ? BankTable.length : 0,
       },
     ], // A numeric array is also available. the purpose of above example is custom the text
   };
@@ -236,20 +240,20 @@ export function MasterRoute() {
           </div>
         </div>
 
-        <div className="tablecontainer">
+        { bankHOState.bank && <div className="tablecontainer">
           <div className="ButtonTextWrapper">
-            <div className="LOS">List of Head Office</div>
+            <div className="LOS"></div>
             <div className="ButtonContainer">
               <Link to="/user/dashboard/headOffice/addbank/">
                 <button>Add Bank</button>
               </Link>
             </div>{" "}
           </div>
-          {TableValue && (
+          {BankTable && (
             <div className="TableContainer" style={{}}>
               <ToolkitProvider
                 keyField="first_name"
-                data={TableValue}
+                data={BankTable}
                 columns={columns}
                 search
               >
@@ -265,7 +269,7 @@ export function MasterRoute() {
                         hover
                         selectRow={selectRow}
                         keyField="first_name"
-                        data={TableValue}
+                        data={BankTable}
                         columns={columns}
                         pagination={paginationFactory(options)}
                         sort={sortOption}
@@ -279,10 +283,55 @@ export function MasterRoute() {
               </ToolkitProvider>
             </div>
           )}
-          Table <br />
-          {JSON.stringify(TableValue)}
-        </div>
+        </div>}
+        { bankHOState.cash && <div className="tablecontainer">
+          <div className="ButtonTextWrapper">
+            <div className="LOS"></div>
+            <div className="ButtonContainer">
+              <Link to="/user/dashboard/headOffice/addbank/">
+                <button>Add Bank</button>
+              </Link>
+            </div>{" "}
+          </div>
+          {BankTable && (
+            <div className="TableContainer" style={{}}>
+              <ToolkitProvider
+                keyField="first_name"
+                data={BankTable}
+                columns={columns}
+                search
+              >
+                {(props) => (
+                  <div className="TableBarWrapper">
+                    <div className="ButtonSearchCont">
+                      <SearchBar {...props.searchProps} />
+                    </div>
+                    <div className="TableWrapper">
+                      <BootstrapTable
+                        bootstrap4
+                        striped
+                        hover
+                        selectRow={selectRow}
+                        keyField="first_name"
+                        data={BankTable}
+                        columns={columns}
+                        pagination={paginationFactory(options)}
+                        sort={sortOption}
+                        noDataIndication={"Loading..."}
+                        {...props.baseProps}
+                        rowStyle={rowStyle}
+                      />
+
+                    </div>
+                  </div>
+                )}
+              </ToolkitProvider>
+            </div>
+          )}
+        </div>}
       </div>
+      <FooterC/>
+
     </>
   );
 }

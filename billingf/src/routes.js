@@ -25,6 +25,8 @@ import { Customer } from "./MasterComponents/customer";
 import { Master } from "./MasterComponents/master";
 import { CDebit } from "./MasterComponents/CDebit";
 import { AddBank } from "./MasterComponents/addComponent/addBank";
+import { EditBank } from "./MasterComponents/editComponent/editbank";
+
 const RoutesD = () =>{
   return(
 
@@ -42,6 +44,8 @@ const RoutesD = () =>{
 
     <Route path="/user/dashboard/headOffice/bank/*" exact element={<PrivateRoutes component={MasterRoute}/>} />
     <Route path="/user/dashboard/headOffice/addbank/*" exact element={<PrivateRoutes component={AddBank}/>} />
+    <Route path="/user/dashboard/headOffice/editbank/*" exact element={<PrivateRoutes component={EditBank}/>} />
+
 
     <Route path="/user/dashboard/headOffice/payment/*" exact element={<PrivateRoutes component={Payements}/>} />
     <Route path="/user/dashboard/headOffice/master/*" exact element={<PrivateRoutes component={Master}/>} />

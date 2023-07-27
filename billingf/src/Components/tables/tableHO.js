@@ -74,7 +74,7 @@ export function TableHO() {
       formatter: (cell, row, rowIndex, extraData) => (
         <div>
           <span>
-          {JSON.stringify(JdateGet(row["joining_date"]))}
+          {JdateGet(row["joining_date"])}
           </span>
         </div>
       )
@@ -87,7 +87,7 @@ export function TableHO() {
       formatter: (cell, row, rowIndex, extraData) => (
         <div>
           <span>
-            {JSON.stringify(getExpiry(row["joining_date"], row["renew_year"]))}
+            {getExpiry(row["joining_date"], row["renew_year"])}
           </span>
         </div>
       ),

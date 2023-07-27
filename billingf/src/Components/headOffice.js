@@ -7,9 +7,36 @@ import Carousel from "react-bootstrap/Carousel";
 import Card from "react-bootstrap/Card";
 import { Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { API } from "../backend";
+import { isAuthenticated } from "../auth/authIndex";
 
 // Before making add branch remeber to change role id values elese user won't be created
 const HeadOfficeComponent = () => {
+  const [CourselData,setCoursel] = useState({bank:0,stock:0,vehicle:0,purorder:0,purchase:0,cust:0});
+//bank/HO/getBank/
+  async function getBanks(){
+    return await fetch(
+      `${API}bill/bank/HO/getBankcnt/${isAuthenticated().user.id}`,
+      { method: "GET" }
+    )
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        setCoursel({...CourselData,bank:data});
+        console.log(data)
+        return data;
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+useEffect(() => {
+  getBanks()
+}, []);
+
   return (
     <>
       <div className="DashContainer">
@@ -31,7 +58,7 @@ const HeadOfficeComponent = () => {
                         </Col>
                         <Col id="dataholder">
                           <Row id="nameH">Purchase</Row>
-                          <Row id="numH">8</Row>
+                          <Row id="numH">{CourselData.purchase}</Row>
                         </Col>
                       </Row>
                     </Card.Body>
@@ -44,7 +71,7 @@ const HeadOfficeComponent = () => {
                         </Col>
                         <Col id="dataholder">
                           <Row id="nameH">Customer</Row>
-                          <Row id="numH">8</Row>
+                          <Row id="numH">{CourselData.cust}</Row>
                         </Col>
                       </Row>
                     </Card.Body>
@@ -61,7 +88,7 @@ const HeadOfficeComponent = () => {
                         </Col>
                         <Col id="dataholder">
                           <Row id="nameH">Stock</Row>
-                          <Row id="numH">8</Row>
+                          <Row id="numH">{CourselData.stock}</Row>
                         </Col>
                       </Row>
                     </Card.Body>
@@ -74,7 +101,7 @@ const HeadOfficeComponent = () => {
                         </Col>
                         <Col id="dataholder">
                           <Row id="nameH">Vehicle</Row>
-                          <Row id="numH">8</Row>
+                          <Row id="numH">{CourselData.vehicle}</Row>
                         </Col>
                       </Row>
                     </Card.Body>
@@ -96,7 +123,7 @@ const HeadOfficeComponent = () => {
                           >
                             Purchase Order
                           </Row>
-                          <Row id="numH">8</Row>
+                          <Row id="numH">{CourselData.purorder}</Row>
                         </Col>
                       </Row>
                     </Card.Body>
@@ -109,7 +136,7 @@ const HeadOfficeComponent = () => {
                         </Col>
                         <Col id="dataholder">
                           <Row id="nameH">Bank</Row>
-                          <Row id="numH">8</Row>
+                          <Row id="numH">{CourselData.bank}</Row>
                         </Col>
                       </Row>
                     </Card.Body>

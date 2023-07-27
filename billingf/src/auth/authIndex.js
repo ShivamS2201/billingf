@@ -357,7 +357,7 @@ export async function UpdateUser(user,bill){
 }
 
 export function JdateGet(JD){
-  return new Date(JSON.stringify(JD).slice(0, 11).split("-", 3).join("-")).toLocaleDateString("en-IN")
+  return JSON.stringify(JD).slice(1,11).split("-",3).reverse().join("-") //perfect date format
 }
 export function getExpiry(dt, rnyr) {
   const Jdate = new Date(
@@ -369,7 +369,7 @@ export function getExpiry(dt, rnyr) {
     Jdate.getDate()
   );
 
-  return Edate.toLocaleDateString("en-IN");
+  return JSON.stringify(Edate.toLocaleDateString("en-IN")).slice(1,10).split("/",3).join("-");
 }
 
 export async function AddBankHO(user){

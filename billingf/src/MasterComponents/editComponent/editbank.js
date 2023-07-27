@@ -3,12 +3,12 @@ import { AddBankHO, isAuthenticated } from "../../auth/authIndex";
 import Navb from "../../Components/navbar";
 import { SignoutNav } from "../../UserView/singoutnav";
 import { Button, Form } from "react-bootstrap";
-import "./css/addbank.css";
+// import "./css/addbank.css";
 import { API } from "../../backend";
 import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 // GST ISSUE needs resolution
-export function AddBank() {
+export function EditBank() {
   const nav = useNavigate();
   const [stateChoice, SetStatechoice] = useState();
   const [Acctype, SetAccType] = useState();
@@ -18,7 +18,7 @@ export function AddBank() {
     account_num: "",
     ifsc_code: "",
     Branch: "",
-    StateCode: "",
+    StateCode_id: "",
     gstNumber: "",
     account_type: "",
     open_balance: "",
@@ -27,16 +27,26 @@ export function AddBank() {
     loading: false,
     didNavigate: false,
   });
+  const FecthEditbank =async () => {
+    await fetch(`${API}bill/bank/HO/fetchbank/6`, {
+      method: "GET",
+    })
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        setvalues(data[0]);
+        console.log(data[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const GSTvalidator = (NUM) => {
     const GSTREGEX = new RegExp(
       /^([0][1-9]|[1-2][0-9]|[3][0-8])[A-Z]{3}[ABCFGHLJPTF]{1}[A-Z]{1}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}/
     );
     if (GSTREGEX.test(NUM)) {
-      if (NUM.slice(0, 2) < 10) {
-        console.log(NUM.slice(0, 2));
-      } else {
-        console.log(NUM.slice(0, 2));
-      }
       return true;
     } else {
       return false;
@@ -51,26 +61,7 @@ export function AddBank() {
     if (name === "gstNumber") { // checks will be sequential 1. State Code and 1 st 2 letters same.
       //2. uske baad length and GST validator-- idhr hoga error and type jisse invalid hoga ya nhi
       if (event.target.value.slice(0,2)<10){
-        if (values.StateCode && (event.target.value.slice(1,2) === values.StateCode) && event.target.value.length<16){
-          if (event.target.value.length>14){
-            var resp = GSTvalidator(event.target.value);
-
-            if (resp){
-              setvalues({
-                ...values,
-                error: false,
-                [name]: event.target.value.slice(0, 15)
-              });
-            }
-            else{
-              setvalues({ ...values, error: true, Etype: "GST" });
-            }            
-          }
-        }
-      }
-      else{
-        if (values.StateCode && (event.target.value.slice(0,2) === values.StateCode) && event.target.value.length<16){
-          console.log(event.target.value.slice(0,2),values.StateCode,"ss")
+        if (values.StateCode_id && (event.target.value.slice(1,2) === values.StateCode_id) && event.target.value.length<16){
           if (event.target.value.length>14){
             var resp = GSTvalidator(event.target.value);
 
@@ -87,7 +78,36 @@ export function AddBank() {
           }
         }
       }
-    } else {
+      else{
+        if (values.StateCode_id && (event.target.value.slice(0,2) === values.StateCode_id) && event.target.value.length<16){
+          console.log(event.target.value.slice(0,2),values.StateCode_id,"ss")
+          if (event.target.value.length>14){
+            var resp = GSTvalidator(event.target.value);
+
+            if (resp){
+              setvalues({
+                ...values,
+                error: false,
+                [name]: event.target.value.slice(0, 15),
+              });
+            }
+            else{
+              setvalues({ ...values, error: true, Etype: "GST" });
+            }            
+          }
+        }
+      }
+    } else if(name === "account_type"){
+      setvalues({ ...values, error: false,["account_type_id"]:event.target.value });
+    }
+    else if(name === "StateCode"){
+      setvalues({ ...values, error: false,["StateCode_id"]:event.target.value });
+      console.log(`${values.StateCode_id}`,`${values.gstNumber.slice(1,2)}`)
+      if (! `${values.StateCode_id}`=== values.gstNumber.slice(1,2)){
+        setvalues({ ...values, error: true, Etype: "GST" });        
+      }
+    }
+    else{
       setvalues({ ...values, error: false, [name]: event.target.value });
       console.log(values)
     }
@@ -97,14 +117,13 @@ export function AddBank() {
       <Form.Group>
         <Form.Label>State Name</Form.Label>
         <Form.Select
+        value={values.StateCode_id}
           aria-label="Default select example"
-          value={values.StateCode}
           onChange={handleChange("StateCode")}
           // isInvalid={}
           // isValid={values.state !== ""}
           required
         >
-          <option defaultValue>Select State</option>
           {stateChoice.map((item, index) => (
             <option key={index} value={item.id}>
               {item.state_name} ({item.state_code})
@@ -123,13 +142,12 @@ export function AddBank() {
         <Form.Label>Account Type</Form.Label>
         <Form.Select
           aria-label="Default select example"
-          value={values.account_type}
+          value={values.account_type_id}
           onChange={handleChange("account_type")}
           // isInvalid={values.state === ""}
           // isValid={values.state !== ""}
           required
         >
-          <option defaultValue>Select Account Type</option>
           {Acctype.map((item, index) => (
             <option key={index} value={item.id}>
               {item.account_type_name}
@@ -168,6 +186,7 @@ export function AddBank() {
   };
   const [validated, setValidated] = useState(false);
   useEffect(() => {
+    FecthEditbank();
     setValidated(false);
     getAccType();
     getState();
@@ -179,9 +198,10 @@ export function AddBank() {
       </div>
 
       <Navb component={<SignoutNav />} state={"headOffice"} />
+      {JSON.stringify(values)}
       <div className="DashContainer">
         <div className="DashboardBar">
-          <h3>Add Bank Master</h3>
+          <h3>Edit Bank Master</h3>
         </div>
       </div>
       <div className="FormSet">
@@ -231,6 +251,7 @@ export function AddBank() {
                     className="form-control"
                     placeholder="Bank Name"
                     required
+                    value={values.bank_name}
                     isInvalid={/^\d+$/.test(values.bank_name)}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -249,6 +270,7 @@ export function AddBank() {
                     className="form-control"
                     placeholder="GST number"
                     required
+                    value={values.gstNumber}
                     isInvalid={values.error && values.Etype === "GST"}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -266,7 +288,8 @@ export function AddBank() {
                     className="form-control"
                     placeholder="Account Number"
                     required
-                    isInvalid={values.account_num.length>10 && !/^\d{9,18}$/.test(values.account_num)}
+                    value={values.account_num}
+                    isInvalid={(values.account_num && values.account_num.length>10) && !/^\d{9,18}$/.test(values.account_num)}
                   />
                   <Form.Control.Feedback type="invalid">
                     Account Number Incorrect{" "}
@@ -283,6 +306,7 @@ export function AddBank() {
                     className="form-control"
                     placeholder="IFSC Code"
                     required
+                    value={values.ifsc_code}
                     // isInvalid={values.ifsc_code === ""}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -300,6 +324,7 @@ export function AddBank() {
                     className="form-control"
                     placeholder="Branch"
                     required
+                    value={values.Branch}
                   />
                   <Form.Control.Feedback type="invalid">
                     Branch Required{" "}
@@ -317,6 +342,7 @@ export function AddBank() {
                     className="form-control"
                     placeholder="Opening Balance"
                     required
+                    value={values.open_balance}
                   />
                   <Form.Control.Feedback type="invalid">
                     Opening Balance Required{" "}

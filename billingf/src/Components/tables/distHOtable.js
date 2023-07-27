@@ -10,8 +10,9 @@ import "./css/tablesales.css";
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min";
-import { isAuthenticated } from "../../auth/authIndex";
+import { JdateGet, isAuthenticated } from "../../auth/authIndex";
 require("react-bootstrap-table-next/dist/react-bootstrap-table2.min.css");
+
 const columns = [
   {
     sort: true,
@@ -71,7 +72,7 @@ const columns = [
     formatter: (cell, row, rowIndex, extraData) => (
       <div>
         <span>
-          {JSON.stringify(row["joining_date"]).slice(1,11).split("-",3).reverse().join("-")}
+          {JdateGet(row["joining_date"])}
         </span>
       </div>
     )
