@@ -10,6 +10,7 @@ import {
   RegisterUser,
   GetBillingInfo,
 } from "../../auth/authIndex";
+import { Navigate } from "react-router-dom";
 
 export function BranchForm() {
   const [lmtmsgsys, setlmmsgsys] = useState({ display: "none" });
@@ -71,7 +72,11 @@ useEffect(()=>{
     loading,
     didNavigate,
   } = values;
-
+  const performNavigate = () => {
+    if (values.didNavigate) {
+      return <Navigate to="/user/dashboard" />;
+    }
+  };
   const handleChange = (name) => (event) => {
    
     if (name === "sms_credit") {
@@ -99,11 +104,19 @@ useEffect(()=>{
   const handleSubmit = (event) => {};
   return (
     <>
-      <Navb component={<SignoutNav />} />
-      <div className="FormSet">
-        <div className="HeadingWrapper">
-          <h2>ADD Branch</h2>
+       <div className="name__top" style={{ background: "#313493" }}>
+        Welcome to Head Office {isAuthenticated().user.first_name}
+      </div>
+      <Navb component={<SignoutNav />}  state={"headOffice"} />
+      <div className="DashContainer">
+        <div className="DashboardBarM">
+          <h3>Branch Master</h3>
+          <div className="MasterButton">  <div className="ButtonTextWrapper">
+         <div className="LOS"></div>
+       </div></div>
         </div>
+      </div>
+      <div className="FormSet">
         <div className="Formhandler">
           <Form
             noValidate
@@ -120,7 +133,23 @@ useEffect(()=>{
                 setValidated(true);
               RegisterUser(
                 { ...values, password2: password }
-              );
+              ).then((data) => {
+                if (data) {
+                  console.log(data);
+                  setvalues({
+                    ...values,
+                    didNavigate: true,
+                    loading: false,
+                  });
+                  <Navigate to="/user/dashboard/" />
+                } else {
+                  console.log(data);
+                  setvalues({ ...values, loading: false });
+                }
+              })
+              .catch((ee) => {
+                console.log(ee);
+              });
               }
               
             }}
@@ -382,6 +411,8 @@ useEffect(()=>{
               </div>
             </div>
             <Button type="submit">Submit form</Button>
+            {performNavigate()}
+
           </Form>
         </div>
       </div>

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { AddBankHO, isAuthenticated } from "../../auth/authIndex";
+import { AddBankHO, EditBankHO, isAuthenticated } from "../../auth/authIndex";
 import Navb from "../../Components/navbar";
 import { SignoutNav } from "../../UserView/singoutnav";
 import { Button, Form } from "react-bootstrap";
 // import "./css/addbank.css";
 import { API } from "../../backend";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 // GST ISSUE needs resolution
+
 export function EditBank() {
+  const {id} = useParams();
   const nav = useNavigate();
   const [stateChoice, SetStatechoice] = useState();
   const [Acctype, SetAccType] = useState();
@@ -28,7 +30,7 @@ export function EditBank() {
     didNavigate: false,
   });
   const FecthEditbank =async () => {
-    await fetch(`${API}bill/bank/HO/fetchbank/6`, {
+    await fetch(`${API}bill/bank/HO/fetchbank/${id}`, {
       method: "GET",
     })
       .then((resp) => {
@@ -219,7 +221,7 @@ export function EditBank() {
                 event.preventDefault();
                 setValidated(true);
                 console.log(values);
-                AddBankHO(values)
+                EditBankHO(values)
                   .then((data) => {
                     if (data) {
                       console.log(data);

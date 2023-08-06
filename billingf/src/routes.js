@@ -26,6 +26,8 @@ import { Master } from "./MasterComponents/master";
 import { CDebit } from "./MasterComponents/CDebit";
 import { AddBank } from "./MasterComponents/addComponent/addBank";
 import { EditBank } from "./MasterComponents/editComponent/editbank";
+import { AddCash } from "./MasterComponents/addComponent/addCash";
+import { EditCash } from "./MasterComponents/editComponent/editcash";
 
 const RoutesD = () =>{
   return(
@@ -44,7 +46,11 @@ const RoutesD = () =>{
 
     <Route path="/user/dashboard/headOffice/bank/*" exact element={<PrivateRoutes component={MasterRoute}/>} />
     <Route path="/user/dashboard/headOffice/addbank/*" exact element={<PrivateRoutes component={AddBank}/>} />
-    <Route path="/user/dashboard/headOffice/editbank/*" exact element={<PrivateRoutes component={EditBank}/>} />
+    <Route path="/user/dashboard/headOffice/editbank/:id" exact element={<PrivateRoutes component={EditBank}/>} />
+    <Route path="/user/dashboard/headOffice/addcash/*" exact element={<PrivateRoutes component={AddCash}/>} />
+    <Route path="/user/dashboard/headOffice/editcash/:id" exact element={<PrivateRoutes component={EditCash}/>} />
+
+
 
 
     <Route path="/user/dashboard/headOffice/payment/*" exact element={<PrivateRoutes component={Payements}/>} />

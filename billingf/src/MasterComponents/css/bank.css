@@ -28,5 +28,6 @@
 }
 
 .tablecontainer{
-    margin: 0vw 4vw;
+    margin: 7.2vw 4vw 0vw 4vw;
+    min-height: 41vh;
 }

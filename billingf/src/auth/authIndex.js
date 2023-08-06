@@ -117,7 +117,7 @@ export default function SignOut(next) {
   }
 }
 
-export function RegisterUser(...user) {
+export async function RegisterUser(...user) {
   const formDataUser = new FormData();
   const formDataBilling = new FormData();
   // User registeration data as form body
@@ -175,38 +175,36 @@ if (user[0].role_id===4){
   formDataBilling.append("is_regdealer","true");
   
 
-  return fetch(`${API}user/register`, {
-    method: "POST",
-    body: formDataUser,
-    headers: { Authorization: null },
-    withCredentials: true,
-  })
-    .then((resp) => {
-      return resp.json();
-    })
-    .then(async (data) => {
-      formDataBilling.append("user_id",data);
-      let m = await fetch(`${API}user/register/bill_info/${data}`, {
-        method: "POST",
-        body: formDataBilling,
-        headers: {
-          Authorization: null },
-        withCredentials: true,
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          return data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      return [data,true];
-    })
-    .catch((err) => {
-      console.log(err);
+  try {
+    const resp = await fetch(`${API}user/register`, {
+      method: "POST",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
     });
+    const data = await resp.json();
+    formDataBilling.append("user_id", data);
+    let m = await fetch(`${API}user/register/bill_info/${data}`, {
+      method: "POST",
+      body: formDataBilling,
+      headers: {
+        Authorization: null
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data_1) => {
+        return data_1;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return await [data, true];
+  } catch (err_1) {
+    console.log(err_1);
+  }
 }
 export async function UpdateMadeUserRq(user){
   const formDataUser = new FormData();
@@ -371,6 +369,18 @@ export function getExpiry(dt, rnyr) {
 
   return JSON.stringify(Edate.toLocaleDateString("en-IN")).slice(1,10).split("/",3).join("-");
 }
+export function expBR(dt,rnyr){
+  const Jdate = new Date(
+    JSON.stringify(dt).slice(0, 11).split("-", 3).join("-")
+  );
+  const Edate = new Date(
+    Jdate.getFullYear() + rnyr,
+    Jdate.getMonth(),
+    Jdate.getDate()
+  );
+  return JSON.stringify(Edate.toLocaleDateString("en-IN")).slice(1,9).split("/",3).join("-");
+
+}
 
 export async function AddBankHO(user){
   const formDataUser = new FormData();
@@ -388,6 +398,73 @@ export async function AddBankHO(user){
   try {
     const response = await fetch(`${API}bill/bank/HO/addbank/${user.user_id}`, {
       method: "POST",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data_1 = await response.json();
+    return data_1;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function EditBankHO(user){
+  const formDataUser = new FormData();
+  formDataUser.append("user_id",user.user_id_id)
+  formDataUser.append("bank_name",user.bank_name)
+  formDataUser.append("account_num",user.account_num)
+  formDataUser.append("ifsc_code",user.ifsc_code)
+  formDataUser.append("Branch",user.Branch)
+  formDataUser.append("StateCode",user.StateCode_id)
+  formDataUser.append("gstNumber",user.gstNumber)
+  formDataUser.append("account_type",user.account_type_id)
+  formDataUser.append("open_balance",user.open_balance)
+
+  try {
+    const response = await fetch(`${API}bill/bank/HO/editbank/${user.id}`, {
+      method: "PUT",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data_1 = await response.json();
+    return data_1;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function AddCashHO(user){
+  const formDataUser = new FormData();
+  formDataUser.append("user_id",user.user_id)
+  formDataUser.append("cash_name",user.cash_name)
+  formDataUser.append("cash_balance",user.cash_balance)
+
+  try {
+    const response = await fetch(`${API}bill/bank/HO/addcash/${user.user_id}`, {
+      method: "POST",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data_1 = await response.json();
+    return data_1;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function EditCashHO(user){
+  const formDataUser = new FormData();
+  console.log(user)
+  formDataUser.append("user_id",user.user_id_id)
+  formDataUser.append("cash_name",user.cash_name)
+  formDataUser.append("cash_balance",user.cash_balance)
+
+  try {
+    const response = await fetch(`${API}bill/bank/HO/editcash/${user.id}`, {
+      method: "PUT",
       body: formDataUser,
       headers: { Authorization: null },
       withCredentials: true,

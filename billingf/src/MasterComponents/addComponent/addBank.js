@@ -7,6 +7,7 @@ import "./css/addbank.css";
 import { API } from "../../backend";
 import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import FooterC from "../../Components/footer";
 // GST ISSUE needs resolution
 export function AddBank() {
   const nav = useNavigate();
@@ -347,6 +348,7 @@ export function AddBank() {
         </div>
         <div></div>
       </div>
+      <FooterC/>
     </>
   );
 }

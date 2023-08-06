@@ -97,7 +97,7 @@ export function OwnerBrTable() {
       formatter: (cell, row, rowIndex, extraData) => (
         <div>
           <span>
-            {JSON.stringify(getExpiry(row["joining_date"], row["renew_year"]))}
+            {getExpiry(row["joining_date"], row["renew_year"])}
           </span>
         </div>
       ),

@@ -37,9 +37,24 @@ export function MasterRoute() {
         console.log(err);
       });
   };
+  const HOCashfetch = async () => {
+    await fetch(`${API}bill/getcash/HO/${isAuthenticated().user.id}`, {
+      method: "GET",
+    })
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        SetCashTable(data);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const nav = useNavigate();
-  const columns = [
+  const columnsBank = [
     {
       sort: true,
       dataField: "bank_name",
@@ -107,6 +122,56 @@ export function MasterRoute() {
       ),
     },
   ];
+  const columnsCash = [
+    {
+      sort: true,
+      dataField: "id",
+      text: "S.NO.",
+    },
+    {
+      sort: true,
+      dataField: "cash_name",
+      text: "Cash Name",
+    },
+    {
+      sort: true,
+      dataField: "cash_balance",
+      text: "Cash Balance",
+    },
+    {
+      sort: true,
+      dataField: "id",
+      text: "Actions",
+      formatter: (cell, row, rowIndex, extraData) => (
+        <div>
+          <span>
+            {(row["id"]  && (
+              <div className="tableOptions">
+                <i
+                  className="bi bi-pencil-fill"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    nav(`/user/dashboard/headOffice/editcash/${row.id}`);
+                  }}
+                >{row.id}</i>
+              </div>
+            )) ||
+              (row["id"]  && (
+                <div className="tableOptions">
+                  <i
+                    className="bi bi-pencil-fill"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      nav(`/user/dashboard/headOffice/editcash/${row.id}`);
+                    }}
+                  ></i>
+                </div>
+              ))}
+          </span>
+        </div>
+      ),
+    },
+  ]
   const handleChange = (name, idx) => (event) => {
     // if (name === "renew_year") {
     //   if (
@@ -125,7 +190,8 @@ export function MasterRoute() {
   let icon2 = require("../assets/images/icon2.png");
   
   useEffect(() => {
-    HOBankfetch()
+    HOCashfetch();
+    HOBankfetch();
   }, []);
   const customTotal = (from, to, size) => (
     <span className="react-bootstrap-table-pagination-total">
@@ -254,7 +320,7 @@ export function MasterRoute() {
               <ToolkitProvider
                 keyField="first_name"
                 data={BankTable}
-                columns={columns}
+                columns={columnsBank}
                 search
               >
                 {(props) => (
@@ -270,7 +336,7 @@ export function MasterRoute() {
                         selectRow={selectRow}
                         keyField="first_name"
                         data={BankTable}
-                        columns={columns}
+                        columns={columnsBank}
                         pagination={paginationFactory(options)}
                         sort={sortOption}
                         noDataIndication={"Loading..."}
@@ -284,21 +350,22 @@ export function MasterRoute() {
             </div>
           )}
         </div>}
+
         { bankHOState.cash && <div className="tablecontainer">
           <div className="ButtonTextWrapper">
             <div className="LOS"></div>
             <div className="ButtonContainer">
-              <Link to="/user/dashboard/headOffice/addbank/">
-                <button>Add Bank</button>
+              <Link to="/user/dashboard/headOffice/addcash/">
+                <button>Add Cash</button>
               </Link>
             </div>{" "}
           </div>
-          {BankTable && (
+          {CashTable && (
             <div className="TableContainer" style={{}}>
               <ToolkitProvider
                 keyField="first_name"
-                data={BankTable}
-                columns={columns}
+                data={CashTable}
+                columns={columnsCash}
                 search
               >
                 {(props) => (
@@ -313,8 +380,8 @@ export function MasterRoute() {
                         hover
                         selectRow={selectRow}
                         keyField="first_name"
-                        data={BankTable}
-                        columns={columns}
+                        data={CashTable}
+                        columns={columnsCash}
                         pagination={paginationFactory(options)}
                         sort={sortOption}
                         noDataIndication={"Loading..."}
@@ -324,6 +391,7 @@ export function MasterRoute() {
 
                     </div>
                   </div>
+                  
                 )}
               </ToolkitProvider>
             </div>
