@@ -2,18 +2,29 @@ import React, { useEffect, useState } from "react";
 import Navb from "../Components/navbar";
 import { SignoutNav } from "../UserView/singoutnav";
 import { useLocation } from "react-router-dom";
-import { isAuthenticated } from "../auth/authIndex";
+import { addCategory, addGroup, addPlace, isAuthenticated } from "../auth/authIndex";
 import { Button, Form } from "react-bootstrap";
 import "./css/places.css";
+
 export function Place() {
-  const [places, setplaces] = useState();
-  const [groups, setgroups] = useState();
-  const [cat, setcat] = useState();
+  const [places, setplaces] = useState({master_id:isAuthenticated().user.id,place_name:""});
+  const [groups, setgroups] = useState({master_id:isAuthenticated().user.id,cust_grp:""});
+  const [cat, setcat] = useState({master_id:isAuthenticated().user.id,cat_name:""});
   const [validated, setValidated] = useState(false);
   useEffect(() => {
     setValidated(false);
   });
-  const handleChange = () => {};
+  const handleChange = (name)=>(event) => {
+    if( name === "place_name"){
+      setplaces({...places,loading:false,[name]: event.target.value})
+    }
+    else if(name === "cust_grp"){
+      setgroups({...groups,[name]: event.target.value,loading:false})
+    }
+    else if(name === "cat_name"){
+      setcat({...cat,[name]: event.target.value,loading:false})
+    }
+  };
   return (
     <>
       <div className="name__top" style={{ background: "#313493" }}>
@@ -26,8 +37,6 @@ export function Place() {
         </div>
       </div>
 
-      <div class="parentplace">
-<div class="divp1">
     <Form
               noValidate
               validated={validated}
@@ -41,27 +50,48 @@ export function Place() {
                   event.preventDefault();
                   setValidated(true);
                   console.log(places);
+                  addPlace(places).then((data) => {
+                    if (data) {
+                      console.log(data);
+                      setplaces({
+                        ...places,
+                        didNavigate: true,
+                        loading: false,
+                      });
+                    } else {
+                      console.log(data);
+                      setplaces({ ...places, loading: false });
+                    }
+                  })
+                  .catch((ee) => {
+                    console.log(ee);
+                  });
                   //Function here to add
                 }
               }}
-            >
+            >      <div class="parentplace">
+
+              <div class="divp1">
+
               <Form.Group>
                 <Form.Label>Add Places (Customers):</Form.Label>
                 <Form.Control
-                  onChange={handleChange("Places")} // add change condition and function call to check for uniqueness from backend.
+                  onChange={handleChange("place_name")} // add change condition and function call to check for uniqueness from backend.
                   size="sm"
                   type="input"
                   className="form-control"
                   placeholder="Places"
                   required
-                /></Form.Group></Form> </div>
-<div class="divp2"><Button type="submit" style={{fontSize: "14px"}}> Save </Button>
+                /></Form.Group> </div>
+ <div class="divp2"><Button type="submit" style={{fontSize: "14px"}}> Save </Button>
  </div>
-<div class="divp3"><Form
+ </div>
+ </Form>
+ <Form
               noValidate
               validated={validated}
               onSubmit={(event) => {
-                places.loading = true;
+                groups.loading = true;
                 const form = event.currentTarget;
                 if (form.checkValidity() === false) {
                   event.preventDefault(); // refresh problem is here
@@ -74,22 +104,27 @@ export function Place() {
                 }
               }}
             >
+             <div class="parentplace">
+            <div class="divp1">
               <Form.Group>
                 <Form.Label>Add Group (Customers):</Form.Label>
                 <Form.Control
-                  onChange={handleChange("Group")} // add change condition and function call to check for uniqueness from backend.
+                  onChange={handleChange("cust_grp")} // add change condition and function call to check for uniqueness from backend.
                   size="sm"
                   type="input"
                   className="form-control"
                   placeholder="Group"
                   required
-                /></Form.Group></Form></div>
-<div class="divp4"><Button type="submit" style={{fontSize: "14px"}}> Save </Button> </div>
-<div class="divp5"><Form
+                /></Form.Group></div>
+<div class="divp2"><Button type="submit" style={{fontSize: "14px"}}> Save </Button> </div>
+</div>
+</Form>
+
+<Form
               noValidate
               validated={validated}
               onSubmit={(event) => {
-                places.loading = true;
+                cat.loading = true;
                 const form = event.currentTarget;
                 if (form.checkValidity() === false) {
                   event.preventDefault(); // refresh problem is here
@@ -102,18 +137,25 @@ export function Place() {
                 }
               }}
             >
+<div class="parentplace">
+            <div class="divp1">
               <Form.Group>
                 <Form.Label>Add Category (Items):</Form.Label>
                 <Form.Control
-                  onChange={handleChange("Category")} // add change condition and function call to check for uniqueness from backend.
+                  onChange={handleChange("cat_name")} // add change condition and function call to check for uniqueness from backend.
                   size="sm"
                   type="input"
                   className="form-control"
                   placeholder="Category"
                   required
-                /></Form.Group></Form> </div>
-<div class="divp6"><Button type="submit" style={{fontSize: "14px"}}> Save </Button> </div>
-</div>
+                /></Form.Group></div>
+<div class="divp2"><Button type="submit" style={{fontSize: "14px"}}> Save </Button> </div> 
+</div> 
+</Form> 
+
+{JSON.stringify(places)}
+{JSON.stringify(groups)}
+{JSON.stringify(cat)}
     </>
   );
 }

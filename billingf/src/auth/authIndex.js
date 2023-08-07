@@ -475,3 +475,58 @@ export async function EditCashHO(user){
     console.log(err);
   }
 }
+
+export async function addPlace(user){
+  const formDataUser = new FormData();
+  formDataUser.append("master_id",user.master_id)
+  formDataUser.append("place_name",user.place_name)
+
+  try {
+    const response = await fetch(`${API}bill/bank/HO/addplace/`, {
+      method: "POST",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data_1 = await response.json();
+    return data_1;
+  } catch (err) {
+    console.log(err);
+  }
+}
+export async function addGroup(user){
+  const formDataUser = new FormData();
+  formDataUser.append("master_id",user.master_id)
+  formDataUser.append("cust_grp",user.cust_grp)
+
+  try {
+    const response = await fetch(`${API}bill/bank/HO/addgroup/`, {
+      method: "POST",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data_1 = await response.json();
+    return data_1;
+  } catch (err) {
+    console.log(err);
+  }
+}
+export async function addCategory(user){
+  const formDataUser = new FormData();
+  formDataUser.append("master_id",user.master_id)
+  formDataUser.append("cat_name",user.cat_name)
+
+  try {
+    const response = await fetch(`${API}bill/bank/HO/addcategory/`, {
+      method: "POST",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data_1 = await response.json();
+    return data_1;
+  } catch (err) {
+    console.log(err);
+  }
+}

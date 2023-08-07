@@ -4,7 +4,7 @@
   grid-template-rows: repeat(3, 1fr);
   grid-column-gap: 0px;
   grid-row-gap: 6vh;
-  margin: 2em 1em 0 3em;
+  margin: 0.4em 1em 0 3em;
   align-items: end;
 }
 
