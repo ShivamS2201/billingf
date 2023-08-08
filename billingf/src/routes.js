@@ -28,6 +28,7 @@ import { AddBank } from "./MasterComponents/addComponent/addBank";
 import { EditBank } from "./MasterComponents/editComponent/editbank";
 import { AddCash } from "./MasterComponents/addComponent/addCash";
 import { EditCash } from "./MasterComponents/editComponent/editcash";
+import { AddPlace } from "./MasterComponents/addComponent/addplace";
 
 const RoutesD = () =>{
   return(
@@ -50,6 +51,10 @@ const RoutesD = () =>{
     <Route path="/user/dashboard/headOffice/addcash/*" exact element={<PrivateRoutes component={AddCash}/>} />
     <Route path="/user/dashboard/headOffice/editcash/:id" exact element={<PrivateRoutes component={EditCash}/>} />
 
+    <Route path="/user/dashboard/headOffice/place/*" exact element={<PrivateRoutes component={Place}/>} />
+    <Route path="/user/dashboard/headOffice/addplace/*" exact element={<PrivateRoutes component={AddPlace}/>} />
+
+
 
 
 
@@ -58,7 +63,6 @@ const RoutesD = () =>{
     <Route path="/user/dashboard/headOffice/customer/*" exact element={<PrivateRoutes component={Customer}/>} />
     <Route path="/user/dashboard/headOffice/stock/*" exact element={<PrivateRoutes component={Stock}/>} />
     <Route path="/user/dashboard/headOffice/receipt/*" exact element={<PrivateRoutes component={Receipt}/>} />
-    <Route path="/user/dashboard/headOffice/place/*" exact element={<PrivateRoutes component={Place}/>} />
     <Route path="/user/dashboard/headOffice/sale/*" exact element={<PrivateRoutes component={SaleR}/>} />
     <Route path="/user/dashboard/headOffice/transport/*" exact element={<PrivateRoutes component={Transport}/>} />
     <Route path="/user/dashboard/headOffice/purchase/*" exact element={<PrivateRoutes component={Purchase}/>} />
