@@ -22,7 +22,7 @@ const Navb = (props) => {
           <Nav.Link
            href="/user/dashboard/headOffice/master"
            className={
-             currentRoute.pathname.toLowerCase().includes("add")|| currentRoute.pathname.toLowerCase().includes("master")
+             currentRoute.pathname.toLowerCase().includes("Branch")|| currentRoute.pathname.toLowerCase().includes("master")
                ? "masterHOactive"
                : "masterHO"
            }>
