@@ -4,10 +4,28 @@
     border:2px solid #4a4d9a;
 }
 @keyframes lefttoright {
-    from {width:0;}
-    to {width:auto;}
+    from {clip-path: inset(0 100% 0 0);}
+    to {    clip-path: inset(0 0 0 0);
+    }
+  }
+  @keyframes righttoleft {
+    from {clip-path: inset(0 0 0 100%);}
+    to {    clip-path: inset(0 0 0 0);
+    }
   }
 .Container > .row > .DealerSelection{
-    animation-name: lefttoright;
-    animation-duration: 4s;
+    animation: lefttoright 200ms ease-in-out;
+}
+.Container > .row > .DealerSelectionf{
+    animation: righttoleft 200ms ease-in-out;
+
+}
+
+.Container > .row .OBDiv{
+  animation: lefttoright 200ms ease-in-out;
+}
+
+
+.Container > .row >.row > .OPBDIV{
+  animation: righttoleft 200ms ease-in-out;
 }

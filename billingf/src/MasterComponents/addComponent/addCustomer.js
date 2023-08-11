@@ -19,6 +19,9 @@ export function Addcustomer() {
   const [stateChoice, SetStatechoice] = useState();
   const [Placemaster, SetPlacemaster] = useState();
   const [RegisterDtype, SetRegDealer] = useState();
+  const [CurrencyData,setCurrency] = useState();
+  const [groupdata,setGroup] = useState();
+  const [Exporttypes,setExportTypes] = useState();
   const [values, setvalues] = useState({
     master_id: isAuthenticated().user.id,
     cust_name: "",
@@ -38,7 +41,7 @@ export function Addcustomer() {
     cust_dealer_type: "",
     cust_gst: "",
     cust_currency: "",
-    export_option: "",
+    export_option: "true",
     export_type: "",
     created_at: "",
     modified_by: "",
@@ -46,6 +49,15 @@ export function Addcustomer() {
     error: false,
     loading: false,
     didNavigate: false,
+  });
+  const [Limit_values,setlimitvalues] = useState({
+    is_limit:"true",
+amount:0,
+cust_openingBalance:0,
+user_id:isAuthenticated().user.id,
+sales_type:"Inter",
+rcm:true, 
+cust_id:"" 
   });
   let icon1 = require("../../assets/images/blackPerson.png");
   // const GSTvalidator = (NUM) => {
@@ -86,6 +98,10 @@ export function Addcustomer() {
       setvalues({ ...values, [name]: event.target.value });
     }
   };
+  const handleChangeLimit = (limit) => (event)=>{
+    // Keep amount as zero if limit is false
+    setlimitvalues({...Limit_values,[limit]:event.target.value})
+  }
   function states() {
     return (
       <Form.Group>
@@ -145,7 +161,7 @@ export function Addcustomer() {
         <Form.Select
         size="md"
           aria-label="Default select example"
-          value={values.account_type}
+          value={values.cust_place}
           onChange={handleChange("cust_place")}
           // isInvalid={values.state === ""}
           // isValid={values.state !== ""}
@@ -164,6 +180,58 @@ export function Addcustomer() {
       </Form.Group>
     );
   }
+  function Currency() {
+    return (
+      <Form.Group>
+        <Form.Label>Currency</Form.Label>
+        <Form.Select
+          size="md"
+          aria-label="Default select example"
+          value={values.cust_currency}
+          onChange={handleChange("cust_currency")}
+          // isInvalid={}
+          // isValid={values.state !== ""}
+          required
+        >
+          <option defaultValue>Select Currency</option>
+          {CurrencyData.map((item, index) => (
+            <option key={index} value={item.id}>
+              {item.type_C} 
+            </option>
+          ))}
+        </Form.Select>
+        <Form.Control.Feedback type="invalid">
+          Select a Currency code!
+        </Form.Control.Feedback>
+      </Form.Group>
+    );
+  }
+  function Export() {
+    return (
+      <Form.Group>
+        <Form.Label>Export</Form.Label>
+        <Form.Select
+          size="md"
+          aria-label="Default select example"
+          value={values.export_type}
+          onChange={handleChange("export_type")}
+          // isInvalid={}
+          // isValid={values.state !== ""}
+          required
+        >
+          <option defaultValue>Select Export</option>
+          {Exporttypes.map((item, index) => (
+            <option key={index} value={item.id}>
+              {item.name} 
+            </option>
+          ))}
+        </Form.Select>
+        <Form.Control.Feedback type="invalid">
+          Select a Currency code!
+        </Form.Control.Feedback>
+      </Form.Group>
+    );
+  }
   const getState = async () => {
     try {
       const resp = await fetch(`${API}bill/bank/HO/addbank/stateCodes/`, {
@@ -176,6 +244,32 @@ export function Addcustomer() {
       console.log(err);
     }
   };
+  function Groups() {
+    return (
+      <Form.Group>
+        <Form.Label>Group: * </Form.Label>
+        <Form.Select
+        size="md"
+          aria-label="Default select example"
+          value={values.cust_group}
+          onChange={handleChange("cust_group")}
+          // isInvalid={values.state === ""}
+          // isValid={values.state !== ""}
+          required
+        >
+          <option defaultValue>Select Group</option>
+          {groupdata.map((item, index) => (
+            <option key={index} value={item.id}>
+              {item.cust_grp}
+            </option>
+          ))}
+        </Form.Select>
+        <Form.Control.Feedback type="invalid">
+          Select a state code!
+        </Form.Control.Feedback>
+      </Form.Group>
+    );
+  }
   const getDealerType = async () => {
     try {
       const resp = await fetch(`${API}bill/bank/HO/customer/RegisterDealer`, {
@@ -203,12 +297,54 @@ export function Addcustomer() {
       console.log(err);
     }
   };
+  const fetchGroup = async () => {
+    await fetch(`${API}bill/bank/HO/fetchGroup/${isAuthenticated().user.id}`, {
+      method: "GET",
+    })
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        setGroup(data);
+        console.log(data.response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const getCurrency = async () => {
+    try {
+      const resp = await fetch(`${API}bill/bank/HO/fetchcurrency/`, {
+        method: "GET",
+      });
+      const data = await resp.json();
+      setCurrency(data);
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getExport = async () => {
+    try {
+      const resp = await fetch(`${API}bill/bank/HO/fetchExport/`, {
+        method: "GET",
+      });
+      const data = await resp.json();
+      setExportTypes(data);
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const [validated, setValidated] = useState(false);
   useEffect(() => {
     setValidated(false);
     getState();
     getPlacebymaster();
     getDealerType();
+    getCurrency();
+    fetchGroup();
+    getExport();
   }, []);
   return (
     <>
@@ -505,7 +641,151 @@ export function Addcustomer() {
                 </Form.Group>
                       </Col>
                     </Row></>}
-                {values.cust_is_reg==="false" &&<></>}
+                {values.cust_is_reg==="false" &&<div className="DealerSelectionf"> </div>}
+                
+              </Row>
+              <Row>
+                <Row>Customer Balance:</Row>
+                <Row>
+                  <Col>Is Limit Applicable:</Col>
+                </Row>
+                <Row>
+                <Col xs={4}>
+                <Row style={{ transform: "scale(0.9)" }}>
+                      <Col xs={2}>
+                        <Form.Check
+                          inline
+                          value={true}
+                          label="Yes"
+                          name="group2"
+                          type="radio"
+                          checked={Limit_values.is_limit === "true"}
+                          onChange={handleChangeLimit("is_limit")}
+                          id={`inline-radio-1`}
+                        />
+                      </Col>
+                      <Col xs={2}>
+                        <Form.Check
+                          inline
+                          value={false}
+                          label="No"
+                          name="group2"
+                          type="radio"
+                          onChange={handleChangeLimit("is_limit")}
+                          id={`inline-radio-2`}
+                        />
+                      </Col>
+                    </Row>
+                    </Col>
+                    {Limit_values.is_limit === "true" &&<>
+                    <Col xs={4} className="OBDiv">
+                    <Form.Group>
+                      <Form.Label>Enter Amount : ()</Form.Label>
+                      <Form.Control
+                        onChange={handleChangeLimit("amount")} // add change condition and function call to check for uniqueness from backend.
+                        size="sm"
+                        type="input"
+                        className="form-control"
+                        placeholder=""
+                        required
+                        isInvalid={Limit_values.amount.length > 10}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        Invalid Amount{" "}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    </Col>
+                    </>
+                    }
+                    
+                    <Col xs={4} className={Limit_values.is_limit==="false"?"OPBDIV":""}>
+                    <Form.Group>
+                      <Form.Label>Opening Balance : ()</Form.Label>
+                      <Form.Control
+                        onChange={handleChangeLimit("cust_openingBalance")} // add change condition and function call to check for uniqueness from backend.
+                        size="sm"
+                        type="input"
+                        className="form-control"
+                        placeholder=""
+                        required
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        Invalid Amount{" "}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    </Col>
+                </Row>
+                <Row>
+                {CurrencyData && 
+                <>
+                  <Col>
+                  {Currency()}
+                  </Col>
+                  <Col>
+                  {groupdata && Groups()}
+                  </Col>
+                  </>
+                  
+                }
+
+                </Row>
+                <Row>
+                  <Col>Export: *</Col>
+                </Row>
+                <Row>
+                <Col xs={4}>
+                <Row style={{ transform: "scale(0.9)" }}>
+                      <Col xs={2}>
+                        <Form.Check
+                          inline
+                          value={true}
+                          label="Yes"
+                          name="group3"
+                          type="radio"
+                          checked={values.export_option === "true"}
+                          onChange={handleChange("export_option")}
+                          id={`inline-radio-1`}
+                        />
+                      </Col>
+                      <Col xs={2}>
+                        <Form.Check
+                          inline
+                          value={false}
+                          label="No"
+                          name="group3"
+                          type="radio"
+                          onChange={handleChange("export_option")}
+                          id={`inline-radio-2`}
+                        />
+                      </Col>
+                    </Row>
+                    </Col>
+                    {values.export_option === "true" &&<>
+                    <Col xs={4} className="OBDiv">
+                    {Exporttypes && Export()}
+                    </Col>
+                    </>
+                    }
+                    
+                    <Col xs={4} className={values.export_option==="false"?"OPBDIV":""}>
+                    <Form.Group>
+                      <Form.Label>Type of Sales :</Form.Label>
+                      <Form.Control
+                        onChange={handleChangeLimit("sales_type")} // add change condition and function call to check for uniqueness from backend.
+                        size="sm"
+                        value={Limit_values.sales_type}
+                        type="input"
+                        disabled
+                        className="form-control"
+                        placeholder=""
+                        required
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        Invalid Amount{" "}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    </Col>
+                </Row>
                 
               </Row>
 
@@ -515,6 +795,7 @@ export function Addcustomer() {
         <div></div>
       </div>
       {JSON.stringify(values)}
+      {JSON.stringify(Limit_values)}
       <FooterC />
     </>
   );
