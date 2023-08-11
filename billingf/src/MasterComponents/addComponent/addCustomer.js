@@ -19,9 +19,9 @@ export function Addcustomer() {
   const [stateChoice, SetStatechoice] = useState();
   const [Placemaster, SetPlacemaster] = useState();
   const [RegisterDtype, SetRegDealer] = useState();
-  const [CurrencyData,setCurrency] = useState();
-  const [groupdata,setGroup] = useState();
-  const [Exporttypes,setExportTypes] = useState();
+  const [CurrencyData, setCurrency] = useState();
+  const [groupdata, setGroup] = useState();
+  const [Exporttypes, setExportTypes] = useState();
   const [values, setvalues] = useState({
     master_id: isAuthenticated().user.id,
     cust_name: "",
@@ -50,14 +50,14 @@ export function Addcustomer() {
     loading: false,
     didNavigate: false,
   });
-  const [Limit_values,setlimitvalues] = useState({
-    is_limit:"true",
-amount:0,
-cust_openingBalance:0,
-user_id:isAuthenticated().user.id,
-sales_type:"Inter",
-rcm:true, 
-cust_id:"" 
+  const [Limit_values, setlimitvalues] = useState({
+    is_limit: "true",
+    amount: 0,
+    cust_openingBalance: 0,
+    user_id: isAuthenticated().user.id,
+    sales_type: "Inter",
+    rcm: true,
+    cust_id: "",
   });
   let icon1 = require("../../assets/images/blackPerson.png");
   // const GSTvalidator = (NUM) => {
@@ -98,14 +98,14 @@ cust_id:""
       setvalues({ ...values, [name]: event.target.value });
     }
   };
-  const handleChangeLimit = (limit) => (event)=>{
+  const handleChangeLimit = (limit) => (event) => {
     // Keep amount as zero if limit is false
-    setlimitvalues({...Limit_values,[limit]:event.target.value})
-  }
+    setlimitvalues({ ...Limit_values, [limit]: event.target.value });
+  };
   function states() {
     return (
       <Form.Group>
-        <Form.Label>State Name</Form.Label>
+        <Form.Label className="RowBoxHeading">State Name</Form.Label>
         <Form.Select
           size="md"
           aria-label="Default select example"
@@ -131,7 +131,9 @@ cust_id:""
   function DealerType() {
     return (
       <Form.Group>
-        <Form.Label>Registered Dealer Type:</Form.Label>
+        <Form.Label className="RowBoxHeading">
+          Registered Dealer Type:
+        </Form.Label>
         <Form.Select
           size="md"
           aria-label="Default select example"
@@ -144,7 +146,7 @@ cust_id:""
           <option defaultValue>Select Dealer Type</option>
           {RegisterDtype.map((item, index) => (
             <option key={index} value={item.id}>
-              {item.dealer_name} 
+              {item.dealer_name}
             </option>
           ))}
         </Form.Select>
@@ -157,9 +159,9 @@ cust_id:""
   function Places() {
     return (
       <Form.Group>
-        <Form.Label>Place </Form.Label>
+        <Form.Label className="RowBoxHeading">Place: * <Button style={{fontSize:"70%", padding:"0 1.3vw 0 1.3vw", borderRadius:"0"}} variant="danger">Add</Button> </Form.Label>
         <Form.Select
-        size="md"
+          size="md"
           aria-label="Default select example"
           value={values.cust_place}
           onChange={handleChange("cust_place")}
@@ -183,7 +185,7 @@ cust_id:""
   function Currency() {
     return (
       <Form.Group>
-        <Form.Label>Currency</Form.Label>
+        <Form.Label className="RowBoxHeading">Currency</Form.Label>
         <Form.Select
           size="md"
           aria-label="Default select example"
@@ -196,7 +198,7 @@ cust_id:""
           <option defaultValue>Select Currency</option>
           {CurrencyData.map((item, index) => (
             <option key={index} value={item.id}>
-              {item.type_C} 
+              {item.type_C}
             </option>
           ))}
         </Form.Select>
@@ -209,7 +211,7 @@ cust_id:""
   function Export() {
     return (
       <Form.Group>
-        <Form.Label>Export</Form.Label>
+        <Form.Label className="RowBoxHeading">Export Type: *</Form.Label>
         <Form.Select
           size="md"
           aria-label="Default select example"
@@ -222,7 +224,7 @@ cust_id:""
           <option defaultValue>Select Export</option>
           {Exporttypes.map((item, index) => (
             <option key={index} value={item.id}>
-              {item.name} 
+              {item.name}
             </option>
           ))}
         </Form.Select>
@@ -247,9 +249,9 @@ cust_id:""
   function Groups() {
     return (
       <Form.Group>
-        <Form.Label>Group: * </Form.Label>
+        <Form.Label className="RowBoxHeading">Group: * <Button style={{fontSize:"70%", padding:"0 1.3vw 0 1.3vw", borderRadius:"0"}} variant="danger">Add</Button> </Form.Label>
         <Form.Select
-        size="md"
+          size="md"
           aria-label="Default select example"
           value={values.cust_group}
           onChange={handleChange("cust_group")}
@@ -359,11 +361,12 @@ cust_id:""
         </div>
       </div>
       <div className="FormSet">
-        <div className="Formhandler">
+        <div className="Formhandlercust">
           <Form
             noValidate
             validated={validated}
             onSubmit={(event) => {
+              console.log(values);
               values.loading = true;
               const form = event.currentTarget;
               if (form.checkValidity() === false) {
@@ -373,24 +376,6 @@ cust_id:""
                 event.preventDefault();
                 setValidated(true);
                 console.log(values);
-                AddBankHO(values)
-                  .then((data) => {
-                    if (data) {
-                      console.log(data);
-                      setvalues({
-                        ...values,
-                        didNavigate: true,
-                        loading: false,
-                      });
-                      <Navigate to="/user/dashboard/headOffice/bank" />;
-                    } else {
-                      console.log(data);
-                      setvalues({ ...values, loading: false });
-                    }
-                  })
-                  .catch((ee) => {
-                    console.log(ee);
-                  });
               }
             }}
           >
@@ -398,10 +383,12 @@ cust_id:""
               <Row>
                 <Col>
                   <Form.Group>
-                    <Form.Label>Customer Name: *</Form.Label>
+                    <Form.Label className="RowBoxHeading TopMargin">
+                      Customer Name: *
+                    </Form.Label>
                     <Form.Control
                       onChange={handleChange("cust_name")} // add change condition and function call to check for uniqueness from backend.
-                      size="sm"
+                      size="lg"
                       type="input"
                       className="form-control"
                       placeholder=""
@@ -417,10 +404,12 @@ cust_id:""
               <Row>
                 <Col>
                   <Form.Group>
-                    <Form.Label>Code: *</Form.Label>
+                    <Form.Label className="RowBoxHeading TopMargin">
+                      Code: *
+                    </Form.Label>
                     <Form.Control
                       onChange={handleChange("cust_code")} // add change condition and function call to check for uniqueness from backend.
-                      size="sm"
+                      size="lg"
                       type="input"
                       className="form-control"
                       placeholder=""
@@ -434,8 +423,12 @@ cust_id:""
                 </Col>
                 <Col>
                   <Form.Group controlId="formFile" className="mb-3">
-                    <Form.Label>Upload Image</Form.Label>
+                    <Form.Label className="RowBoxHeading TopMargin">
+                      Upload Image
+                    </Form.Label>
                     <Form.Control
+                      style={{ marginTop: "1vh" }}
+                      size="md"
                       type="file"
                       accept="image/*"
                       onChange={handleChange("Image")}
@@ -446,6 +439,7 @@ cust_id:""
                   {values.Image && values.ImageUrl && (
                     <>
                       <Image
+                        className="TopMargin"
                         required
                         src={`${values.ImageUrl}`}
                         height="150px"
@@ -459,6 +453,7 @@ cust_id:""
                   {!values.Image && !values.ImageUrl && (
                     <>
                       <Image
+                        className="TopMargin"
                         src={icon1}
                         height="150px"
                         width="150px"
@@ -470,16 +465,18 @@ cust_id:""
                   )}
                 </Col>
               </Row>
-              <Row>
-                <Row>Address :</Row>
-                <Row>
+              <Row className="RowBoxHeading TopMargin">Address :</Row>
+              <Row className="AddressContainer">
+                <Row className="TopMargin">
                   <Col>{stateChoice && states()}</Col>
                   <Col>
                     <Form.Group>
-                      <Form.Label>Pin Code: *</Form.Label>
+                      <Form.Label className="RowBoxHeading">
+                        Pin Code: *
+                      </Form.Label>
                       <Form.Control
                         onChange={handleChange("cust_code")} // add change condition and function call to check for uniqueness from backend.
-                        size="sm"
+                        size="md"
                         type="input"
                         className="form-control"
                         placeholder=""
@@ -496,12 +493,12 @@ cust_id:""
 
                 <Col>
                   <Form.Group>
-                    <Form.Label>
+                    <Form.Label className="RowBoxHeading">
                       Address: * (Maximum Characters: 100)
                     </Form.Label>
                     <Form.Control
                       onChange={handleChange("address")} // add change condition and function call to check for uniqueness from backend.
-                      size="sm"
+                      size="lg"
                       type="input"
                       className="form-control"
                       placeholder=""
@@ -514,16 +511,17 @@ cust_id:""
                   </Form.Group>
                 </Col>
               </Row>
-
-              <Row>
-                <Row>Contact Details</Row>
-                <Row>
+              <Row className="RowBoxHeading TopMargin">Contact Details</Row>
+              <Row className="AddressContainer">
+                <Row className="TopMargin">
                   <Col>
                     <Form.Group>
-                      <Form.Label>Mobile Number: *</Form.Label>
+                      <Form.Label className="RowBoxHeading">
+                        Mobile Number: *
+                      </Form.Label>
                       <Form.Control
                         onChange={handleChange("cust_mobile")} // add change condition and function call to check for uniqueness from backend.
-                        size="sm"
+                        size="md"
                         type="input"
                         className="form-control"
                         placeholder=""
@@ -537,10 +535,12 @@ cust_id:""
                   </Col>
                   <Col>
                     <Form.Group>
-                      <Form.Label>Landline No.: *</Form.Label>
+                      <Form.Label className="RowBoxHeading">
+                        Landline No.: *
+                      </Form.Label>
                       <Form.Control
                         onChange={handleChange("cust_landline")} // add change condition and function call to check for uniqueness from backend.
-                        size="sm"
+                        size="md"
                         type="input"
                         className="form-control"
                         placeholder=""
@@ -548,16 +548,18 @@ cust_id:""
                         isInvalid={values.cust_landline.length > 10}
                       />
                       <Form.Control.Feedback type="invalid">
-                        Invalid Number{" "}
+                        Invalid Number
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                   <Col>
                     <Form.Group>
-                      <Form.Label>Email: *</Form.Label>
+                      <Form.Label className="RowBoxHeading">
+                        Email: *
+                      </Form.Label>
                       <Form.Control
                         onChange={handleChange("cust_email")} // add change condition and function call to check for uniqueness from backend.
-                        size="sm"
+                        size="md"
                         type="input"
                         className="form-control"
                         placeholder=""
@@ -571,87 +573,104 @@ cust_id:""
                   </Col>
                 </Row>
               </Row>
-
-              <Row>
-                <Row>Registeration Details:</Row>
-                <Row>
-                  <Col>
-                    <Form.Group>
-                      <Form.Label>Pan No.: *</Form.Label>
-                      <Form.Control
-                        onChange={handleChange("cust_pan")} // add change condition and function call to check for uniqueness from backend.
-                        size="sm"
-                        type="input"
-                        className="form-control"
-                        placeholder=""
-                        required
-                        isInvalid={values.cust_pan.length > 10}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        Invalid pan
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </Col>
-                  <Col xs={6}>
-                    <Row>Is Registered Dealer</Row>
-                    <Row style={{ transform: "scale(0.9)" }}>
-                      <Col xs={2}>
-                        <Form.Check
-                          inline
-                          value={true}
-                          label="Yes"
-                          name="group1"
-                          type="radio"
-                          checked={values.cust_is_reg === "true"}
-                          onChange={handleChange("cust_is_reg")}
-                          id={`inline-radio-1`}
-                        />
-                      </Col>
-                      <Col xs={2}>
-                        <Form.Check
-                          inline
-                          value={false}
-                          label="No"
-                          name="group1"
-                          type="radio"
-                          onChange={handleChange("cust_is_reg")}
-                          id={`inline-radio-2`}
-                        />
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-                {values.cust_is_reg==="true" &&<><Row className="DealerSelection">
-                      <Col>{RegisterDtype && DealerType()}</Col>
-                      <Col>
-                      <Form.Group>
-                  <Form.Label>Enter GST Number:</Form.Label>
-                  <Form.Control
-                    onChange={handleChange("cust_gst")} // add change condition and function call to check for uniqueness from backend.
-                    size="sm"
-                    type="input"
-                    className="form-control"
-                    placeholder="GST number"
-                    required
-                    isInvalid={values.error && values.Etype === "GST"}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    GST number Invalid !
-                  </Form.Control.Feedback>
-                </Form.Group>
-                      </Col>
-                    </Row></>}
-                {values.cust_is_reg==="false" &&<div className="DealerSelectionf"> </div>}
-                
+              <Row className="RowBoxHeading TopMargin">
+                Registeration Details:
               </Row>
-              <Row>
-                <Row>Customer Balance:</Row>
+              <Row className="AddressContainer">
                 <Row>
-                  <Col>Is Limit Applicable:</Col>
+                  <Row className="TopMargin">
+                    <Col>
+                      <Form.Group>
+                        <Form.Label className="RowBoxHeading">
+                          Pan No.: *
+                        </Form.Label>
+                        <Form.Control
+                          onChange={handleChange("cust_pan")} // add change condition and function call to check for uniqueness from backend.
+                          size="md"
+                          type="input"
+                          className="form-control"
+                          placeholder=""
+                          required
+                          isInvalid={values.cust_pan.length > 10}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          Invalid pan
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                    <Col xs={6}>
+                      <Row className="RowBoxHeading">Is Registered Dealer</Row>
+                      <Row
+                        style={{ transform: "scale(0.9)", marginTop: "12px" }}
+                      >
+                        <Col xs={2}>
+                          <Form.Check
+                            inline
+                            value={true}
+                            label="Yes"
+                            name="group1"
+                            type="radio"
+                            checked={values.cust_is_reg === "true"}
+                            onChange={handleChange("cust_is_reg")}
+                            id={`inline-radio-1`}
+                          />
+                        </Col>
+                        <Col xs={2}>
+                          <Form.Check
+                            inline
+                            value={false}
+                            label="No"
+                            name="group1"
+                            type="radio"
+                            onChange={handleChange("cust_is_reg")}
+                            id={`inline-radio-2`}
+                          />
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                  {values.cust_is_reg === "true" && (
+                    <>
+                      <Row className="DealerSelection">
+                        <Col>{RegisterDtype && DealerType()}</Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label className="RowBoxHeading">
+                              Enter GST Number:
+                            </Form.Label>
+                            <Form.Control
+                              onChange={handleChange("cust_gst")} // add change condition and function call to check for uniqueness from backend.
+                              size="md"
+                              type="input"
+                              className="form-control"
+                              placeholder="GST number"
+                              required
+                              isInvalid={values.error && values.Etype === "GST"}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              GST number Invalid !
+                            </Form.Control.Feedback>
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    </>
+                  )}
+                  {values.cust_is_reg === "false" && (
+                    <div className="DealerSelectionf"> </div>
+                  )}
+                </Row>
+              </Row>
+              <Row className="RowBoxHeading TopMargin">Customer Balance:</Row>
+
+              <Row className="AddressContainer TopMargin">
+                <Row>
+                  <Col className="RowBoxHeading" style={{ marginTop: "12px" }}>
+                    Is Limit Applicable:
+                  </Col>
                 </Row>
                 <Row>
-                <Col xs={4}>
-                <Row style={{ transform: "scale(0.9)" }}>
+                  <Col xs={4}>
+                    <Row style={{ transform: "scale(0.9)" }}>
                       <Col xs={2}>
                         <Form.Check
                           inline
@@ -676,65 +695,69 @@ cust_id:""
                         />
                       </Col>
                     </Row>
-                    </Col>
-                    {Limit_values.is_limit === "true" &&<>
-                    <Col xs={4} className="OBDiv">
-                    <Form.Group>
-                      <Form.Label>Enter Amount : ()</Form.Label>
-                      <Form.Control
-                        onChange={handleChangeLimit("amount")} // add change condition and function call to check for uniqueness from backend.
-                        size="sm"
-                        type="input"
-                        className="form-control"
-                        placeholder=""
-                        required
-                        isInvalid={Limit_values.amount.length > 10}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        Invalid Amount{" "}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                    </Col>
+                  </Col>
+                  {Limit_values.is_limit === "true" && (
+                    <>
+                      <Col xs={4} className="OBDiv">
+                        <Form.Group>
+                          <Form.Label className="RowBoxHeading">
+                            Enter Amount : (₹)
+                          </Form.Label>
+                          <Form.Control
+                            onChange={handleChangeLimit("amount")} // add change condition and function call to check for uniqueness from backend.
+                            size="md"
+                            type="input"
+                            className="form-control"
+                            placeholder=""
+                            required
+                            isInvalid={Limit_values.amount.length > 10}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Invalid Amount
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
                     </>
+                  )}
+
+                  <Col
+                    xs={4}
+                    className={
+                      Limit_values.is_limit === "false" ? "OPBDIV" : ""
                     }
-                    
-                    <Col xs={4} className={Limit_values.is_limit==="false"?"OPBDIV":""}>
+                  >
                     <Form.Group>
-                      <Form.Label>Opening Balance : ()</Form.Label>
+                      <Form.Label className="RowBoxHeading">
+                        Opening Balance : (₹)
+                      </Form.Label>
                       <Form.Control
                         onChange={handleChangeLimit("cust_openingBalance")} // add change condition and function call to check for uniqueness from backend.
-                        size="sm"
+                        size="md"
                         type="input"
                         className="form-control"
                         placeholder=""
                         required
                       />
                       <Form.Control.Feedback type="invalid">
-                        Invalid Amount{" "}
+                        Invalid Amount
                       </Form.Control.Feedback>
                     </Form.Group>
-                    </Col>
-                </Row>
-                <Row>
-                {CurrencyData && 
-                <>
-                  <Col>
-                  {Currency()}
                   </Col>
-                  <Col>
-                  {groupdata && Groups()}
-                  </Col>
-                  </>
-                  
-                }
-
+                </Row>
+                <Row className="TopMargin">
+                  {CurrencyData && (
+                    <>
+                      <Col>{Currency()}</Col>
+                      <Col>{groupdata && Groups()}</Col>
+                    </>
+                  )}
+                </Row>
+                <Row className="TopMargin">
+                  <Col className="RowBoxHeading">Export: *</Col>
                 </Row>
                 <Row>
-                  <Col>Export: *</Col>
-                </Row>
-                <Row>
-                <Col xs={4}>
-                <Row style={{ transform: "scale(0.9)" }}>
+                  <Col xs={4}>
+                    <Row style={{ transform: "scale(0.9)" }}>
                       <Col xs={2}>
                         <Form.Check
                           inline
@@ -759,20 +782,26 @@ cust_id:""
                         />
                       </Col>
                     </Row>
-                    </Col>
-                    {values.export_option === "true" &&<>
-                    <Col xs={4} className="OBDiv">
-                    {Exporttypes && Export()}
-                    </Col>
+                  </Col>
+                  {values.export_option === "true" && (
+                    <>
+                      <Col xs={4} className="OBDiv">
+                        {Exporttypes && Export()}
+                      </Col>
                     </>
-                    }
-                    
-                    <Col xs={4} className={values.export_option==="false"?"OPBDIV":""}>
+                  )}
+
+                  <Col
+                    xs={4}
+                    className={values.export_option === "false" ? "OPBDIV" : ""}
+                  >
                     <Form.Group>
-                      <Form.Label>Type of Sales :</Form.Label>
+                      <Form.Label className="RowBoxHeading">
+                        Type of Sales :
+                      </Form.Label>
                       <Form.Control
                         onChange={handleChangeLimit("sales_type")} // add change condition and function call to check for uniqueness from backend.
-                        size="sm"
+                        size="md"
                         value={Limit_values.sales_type}
                         type="input"
                         disabled
@@ -781,21 +810,25 @@ cust_id:""
                         required
                       />
                       <Form.Control.Feedback type="invalid">
-                        Invalid Amount{" "}
+                        Invalid Amount
                       </Form.Control.Feedback>
                     </Form.Group>
-                    </Col>
+                  </Col>
                 </Row>
-                
               </Row>
-
+              <Row>
+              <Col md={{ span: 6, offset: 6 }}>
+                </Col>
+              </Row>
             </Container>
+            <Button type="submit" >Save</Button> 
+                {performNavigate()}
           </Form>
         </div>
         <div></div>
       </div>
-      {JSON.stringify(values)}
-      {JSON.stringify(Limit_values)}
+      {/* {JSON.stringify(values)}
+      {JSON.stringify(Limit_values)} */}
       <FooterC />
     </>
   );

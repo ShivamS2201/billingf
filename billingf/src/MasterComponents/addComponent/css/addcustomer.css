@@ -29,3 +29,17 @@
 .Container > .row >.row > .OPBDIV{
   animation: righttoleft 200ms ease-in-out;
 }
+.Container  .AddressContainer{
+  border: 1px solid #f1f1f1;
+  padding-bottom: 3vh ;
+
+
+}
+.RowBoxHeading{
+  font-weight: 600;
+  font-size: 14px;
+}
+.TopMargin{
+  margin-top: 4vh;
+  margin-bottom: 3vh;
+}
