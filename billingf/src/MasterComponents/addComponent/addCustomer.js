@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { AddBankHO, isAuthenticated } from "../../auth/authIndex";
+import { CustomerAdd, isAuthenticated } from "../../auth/authIndex";
 import Navb from "../../Components/navbar";
 import { SignoutNav } from "../../UserView/singoutnav";
 import { Button, Form } from "react-bootstrap";
 import "./css/addcustomer.css";
 import { API } from "../../backend";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import FooterC from "../../Components/footer";
 import Container from "react-bootstrap/Container";
@@ -43,8 +43,7 @@ export function Addcustomer() {
     cust_currency: "",
     export_option: "true",
     export_type: "",
-    created_at: "",
-    modified_by: "",
+    modified_by: `${isAuthenticated().user.id}`,
     status: true,
     error: false,
     loading: false,
@@ -77,7 +76,7 @@ export function Addcustomer() {
   // };
   const performNavigate = () => {
     if (values.didNavigate) {
-      return <Navigate to="/user/dashboard" />;
+      return <Navigate to="/user/dashboard/headOffice/customer" />;
     }
   };
   const handleChange = (name) => (event) => {
@@ -105,7 +104,7 @@ export function Addcustomer() {
   function states() {
     return (
       <Form.Group>
-        <Form.Label className="RowBoxHeading">State Name</Form.Label>
+        <Form.Label className="RowBoxHeading">State Name: *</Form.Label>
         <Form.Select
           size="md"
           aria-label="Default select example"
@@ -141,7 +140,6 @@ export function Addcustomer() {
           onChange={handleChange("cust_dealer_type")}
           // isInvalid={}
           // isValid={values.state !== ""}
-          required
         >
           <option defaultValue>Select Dealer Type</option>
           {RegisterDtype.map((item, index) => (
@@ -159,7 +157,7 @@ export function Addcustomer() {
   function Places() {
     return (
       <Form.Group>
-        <Form.Label className="RowBoxHeading">Place: * <Button style={{fontSize:"70%", padding:"0 1.3vw 0 1.3vw", borderRadius:"0"}} variant="danger">Add</Button> </Form.Label>
+        <Form.Label className="RowBoxHeading">Place: * <Button style={{fontSize:"70%", padding:"0 1.3vw 0 1.3vw", borderRadius:"0"}} variant="danger"> <Link to="/user/dashboard/headOffice/addplace/" style={{textDecoration:"none", color:"white"}}>Add</Link></Button> </Form.Label>
         <Form.Select
           size="md"
           aria-label="Default select example"
@@ -185,7 +183,7 @@ export function Addcustomer() {
   function Currency() {
     return (
       <Form.Group>
-        <Form.Label className="RowBoxHeading">Currency</Form.Label>
+        <Form.Label className="RowBoxHeading">Currency: *</Form.Label>
         <Form.Select
           size="md"
           aria-label="Default select example"
@@ -249,7 +247,7 @@ export function Addcustomer() {
   function Groups() {
     return (
       <Form.Group>
-        <Form.Label className="RowBoxHeading">Group: * <Button style={{fontSize:"70%", padding:"0 1.3vw 0 1.3vw", borderRadius:"0"}} variant="danger">Add</Button> </Form.Label>
+        <Form.Label className="RowBoxHeading">Group: * <Button style={{fontSize:"70%", padding:"0 1.3vw 0 1.3vw", borderRadius:"0"}} variant="danger"><Link to="/user/dashboard/headOffice/addplace/" style={{textDecoration:"none", color:"white"}}>Add</Link></Button> </Form.Label>
         <Form.Select
           size="md"
           aria-label="Default select example"
@@ -308,7 +306,6 @@ export function Addcustomer() {
       })
       .then((data) => {
         setGroup(data);
-        console.log(data.response);
       })
       .catch((err) => {
         console.log(err);
@@ -366,7 +363,6 @@ export function Addcustomer() {
             noValidate
             validated={validated}
             onSubmit={(event) => {
-              console.log(values);
               values.loading = true;
               const form = event.currentTarget;
               if (form.checkValidity() === false) {
@@ -375,7 +371,23 @@ export function Addcustomer() {
               } else {
                 event.preventDefault();
                 setValidated(true);
-                console.log(values);
+                CustomerAdd(values,Limit_values).then((data) => {
+                  if (data) {
+                    console.log(data);
+                    setvalues({
+                      ...values,
+                      didNavigate: true,
+                      loading: false,
+                    });
+                    <Navigate to="/user/dashboard/headOffice/customer" />
+                  } else {
+                    console.log(data);
+                    setvalues({ ...values, loading: false });
+                  }
+                })
+                .catch((ee) => {
+                  console.log(ee);
+                });         
               }
             }}
           >
@@ -475,7 +487,7 @@ export function Addcustomer() {
                         Pin Code: *
                       </Form.Label>
                       <Form.Control
-                        onChange={handleChange("cust_code")} // add change condition and function call to check for uniqueness from backend.
+                        onChange={handleChange("cust_pincode")} // add change condition and function call to check for uniqueness from backend.
                         size="md"
                         type="input"
                         className="form-control"
@@ -511,7 +523,7 @@ export function Addcustomer() {
                   </Form.Group>
                 </Col>
               </Row>
-              <Row className="RowBoxHeading TopMargin">Contact Details</Row>
+              <Row className="RowBoxHeading TopMargin">Contact Details :</Row>
               <Row className="AddressContainer">
                 <Row className="TopMargin">
                   <Col>
@@ -536,7 +548,7 @@ export function Addcustomer() {
                   <Col>
                     <Form.Group>
                       <Form.Label className="RowBoxHeading">
-                        Landline No.: *
+                        Landline No.:
                       </Form.Label>
                       <Form.Control
                         onChange={handleChange("cust_landline")} // add change condition and function call to check for uniqueness from backend.
@@ -544,7 +556,6 @@ export function Addcustomer() {
                         type="input"
                         className="form-control"
                         placeholder=""
-                        required
                         isInvalid={values.cust_landline.length > 10}
                       />
                       <Form.Control.Feedback type="invalid">
@@ -599,7 +610,7 @@ export function Addcustomer() {
                       </Form.Group>
                     </Col>
                     <Col xs={6}>
-                      <Row className="RowBoxHeading">Is Registered Dealer</Row>
+                      <Row className="RowBoxHeading">Is Registered Dealer :</Row>
                       <Row
                         style={{ transform: "scale(0.9)", marginTop: "12px" }}
                       >
@@ -644,7 +655,6 @@ export function Addcustomer() {
                               type="input"
                               className="form-control"
                               placeholder="GST number"
-                              required
                               isInvalid={values.error && values.Etype === "GST"}
                             />
                             <Form.Control.Feedback type="invalid">
@@ -665,7 +675,7 @@ export function Addcustomer() {
               <Row className="AddressContainer TopMargin">
                 <Row>
                   <Col className="RowBoxHeading" style={{ marginTop: "12px" }}>
-                    Is Limit Applicable:
+                    Is Limit Applicable: *
                   </Col>
                 </Row>
                 <Row>
@@ -709,7 +719,6 @@ export function Addcustomer() {
                             type="input"
                             className="form-control"
                             placeholder=""
-                            required
                             isInvalid={Limit_values.amount.length > 10}
                           />
                           <Form.Control.Feedback type="invalid">
@@ -736,7 +745,6 @@ export function Addcustomer() {
                         type="input"
                         className="form-control"
                         placeholder=""
-                        required
                       />
                       <Form.Control.Feedback type="invalid">
                         Invalid Amount
@@ -797,7 +805,7 @@ export function Addcustomer() {
                   >
                     <Form.Group>
                       <Form.Label className="RowBoxHeading">
-                        Type of Sales :
+                        Type of Sales : *
                       </Form.Label>
                       <Form.Control
                         onChange={handleChangeLimit("sales_type")} // add change condition and function call to check for uniqueness from backend.
@@ -820,9 +828,17 @@ export function Addcustomer() {
               <Col md={{ span: 6, offset: 6 }}>
                 </Col>
               </Row>
-            </Container>
-            <Button type="submit" >Save</Button> 
+              <Row className="ButtonsForm">
+                <Col xs={1}>
+                <Button type="submit" onClick={()=>{nav(-1)}} >Back</Button>
+                </Col>
+                <Col xs={1}>
+                <Button type="submit" >Save</Button> 
                 {performNavigate()}
+                </Col>
+              </Row>
+            </Container>
+           
           </Form>
         </div>
         <div></div>

@@ -530,3 +530,78 @@ export async function addCategory(user){
     console.log(err);
   }
 }
+
+export async function CustomerAdd(user,limitvalue){
+  const formDataCust = new FormData();
+  const FormdataLimit = new FormData();
+  if (limitvalue.is_limit ==="true"){
+
+    FormdataLimit.append("amount",limitvalue.amount);
+    FormdataLimit.append("is_limit",true);
+
+  }
+  else{
+    FormdataLimit.append("amount",0);
+    FormdataLimit.append("is_limit",false);
+
+  }
+  FormdataLimit.append("cust_openingBalance",limitvalue.cust_openingBalance);
+  FormdataLimit.append("user_id",limitvalue.user_id);
+  FormdataLimit.append("sales_type",limitvalue.sales_type);
+  FormdataLimit.append("rcm",limitvalue.rcm);
+  
+formDataCust.append("master_id",user.master_id)
+formDataCust.append("cust_name",user.cust_name)
+formDataCust.append("cust_code",user.cust_code)
+formDataCust.append("Image",user.Image)
+formDataCust.append("cust_state_id",user.cust_state_id)
+formDataCust.append("cust_pincode",user.cust_pincode)
+formDataCust.append("cust_pan",user.cust_pan)
+formDataCust.append("cust_place",user.cust_place)
+formDataCust.append("cust_group",user.cust_group)
+formDataCust.append("cust_mobile",user.cust_mobile)
+formDataCust.append("cust_landline",user.cust_landline)
+formDataCust.append("cust_email",user.cust_email)
+formDataCust.append("address",user.address)
+formDataCust.append("cust_is_reg",user.cust_is_reg)
+formDataCust.append("cust_dealer_type",user.cust_dealer_type)
+formDataCust.append("cust_gst",user.cust_gst)
+formDataCust.append("cust_currency",user.cust_currency)
+formDataCust.append("export_option",user.export_option)
+formDataCust.append("export_type",user.export_type)
+formDataCust.append("modified_by",user.modified_by)
+formDataCust.append("status",user.status)
+  
+  console.log(user,limitvalue)
+
+  try {
+    const resp = await fetch(`${API}bill/bank/HO/AddCustomer/`, {
+      method: "POST",
+      body: formDataCust,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data = await resp.json();
+    FormdataLimit.append("cust_id", data);
+    let m = await fetch(`${API}bill/bank/HO/AddCustomerLimit/`, {
+      method: "POST",
+      body: FormdataLimit,
+      headers: {
+        Authorization: null
+      },
+      withCredentials: true,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data_1) => {
+        return data_1;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return await [data, true];
+  } catch (err_1) {
+    console.log(err_1);
+  }
+}
