@@ -12,8 +12,11 @@ import { isAuthenticated } from "../auth/authIndex";
 
 // Before making add branch remeber to change role id values elese user won't be created
 const HeadOfficeComponent = () => {
-  const [CourselData,setCoursel] = useState({bank:0,stock:0,vehicle:0,purorder:0,purchase:0,cust:0});
+  const [BankCnt,setbank] = useState({bank:0});
+  const [CustCnt,setCust] = useState({cust:0});
+
 //bank/HO/getBank/
+// bank/HO/getCustcnt/
   async function getBanks(){
     return await fetch(
       `${API}bill/bank/HO/getBankcnt/${isAuthenticated().user.id}`,
@@ -23,7 +26,7 @@ const HeadOfficeComponent = () => {
         return resp.json();
       })
       .then((data) => {
-        setCoursel({...CourselData,bank:data});
+        setbank({bank:data});
         console.log(data)
         return data;
 
@@ -32,9 +35,27 @@ const HeadOfficeComponent = () => {
         console.log(err);
       });
   }
+  async function getCust(){
+    return await fetch(
+      `${API}bill/bank/HO/getCustcnt/${isAuthenticated().user.id}`,
+      { method: "GET" }
+    )
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        setCust({cust:data});
+        console.log(data)
+        return data;
 
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 useEffect(() => {
-  getBanks()
+  getBanks();
+  getCust();
 }, []);
 
   return (
@@ -58,7 +79,7 @@ useEffect(() => {
                         </Col>
                         <Col id="dataholder">
                           <Row id="nameH">Purchase</Row>
-                          <Row id="numH">{CourselData.purchase}</Row>
+                          {/* <Row id="numH">{CourselData.purchase}</Row> */}
                         </Col>
                       </Row>
                     </Card.Body>
@@ -71,7 +92,7 @@ useEffect(() => {
                         </Col>
                         <Col id="dataholder">
                           <Row id="nameH">Customer</Row>
-                          <Row id="numH">{CourselData.cust}</Row>
+                          <Row id="numH">{CustCnt.cust}</Row>
                         </Col>
                       </Row>
                     </Card.Body>
@@ -88,7 +109,7 @@ useEffect(() => {
                         </Col>
                         <Col id="dataholder">
                           <Row id="nameH">Stock</Row>
-                          <Row id="numH">{CourselData.stock}</Row>
+                          {/* <Row id="numH">{CourselData.stock}</Row> */}
                         </Col>
                       </Row>
                     </Card.Body>
@@ -101,7 +122,7 @@ useEffect(() => {
                         </Col>
                         <Col id="dataholder">
                           <Row id="nameH">Vehicle</Row>
-                          <Row id="numH">{CourselData.vehicle}</Row>
+                          {/* <Row id="numH">{CourselData.vehicle}</Row> */}
                         </Col>
                       </Row>
                     </Card.Body>
@@ -123,7 +144,7 @@ useEffect(() => {
                           >
                             Purchase Order
                           </Row>
-                          <Row id="numH">{CourselData.purorder}</Row>
+                          {/* <Row id="numH">{CourselData.purorder}</Row> */}
                         </Col>
                       </Row>
                     </Card.Body>
@@ -136,7 +157,7 @@ useEffect(() => {
                         </Col>
                         <Col id="dataholder">
                           <Row id="nameH">Bank</Row>
-                          <Row id="numH">{CourselData.bank}</Row>
+                          <Row id="numH">{BankCnt.bank}</Row>
                         </Col>
                       </Row>
                     </Card.Body>

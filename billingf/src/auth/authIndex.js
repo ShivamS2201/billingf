@@ -537,12 +537,12 @@ export async function CustomerAdd(user,limitvalue){
   if (limitvalue.is_limit ==="true"){
 
     FormdataLimit.append("amount",limitvalue.amount);
-    FormdataLimit.append("is_limit",true);
+    FormdataLimit.append("is_limit_cond",true);
 
   }
   else{
     FormdataLimit.append("amount",0);
-    FormdataLimit.append("is_limit",false);
+    FormdataLimit.append("is_limit_cond",false);
 
   }
   FormdataLimit.append("cust_openingBalance",limitvalue.cust_openingBalance);
@@ -553,7 +553,7 @@ export async function CustomerAdd(user,limitvalue){
 formDataCust.append("master_id",user.master_id)
 formDataCust.append("cust_name",user.cust_name)
 formDataCust.append("cust_code",user.cust_code)
-formDataCust.append("Image",user.Image)
+formDataCust.append("Image",user.Image) // Need to pass an image in either of the case.
 formDataCust.append("cust_state_id",user.cust_state_id)
 formDataCust.append("cust_pincode",user.cust_pincode)
 formDataCust.append("cust_pan",user.cust_pan)

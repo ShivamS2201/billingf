@@ -11,16 +11,16 @@ import ToolkitProvider, {
     Search,
   } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min";
 export function Customer (){
-    const [BrTable,setBrtable] = useState({response:""});
-    const fetchBrtable = async () => {
-      await fetch(`${API}user/register/hobrdata/${isAuthenticated().user.id}/6`, {
+    const [Custtable,setCustdata] = useState({response:""});
+    const fetchCusttable = async () => {
+      await fetch(`${API}bill/bank/HO/fetchCusttable/${isAuthenticated().user.id}`, {
         method: "GET",
       })
         .then((resp) => {
           return resp.json();
         })
         .then((data) => {
-          setBrtable(data);
+          setCustdata(data);
           console.log(data.response);
         })
         .catch((err) => {
@@ -30,35 +30,28 @@ export function Customer (){
     let icon1 = require("../assets/images/icon1.png");
     let icon2 = require("../assets/images/icon2.png");
     useEffect(()=>{
-      fetchBrtable();
+      fetchCusttable();
     },[])
     const columns = [
       {
         sort: true,
-        dataField: "first_name",
+        dataField: "cust_name",
         text: "Name",
       },
       {
         sort: true,
-        dataField: "email",
+        dataField: "cust_email",
         text: "Email ID",
       },
       {
         sort: true,
-        dataField: "bill_manage_info__landlineNUM",
+        dataField: "cust_mobile",
         text: "Contact No.",
       },
       {
         sort: true,
-        dataField: "bill_manage_info__sms_credit",
-        text: "SMS",
-        formatter: (cell, row, rowIndex, extraData) => (
-          <div>
-            <span>
-              {cell}({JSON.stringify(row["bill_manage_info__sms_debit"])})
-            </span>
-          </div>
-        ),
+        dataField: "cust_code",
+        text: "Code",
       },
       {
         sort: true,
@@ -84,31 +77,31 @@ export function Customer (){
           </div>
         ),
       },
-     {
-        sort: true,
-        dataField: "joining_date",
-        text: "Joining Date",
-        formatter: (cell, row, rowIndex, extraData) => (
-          <div>
-            <span>
-            {JdateGet(row["joining_date"])}
-            </span>
-          </div>
-        )
-      }
-      ,
-      {
-        sort: true,
-        dataField: "renew_year",
-        text: "Expiry Date",
-        formatter: (cell, row, rowIndex, extraData) => (
-          <div>
-            <span>
-              {expBR(row["joining_date"], row["renew_year"])}
-            </span>
-          </div>
-        ),
-      },
+    //  {
+    //     sort: true,
+    //     dataField: "joining_date",
+    //     text: "Joining Date",
+    //     formatter: (cell, row, rowIndex, extraData) => (
+    //       <div>
+    //         <span>
+    //         {JdateGet(row["joining_date"])}
+    //         </span>
+    //       </div>
+    //     )
+      // }
+     // ,
+      // {
+      //   sort: true,
+      //   dataField: "renew_year",
+      //   text: "Expiry Date",
+      //   formatter: (cell, row, rowIndex, extraData) => (
+      //     <div>
+      //       <span>
+      //         {expBR(row["joining_date"], row["renew_year"])}
+      //       </span>
+      //     </div>
+      //   ),
+      // },
     ];
     const customTotal = (from, to, size) => (
       <span className="react-bootstrap-table-pagination-total">
@@ -169,7 +162,7 @@ export function Customer (){
         },
         {
           text: "All",
-          value: BrTable ? BrTable.length : 0,
+          value: Custtable ? Custtable.length : 0,
         },
       ], // A numeric array is also available. the purpose of above example is custom the text
     };
@@ -202,7 +195,7 @@ export function Customer (){
        </div></div>
         </div>
       </div>
-      {!BrTable.response &&
+      {!Custtable.response &&
        <div className="NoTableCont">
         <div className="Content">
                  
@@ -210,13 +203,13 @@ export function Customer (){
        </div>
      </div>
       }
-      {BrTable.response && (
+      {Custtable.response && (
         <div className="tablecontainer">
-        {BrTable.response && (
+        {Custtable.response && (
           <div className="TableContainer" style={{}}>
             <ToolkitProvider
               keyField="first_name"
-              data={BrTable.response}
+              data={Custtable.response}
               columns={columns}
               search
             >
@@ -232,7 +225,7 @@ export function Customer (){
                       hover
                       selectRow={selectRow}
                       keyField="first_name"
-                      data={BrTable.response}
+                      data={Custtable.response}
                       columns={columns}
                       pagination={paginationFactory(options)}
                       sort={sortOption}
