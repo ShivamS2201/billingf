@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Nav } from "react-bootstrap";
+import { Button, Col, Container, Nav, Row } from "react-bootstrap";
 import { Link, Navigate, NavLink } from "react-router-dom";
 import { isAuthenticated } from "../auth/authIndex";
 import "./css/owner.css";
@@ -411,7 +411,31 @@ const Owner = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> 
+              {/* The admin Buttons are added.Can be conditional Need to change just add it to render for Owner state */}
+              <Container fluid="md" style={{display:"inline"}}>
+                <Row>
+                  <Col>
+                  <Link to="/user/dashboard/transfersales">
+                  <Button style={{width:"18.6vw",background:"rgb(47, 49, 146)",border:"none"}}>
+                    Transfer Sales
+                    </Button>
+                    </Link>
+                  </Col>
+                  <Col><Link to="/user/dashboard/transferHO">
+                  <Button style={{width:"18.6vw",background:"rgb(47, 49, 146)",border:"none"}}>
+                    Transfer Head Office
+                  </Button>
+                  </Link>
+                  </Col>
+                  <Col><Link to="/user/dashboard/adminMessage">
+                  <Button style={{width:"18.6vw",background:"rgb(47, 49, 146)",border:"none"}}>
+                    Admin Messages
+                  </Button>
+                  </Link>
+                  </Col>
+                </Row>
+              </Container>
             </div>
           </div>
         </div>

@@ -30,6 +30,9 @@ import { AddCash } from "./MasterComponents/addComponent/addCash";
 import { EditCash } from "./MasterComponents/editComponent/editcash";
 import { AddPlace } from "./MasterComponents/addComponent/addplace";
 import { Addcustomer } from "./MasterComponents/addComponent/addCustomer";
+import AdminMessage from "./Components/adminMsg";
+import TransferSales from "./Components/transfersales";
+import TransferHO from "./Components/trasnsferHO";
 
 const RoutesD = () =>{
   return(
@@ -40,6 +43,10 @@ const RoutesD = () =>{
     <Route path="/signin" exact element={<LOGIN />} />
     <Route path="*" exact element={<Notfound/>} />
     <Route path="/user/dashboard/*" element={<PrivateRoutes component={UserDashboard}/>}/>
+    <Route path="/user/dashboard/adminMessage" element={<PrivateRoutes component={AdminMessage}/>}/>
+    <Route path="/user/dashboard/transfersales" element={<PrivateRoutes component={TransferSales}/>}/>
+    <Route path="/user/dashboard/transferHO" element={<PrivateRoutes component={TransferHO}/>}/>
+
     <Route path="/user/dashboard/register/addDistributor/*" exact element={<PrivateRoutes component={DistributorForm}/>} />
     <Route path="/user/dashboard/register/addsales/*" exact element={<PrivateRoutes component={SalesForm}/>} />
     <Route path="/user/dashboard/register/addHoffice/*" exact element={<PrivateRoutes component={HooficeForm}/>} />
