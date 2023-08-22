@@ -353,7 +353,53 @@ export async function UpdateUser(user,bill){
     console.log(err_1);
   }
 }
+export async function TransferSalesreq(user){
 
+  const formDataUser = new FormData();
+  
+  formDataUser.append("distID",user.dist_id) //passing the new dist id
+  formDataUser.append("email",user.email) //passing the new dist id
+  formDataUser.append("role_id",user.role_id) //passing the new dist id
+
+
+
+  try {
+    const resp = await fetch(`${API}user/update/${user.id}`, { // pass the sales id
+      method: "PUT",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data = await resp.json();
+    return true;
+  } catch (err_1) {
+    console.log(err_1);
+  }
+}
+
+export async function TransferHOreq(user){
+
+  const formDataUser = new FormData();
+  
+  formDataUser.append("salesid",user.salesid) //passing the new dist id
+  formDataUser.append("email",user.email) //passing the new dist id
+  formDataUser.append("role_id",user.role_id) //passing the new dist id
+
+
+
+  try {
+    const resp = await fetch(`${API}user/update/${user.id}`, { // pass the sales id
+      method: "PUT",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data = await resp.json();
+    return true;
+  } catch (err_1) {
+    console.log(err_1);
+  }
+}
 export function JdateGet(JD){
   return JSON.stringify(JD).slice(1,11).split("-",3).reverse().join("-") //perfect date format
 }

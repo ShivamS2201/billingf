@@ -33,6 +33,7 @@ import { Addcustomer } from "./MasterComponents/addComponent/addCustomer";
 import AdminMessage from "./Components/adminMsg";
 import TransferSales from "./Components/transfersales";
 import TransferHO from "./Components/trasnsferHO";
+import AddMessage from "./Components/addMessage";
 
 const RoutesD = () =>{
   return(
@@ -80,6 +81,13 @@ const RoutesD = () =>{
     <Route path="/user/dashboard/headOffice/production/*" exact element={<PrivateRoutes component={Production}/>} />
     <Route path="/user/dashboard/headOffice/adjustment/*" exact element={<PrivateRoutes component={Adjustment}/>} />
     <Route path="/user/dashboard/headOffice/creddeb/*" exact element={<PrivateRoutes component={CDebit}/>} />
+
+    <Route path="/user/dashboard/messages/add/sms" exact element={<PrivateRoutes component={AddMessage}/>} />
+    <Route path="/user/dashboard/messages/add/Whatsapp" exact element={<PrivateRoutes component={AddMessage}/>} />
+    <Route path="/user/dashboard/messages/add/Email" exact element={<PrivateRoutes component={AddMessage}/>} />
+    <Route path="/user/dashboard/messages/add/MOS" exact element={<PrivateRoutes component={AddMessage}/>} />
+
+
 
 
 
