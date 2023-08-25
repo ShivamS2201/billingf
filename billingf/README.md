@@ -52,4 +52,10 @@ also setup a static and media folder in backend.
 
 Change The credit debit logi in backend to see count the numbers and allow access
 
-Also give add capability and make logic according ot the is _active status
+Also give add capability and make logic according ot the is _active status.
+
+
+Making :
+- The Send Message service all over the system.
+- The final reciept model needs to be accomplished and finalised. 
+- The Models need to be configured and masters to be specialised. 

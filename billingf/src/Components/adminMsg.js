@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { JdateGet, isAuthenticated } from "../auth/authIndex";
 import Navb from "./navbar";
 import { SignoutNav } from "../UserView/singoutnav";
@@ -13,9 +13,9 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 import BootstrapTable from "react-bootstrap-table-next";
 import { API } from "../backend";
 import AddMessage from "./addMessage";
+import Loader from "./loader";
 
-export default function AdminMessage() {
-    
+export default function AdminMessage() {    
   const TableandButton = (tableData, typemsg) => {
     const columns = [
         {
@@ -177,12 +177,12 @@ export default function AdminMessage() {
     whatsapp: false,
     email: false,
     MOS: false,
+    loading:true
   });
   const [Table,setTable] = useState();
   const Typehandlechange = (name) => (event) => {
     if (name === "sms") {
-      setmsgtype({ sms: true, whatsapp: false, email: false, MOS: false });
-      FetchTable();
+      setmsgtype({ sms: true, whatsapp: false, email: false, MOS: false});
     } else if (name === "whatsapp") {
       setmsgtype({ sms: false, whatsapp: true, email: false, MOS: false });
     } else if (name === "email") {
@@ -205,6 +205,7 @@ export default function AdminMessage() {
             })
             .then((data) => {
               setTable(data);
+              setmsgtype({...msgtype,loading:false})
             })
             .catch((err) => {
               console.log(err);
@@ -212,8 +213,13 @@ export default function AdminMessage() {
 
     }
   }
+  useEffect(()=>{
+    Typehandlechange("sms")
+    FetchTable();
+  },[])
   return (
     <>
+        {msgtype.sms && msgtype.loading && <><Loader/></>}
       <div className="name__top">
         Welcome to Owner {isAuthenticated().user.first_name}
       </div>
@@ -238,9 +244,8 @@ export default function AdminMessage() {
           <Button onClick={Typehandlechange("email")}> EMAIL </Button>
           <Button onClick={Typehandlechange("MOS")}> MESSAGE ON SCREEN </Button>
         </div>
-        {JSON.stringify(msgtype)}
         <div className="ContentContainer">
-          {msgtype.sms && <>{TableandButton(Table,"SMS")}</>}
+          {msgtype.sms && Table &&<>{TableandButton(Table,"SMS")}</>}
           {msgtype.whatsapp && <>{TableandButton([],"Whatsapp")}</>}
           {msgtype.email && <>{TableandButton([],"Email")}</>}
           {msgtype.MOS && <>{TableandButton([],"MOS")}</>}
