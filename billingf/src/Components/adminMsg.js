@@ -26,16 +26,12 @@ export default function AdminMessage() {
         {
           sort: true,
           dataField: "ShortId",
-          text: "Date Sent",
+          text: "Unique Identifier",
         },
         {
           dataField: "message",
-          text: "Sent To",
+          text: "Message",
         },
-        {
-            dataField: "message",
-            text: "Message",
-          },
           {
             dataField: "timestamp",
             text: "Sent At",

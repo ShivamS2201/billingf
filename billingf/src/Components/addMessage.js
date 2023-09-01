@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { isAuthenticated } from "../auth/authIndex";
+import { AddMessageRequest, isAuthenticated } from "../auth/authIndex";
 import Navb from "./navbar";
 import { SignoutNav } from "../UserView/singoutnav";
 import FooterC from "./footer";
@@ -131,7 +131,8 @@ export default function AddMessage() {
 msg.sales.length + " Sales " +
 msg.HO.length+ " Head Office "+
 msg.Br.length+ " Branch " )
-    }
+var ret = AddMessageRequest(msg,isAuthenticated().user.id)
+}
   }
   return (
     <>

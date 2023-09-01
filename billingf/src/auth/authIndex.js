@@ -651,3 +651,41 @@ formDataCust.append("status",user.status)
     console.log(err_1);
   }
 }
+
+export async function AddMessageRequest(msg,id){
+  const FormMsg = new FormData();
+  FormMsg.append("message",msg.msg);
+  FormMsg.append("ShortId",msg.UIden);
+  var D = []
+  var S = []
+  var H = []
+  var B = []
+  if (msg.dist){
+    msg.dist.forEach((val)=>{D.push(val.value)})
+    FormMsg.append("dist",D);
+}
+  if (msg.sales){
+    msg.sales.forEach((val)=>{S.push(val.value)})
+    FormMsg.append("sales",S);}
+  if (msg.HO){
+    msg.HO.forEach((val)=>{H.push(val.value)})
+    FormMsg.append("HO",H);}
+  if (msg.Br){
+    msg.Br.forEach((val)=>{B.push(val.value)})
+    FormMsg.append("Br",B);}
+  
+  try {
+    const response = await fetch(`${API}bill/admin/sendmessage`, {
+      method: "POST",
+      body: FormMsg,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+    const data_1 = await response.json();
+    return data_1;
+  } catch (err) {
+    console.log(err);
+  }
+
+
+}

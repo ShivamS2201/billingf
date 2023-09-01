@@ -48,6 +48,10 @@ const ChildSolution = forwardRef((props, _ref) => {
   };
   useImperativeHandle(_ref, () => ({
     getchildstate: () => {
+      for(var k in props.value.length){
+        console.log(props.value[`${k}`].value)
+      }
+      console.log(props.value)
       return props.value;
     }
   }));
