@@ -652,7 +652,7 @@ formDataCust.append("status",user.status)
   }
 }
 
-export async function AddMessageRequest(msg,id){
+export async function AddMessageRequest(msg,id,typeMsg){
   const FormMsg = new FormData();
   FormMsg.append("message",msg.msg);
   FormMsg.append("ShortId",msg.UIden);
@@ -674,18 +674,63 @@ export async function AddMessageRequest(msg,id){
     msg.Br.forEach((val)=>{B.push(val.value)})
     FormMsg.append("Br",B);}
   
-  try {
-    const response = await fetch(`${API}bill/admin/sendmessage`, {
-      method: "POST",
-      body: FormMsg,
-      headers: { Authorization: null },
-      withCredentials: true,
-    });
-    const data_1 = await response.json();
-    return data_1;
-  } catch (err) {
-    console.log(err);
+  if (typeMsg === "SMS"){
+    try {
+      const response = await fetch(`${API}bill/admin/sendmessage`, {
+        method: "POST",
+        body: FormMsg,
+        headers: { Authorization: null },
+        withCredentials: true,
+      });
+      const data_1 = await response.json();
+      return data_1;
+    } catch (err) {
+      console.log(err);
+    }
   }
+  else if (typeMsg === "WHATSAPP"){
+    try {
+      const response = await fetch(`${API}bill/admin/sendmessageW`, {
+        method: "POST",
+        body: FormMsg,
+        headers: { Authorization: null },
+        withCredentials: true,
+      });
+      const data_1 = await response.json();
+      return data_1;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  else if (typeMsg === "EMAIL"){
+    try {
+      const response = await fetch(`${API}bill/admin/sendmessageE`, {
+        method: "POST",
+        body: FormMsg,
+        headers: { Authorization: null },
+        withCredentials: true,
+      });
+      const data_1 = await response.json();
+      return data_1;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  else if (typeMsg === "MOS"){
+    try {
+      const response = await fetch(`${API}bill/admin/sendmessageMOS`, {
+        method: "POST",
+        body: FormMsg,
+        headers: { Authorization: null },
+        withCredentials: true,
+      });
+      const data_1 = await response.json();
+      return data_1;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+ 
 
 
 }
