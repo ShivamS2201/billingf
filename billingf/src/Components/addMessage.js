@@ -139,7 +139,7 @@ else if(name === "WHATSAPP"){
   var ret = AddMessageRequest(msg,isAuthenticated().user.id,name)
 }
 else if(name === "EMAIL"){
-  // var ret = AddMessageRequest(msg,isAuthenticated().user.id)
+  var ret = AddMessageRequest(msg,isAuthenticated().user.id,name)
 }else if(name === "MOS"){
   // var ret = AddMessageRequest(msg,isAuthenticated().user.id)
 }
