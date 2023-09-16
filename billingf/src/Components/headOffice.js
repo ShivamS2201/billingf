@@ -186,7 +186,7 @@ useEffect(() => {
                 </div>
               </Link>
 
-              <Link id="linkerho" to={"bank"}>
+              <Link id="linkerho" to={"headOffice/editprofile"}>
                 <div className="divHO3">
                   <div className="iconHO">
                     <i className="bi bi-person-fill"></i>{" "}
