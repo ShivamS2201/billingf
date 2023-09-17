@@ -17,6 +17,11 @@ export default function EditProfile() {
     const [billseries,setbillseries] = useState("false");
     const [CurrencyData, setCurrency] = useState();
     const [templatesData, settemplates] = useState();
+    const [Bank,setBank] = useState(
+     { isBank:false,
+      bank_name:"",}
+    );
+
 
 
     
@@ -79,7 +84,7 @@ export default function EditProfile() {
           size="md"
           aria-label="Default select example"
           value={values.cust_currency}
-          onChange={handleChange("cust_currency")}
+          onChange={handleChangeInvoice("cust_currency")}
           // isInvalid={}
           // isValid={values.state !== ""}
           required
@@ -138,6 +143,9 @@ export default function EditProfile() {
   const handleChangeManage = (name) => (event) => {
     setManageVal({ ...manageValue, [name]: event.target.value });
     };
+  const handleChangeInvoice = (name) =>(event)=>{
+    setbillInvoice({...billInvoice,[name]:event.target.value})
+  }
     const handleChange = (name) => (event) => {
         if (name === "Image") {
           setvalues({
@@ -150,6 +158,9 @@ export default function EditProfile() {
             setvalues({ ...values, [name]: event.target.value });
           }
         };
+  const handleChangeBank = (name) =>(event)=>{
+    setBank({...Bank,[name]:event.target.value})
+  }
         const getState = async () => {
           try {
             const resp = await fetch(`${API}bill/bank/HO/addbank/stateCodes/`, {
@@ -546,8 +557,8 @@ export default function EditProfile() {
                             label="Yes"
                             name="group3"
                             type="radio"
-                            checked={values.bankDetails === "true"}
-                            onChange={handleChange("bankDetails")}
+                            checked={Bank.isBank === "true" || Bank.isBank === true}
+                            onChange={handleChangeBank("isBank")}
                             id={`inline-radio-1`}
                           />
                         </Col>
@@ -558,11 +569,94 @@ export default function EditProfile() {
                             label="No"
                             name="group3"
                             type="radio"
-                            onChange={handleChange("bankDetails")}
+                            checked={Bank.isBank === "false" || Bank.isBank === false}
+                            onChange={handleChangeBank("isBank")}
                             id={`inline-radio-2`}
                           />
                         </Col>
               </Row>
+              {(Bank.isBank === "true" || Bank.isBank === true ) &&
+              <>
+              <Row>
+                <Col>
+                <Form.Group>
+                            <Form.Label className="RowBoxHeading TopMargin">
+                              Bank Name:
+                            </Form.Label>
+                            <Form.Control
+                              onChange={handleChangeBank("bank_name")} // add change condition and function call to check for uniqueness from backend.
+                              size="md"
+                              type="input"
+                              className="form-control"
+                              // isInvalid={values.error && values.Etype === "GST"}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                             Valid Name
+                            </Form.Control.Feedback>
+                          </Form.Group>                
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                <Form.Group>
+                            <Form.Label className="RowBoxHeading TopMargin">
+                              Enter GST Number:
+                            </Form.Label>
+                            <Form.Control
+                              onChange={handleChange("cust_gst")} // add change condition and function call to check for uniqueness from backend.
+                              size="md"
+                              type="input"
+                              className="form-control"
+                              value={manageValue && manageValue.gstNum}
+                              isInvalid={values.error && values.Etype === "GST"}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              GST number Invalid !
+                            </Form.Control.Feedback>
+                          </Form.Group>
+                </Col>
+              <Col>
+              <Form.Group>
+                            <Form.Label className="RowBoxHeading TopMargin">
+                              Enter GST Number:
+                            </Form.Label>
+                            <Form.Control
+                              onChange={handleChange("cust_gst")} // add change condition and function call to check for uniqueness from backend.
+                              size="md"
+                              type="input"
+                              className="form-control"
+                              value={manageValue && manageValue.gstNum}
+                              isInvalid={values.error && values.Etype === "GST"}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              GST number Invalid !
+                            </Form.Control.Feedback>
+                          </Form.Group>
+              
+              </Col>
+              </Row>
+              <Row>
+                <Col>
+                <Form.Group>
+                            <Form.Label className="RowBoxHeading TopMargin">
+                              Enter GST Number:
+                            </Form.Label>
+                            <Form.Control
+                              onChange={handleChange("cust_gst")} // add change condition and function call to check for uniqueness from backend.
+                              size="md"
+                              type="input"
+                              className="form-control"
+                              value={manageValue && manageValue.gstNum}
+                              isInvalid={values.error && values.Etype === "GST"}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              GST number Invalid !
+                            </Form.Control.Feedback>
+                          </Form.Group>
+                </Col>
+                <Col>Cuurency</Col>
+              </Row>
+              </> }
               <Row style={{background:"#eee "}}>
               <Form.Label className="RowBoxHeading TopMargin">
               Invoice Details :
@@ -584,7 +678,7 @@ export default function EditProfile() {
                             name="group4"
                             type="radio"
                             checked={values.logo_text === "true"}
-                            onChange={handleChange("logo_text")}
+                            onChange={handleChangeInvoice("logo_text")}
                             id={`inline-radio-1`}
                           />
                         </Col>
@@ -595,7 +689,7 @@ export default function EditProfile() {
                             label="No"
                             name="group4"
                             type="radio"
-                            onChange={handleChange("logo_text")}
+                            onChange={handleChangeInvoice("logo_text")}
                             id={`inline-radio-2`}
                           />
                         </Col>
@@ -654,7 +748,7 @@ export default function EditProfile() {
                       as="textarea"
                       rows={3}
                       // isInvalid={}
-                      onChange={handleChange("msg")}
+                      onChange={handleChangeInvoice("msg")}
                     />
                   </Form.Group>
                 </Col>
@@ -672,7 +766,7 @@ export default function EditProfile() {
                             name="group5"
                             type="radio"
                             checked={values.bankDetails === "true"}
-                            onChange={handleChange("bankDetails")}
+                            onChange={handleChangeInvoice("additional_options")}
                             id={`inline-radio-1`}
                           />
                         </Col>
@@ -683,7 +777,7 @@ export default function EditProfile() {
                             label="No"
                             name="group5"
                             type="radio"
-                            onChange={handleChange("bankDetails")}
+                            onChange={handleChangeInvoice("additional_options")}
                             id={`inline-radio-2`}
                           />
                         </Col>
@@ -692,13 +786,13 @@ export default function EditProfile() {
               <Form.Label className="RowBoxHeading TopMargin">
                       Additional Description : *
                     </Form.Label>
-                <Row>
-                  <Col xs={{"offset":1}}>
+                <Row style={{padding:"0px 3.3vw"}}>
+                  <Col>
                   <Row><Form.Label className="RowBoxHeading TopMargin">
                   Are you a E-Commerce Trader * : *
                     </Form.Label></Row>
                   <Row style={{ transform: "scale(0.9)"}}>
-                  <Col xs={2}>
+                  <Col >
                           <Form.Check
                             inline
                             value={true}
@@ -706,18 +800,18 @@ export default function EditProfile() {
                             name="group6"
                             type="radio"
                             checked={values.logo_text === "true"}
-                            onChange={handleChange("logo_text")}
+                            onChange={handleChangeInvoice("ECommerce")}
                             id={`inline-radio-1`}
                           />
                         </Col>
-                        <Col xs={2}>
+                        <Col >
                           <Form.Check
                             inline
                             value={false}
                             label="No"
                             name="group6"
                             type="radio"
-                            onChange={handleChange("logo_text")}
+                            onChange={handleChangeInvoice("ECommerce")}
                             id={`inline-radio-2`}
                           />
                         </Col>
@@ -726,10 +820,10 @@ export default function EditProfile() {
                   </Col>
                   <Col>
                   <Row><Form.Label className="RowBoxHeading TopMargin">
-                  Are you a E-Commerce Trader * : *
+                  Are you liable to reverse charge : *
                     </Form.Label></Row>
                     <Row style={{ transform: "scale(0.9)"}}>
-                  <Col xs={2}>
+                  <Col>
                           <Form.Check
                             inline
                             value={true}
@@ -737,28 +831,28 @@ export default function EditProfile() {
                             name="group7"
                             type="radio"
                             checked={values.logo_text === "true"}
-                            onChange={handleChange("logo_text")}
+                            onChange={handleChangeInvoice("revserseCharge")}
                             id={`inline-radio-1`}
                           />
                         </Col>
-                        <Col xs={2}>
+                        <Col>
                           <Form.Check
                             inline
                             value={false}
                             label="No"
                             name="group7"
                             type="radio"
-                            onChange={handleChange("logo_text")}
+                            onChange={handleChangeInvoice("reverseCharge")}
                             id={`inline-radio-2`}
                           />
                         </Col></Row>
                   </Col>
                   <Col>
                   <Row><Form.Label className="RowBoxHeading TopMargin">
-                  Are you a E-Commerce Trader * : *
+                  Bill to / Ship to applicable : *
                     </Form.Label></Row>
                     <Row style={{ transform: "scale(0.9)"}}>
-                  <Col xs={2}>
+                  <Col>
                           <Form.Check
                             inline
                             value={true}
@@ -766,18 +860,47 @@ export default function EditProfile() {
                             name="group8"
                             type="radio"
                             checked={values.logo_text === "true"}
-                            onChange={handleChange("logo_text")}
+                            onChange={handleChangeInvoice("Bill_to")}
                             id={`inline-radio-1`}
                           />
                         </Col>
-                        <Col xs={2}>
+                        <Col>
                           <Form.Check
                             inline
                             value={false}
                             label="No"
                             name="group8"
                             type="radio"
-                            onChange={handleChange("logo_text")}
+                            onChange={handleChangeInvoice("Bill_to")}
+                            id={`inline-radio-2`}
+                          />
+                        </Col></Row>
+                  </Col>
+                  <Col>
+                  <Row><Form.Label className="RowBoxHeading TopMargin">
+                  Charge GST on shipping address : *
+                    </Form.Label></Row>
+                    <Row style={{ transform: "scale(0.9)"}}>
+                  <Col>
+                          <Form.Check
+                            inline
+                            value={true}
+                            label="Yes"
+                            name="group9"
+                            type="radio"
+                            checked={billInvoice.ChargeGST === "true"}
+                            onChange={handleChangeInvoice("ChargeGST")}
+                            id={`inline-radio-1`}
+                          />
+                        </Col>
+                        <Col>
+                          <Form.Check
+                            inline
+                            value={false}
+                            label="No"
+                            name="group9"
+                            type="radio"
+                            onChange={handleChangeInvoice("ChargeGST")}
                             id={`inline-radio-2`}
                           />
                         </Col></Row>
@@ -804,8 +927,11 @@ export default function EditProfile() {
       ...
       </>
       <FooterC />
-      {JSON.stringify(values)}
-      {JSON.stringify(manageValue)}
+..<br/>      {JSON.stringify(values)}
+ ..<br/>     {JSON.stringify(manageValue)}
+..<br/>      {JSON.stringify(billInvoice)}
+..<br/>       {JSON.stringify(Bank)}
+
 
     </>
   );
