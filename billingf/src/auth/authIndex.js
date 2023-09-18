@@ -734,3 +734,24 @@ export async function AddMessageRequest(msg,id,typeMsg){
 
 
 }
+export async function AddInvoice (data){
+  const FormdataInvoice = new FormData();
+  FormdataInvoice.append("user_id",data.user_id);
+  FormdataInvoice.append("is_logo_img",data.is_logo_img)
+  FormdataInvoice.append("logo",data.Image)
+  FormdataInvoice.append("logo_text",data.logo_text)
+  FormdataInvoice.append("invoice_design_temp",data.invoice_design_temp)
+  FormdataInvoice.append("currency",data.currency)
+  FormdataInvoice.append("term_condition",data.term_condition)
+  FormdataInvoice.append("additional_option_type",data.additional_option_type)
+  FormdataInvoice.append("option_values","data.option_values")
+  FormdataInvoice.append("ecommerce_trader",data.ecommerce_trader)
+  FormdataInvoice.append("reverse_charge",data.reverse_charge)
+  FormdataInvoice.append("to_bill_ship_applicabletrue",data.to_bill_ship_applicabletrue)
+  FormdataInvoice.append("gst_shipping_address",data.gst_shipping_address)
+  FormdataInvoice.append("from_date",data.from_date)
+  FormdataInvoice.append("till_date",data.till_date)
+  FormdataInvoice.append("bank_def",data.bank_def)
+  console.log(...FormdataInvoice.values())
+
+}
