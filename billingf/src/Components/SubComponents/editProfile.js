@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import Navb from "../navbar";
 import FooterC from "../footer";
 import { SignoutNav } from "../../UserView/singoutnav";
-import {  AddInvoice, isAuthenticated, isAuthenticatedBilling } from "../../auth/authIndex";
+import {  AddInvoice_Series, UpdateUser, isAuthenticated, isAuthenticatedBilling } from "../../auth/authIndex";
 import { Button, Col, Container, Form, FormGroup, Row } from "react-bootstrap";
 import { API } from "../../backend";
 import Select from "react-select";
 import { Link } from "react-router-dom";
 import Image from "react-bootstrap/Image";
 import { useNavigate } from "react-router-dom";
-
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 export default function EditProfile() {
   const nav = useNavigate();
-  const [values, setvalues] = useState(isAuthenticated().user);
+  const [values, setvalues] = useState({...isAuthenticated().user,password:""});
   const [manageValue, setManageVal] = useState(isAuthenticatedBilling());
   const [stateChoice, SetStatechoice] = useState();
 
@@ -34,8 +35,17 @@ gst_shipping_address :true,
 from_date :"",
 till_date:"",
 bank_def :"",
-prefsuf:true});
-  const [billseries, setbillseries] = useState("false");
+});
+  const [billseries, setbillseries] = useState({
+    user_id :isAuthenticated().user.id,
+    invoice_id:"",//passed in authindex after call.
+    series_num :1,
+    name :"",
+    prefix_surfix_type:true,
+    sl_num :"",
+    prefix_surfix :fiscalyear("pref"),//Intially for Prefix as pref is true
+    primary_type :true,
+    genrate_invoice :false, });
   const [CurrencyData, setCurrency] = useState();
   const [templatesData, settemplates] = useState();
   const [Bank, setBank] = useState({ isBank: false });
@@ -242,14 +252,18 @@ prefsuf:true});
         ImageUrl: URL.createObjectURL(event.target.files[0]),
         Image: event.target.files[0],
       });
-    } else if(name === "prefsuf") 
-    {
-      setbillInvoice({ ...billInvoice, [name]: event.target.value });
     }
     else{
       setbillInvoice({ ...billInvoice, [name]: event.target.value });
     }
   };
+  const handlechangeSeries = (name) => (event) =>{
+    if(name === "prefix_surfix_type") 
+    {
+      setbillseries({ ...billseries, [name]: event.target.value });
+    }
+    setbillseries({...billseries, [name]:event.target.value});
+  }
   const handleBank = (selectedOption) => {
     setbillInvoice({ ...billInvoice, ["bank_def"]: selectedOption.value });
   };
@@ -299,6 +313,21 @@ prefsuf:true});
       </Form.Group>
     );
   }
+  const Tool =()=>{
+    const renderTooltip = (props) => (
+      <Tooltip id="button-tooltip" {...props}>
+        Provide old Password in case no new password is set.</Tooltip>
+    );
+    return (
+      <>{!values.password &&  <OverlayTrigger
+        placement="right"
+        delay={{ show: 250, hide: 400 }}
+        overlay={renderTooltip}
+      >
+<i className="bi bi-info-circle"></i>
+      </OverlayTrigger>}</>
+    )
+  }
   const [validated, setValidated] = useState(false);
 
   useEffect(() => {
@@ -334,14 +363,15 @@ prefsuf:true});
             onSubmit={(event) => {
               values.loading = true;
               const form = event.currentTarget;
-              AddInvoice(billInvoice)
+              AddInvoice_Series(billInvoice,billseries)
+              UpdateUser(values,manageValue)
               if (form.checkValidity() === false) {
                 event.preventDefault(); // refresh problem is here
-                event.stopPropagation();
+                event.stopPropagation(); // Add Login Logout just like update componenet for new info updateon.
               } else {
                 event.preventDefault();
                 setValidated(true);
-                AddInvoice(billInvoice)
+                AddInvoice_Series(billInvoice)
                 // CustomerAdd(values,Limit_values).then((data) => {
                 //   if (data) {
                 //     console.log(data);
@@ -384,18 +414,36 @@ prefsuf:true});
                   </Form.Group>
                 </Col>
                 <Col>
+                <Form.Group>
+                  <Form.Label className="RowBoxHeading TopMargin">New Password :</Form.Label>
+                  <Tool/>
+                  <Form.Control
+                    value={values.password}
+                    onChange={handleChange("password")} // add change condition and function call to check for uniqueness from backend.
+                    size="md"
+                    type="password"
+                    className="form-control"
+                    placeholder="Password"
+                    required
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Need Password
+                  </Form.Control.Feedback>
+                </Form.Group>
+                </Col>
+                <Col>
                   <Form.Group>
                     <Form.Label className="RowBoxHeading TopMargin">
                       Short Name: *
                     </Form.Label>
                     <Form.Control
-                      onChange={handleChange("cust_name")} // add change condition and function call to check for uniqueness from backend.
+                      onChange={handleChangeManage("shortname")} // add change condition and function call to check for uniqueness from backend.
                       size="md"
                       type="input"
                       className="form-control"
                       value={manageValue && manageValue.shortname}
                       required
-                      isInvalid={/^\d+$/.test(values.cust_name)}
+                      isInvalid={/^\d+$/.test(manageValue.shortname)}
                     />
                     <Form.Control.Feedback type="invalid">
                       Bank Name Incorrect
@@ -809,7 +857,7 @@ prefsuf:true});
                               Display name: *
                             </Form.Label>
                                 <Form.Control
-                            onChange={handleChangeInvoice("displayname")} // add change condition and function call to check for uniqueness from backend.
+                            onChange={handlechangeSeries("name")} // add change condition and function call to check for uniqueness from backend.
                             size="md"
                             type="input"
                             className="form-control"
@@ -829,10 +877,10 @@ prefsuf:true});
                         name="group10"
                         type="radio"
                         checked={
-                          billInvoice.prefsuf === "true" ||
-                          billInvoice.prefsuf === true
+                          billseries.prefix_surfix_type === "true" ||
+                          billseries.prefix_surfix_type === true
                         }
-                        onChange={handleChangeInvoice("prefsuf")}
+                        onChange={handlechangeSeries("prefix_surfix_type")}
                         id={`inline-radio-1`}
                       />
                       <Form.Check style={{transform:"scale(0.9)"}}
@@ -842,20 +890,20 @@ prefsuf:true});
                         name="group10"
                         type="radio"
                         checked={
-                          billInvoice.prefsuf === "false" ||
-                          billInvoice.prefsuf === false
+                          billseries.prefix_surfix_type === "false" ||
+                          billseries.prefix_surfix_type === false
                         }
-                        onChange={handleChangeInvoice("prefsuf")}
+                        onChange={handlechangeSeries("prefix_surfix_type")}
                         id={`inline-radio-1`}
                       />    
                        <Form.Control
-                            onChange={handleChangeInvoice("preSuffTtext")} // add change condition and function call to check for uniqueness from backend.
+                            onChange={handlechangeSeries("prefix_surfix")} // add change condition and function call to check for uniqueness from backend.
                             size="md"
                             type="input"
                             className="form-control"
                             disabled
-                            value={(billInvoice.prefsuf === "true" ||
-                            billInvoice.prefsuf === true )?fiscalyear("pref"):fiscalyear("suf")}
+                            value={(billseries.prefix_surfix_type === "true" ||
+                            billseries.prefix_surfix_type === true )?fiscalyear("pref"):fiscalyear("suf")}
                           />
                           <Form.Control.Feedback type="invalid">
                             Only 2 Characters allowed.                       </Form.Control.Feedback>
@@ -865,12 +913,13 @@ prefsuf:true});
                               Starting Serial num: *
                             </Form.Label>
                             <Form.Control
-                            onChange={handleChangeInvoice("serial_num")} // add change condition and function call to check for uniqueness from backend.
+                            onChange={handlechangeSeries("sl_num")} // add change condition and function call to check for uniqueness from backend.
                             size="md"
                             type="input"
                             className="form-control"
                             placeholder="Serial Number"
-                            // isInvalid = {billInvoice.serial_num.length > 0 && !/^\d+$/.test(billInvoice.serial_num)}
+                            value={billseries.sl_num}
+                            isInvalid = {billseries.sl_num.length > 0 && !/^\d+$/.test(billseries.sl_num)}
                           />
                           <Form.Control.Feedback type="invalid">
                             Should be an Integer</Form.Control.Feedback>
@@ -1108,6 +1157,8 @@ prefsuf:true});
       <br /> {JSON.stringify(billInvoice)}
       ..
       <br /> {JSON.stringify(Bank)}
+      <br /> {JSON.stringify(billseries)}
+
     </>
   );
 }

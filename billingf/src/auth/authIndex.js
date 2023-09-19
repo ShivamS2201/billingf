@@ -295,6 +295,7 @@ export async function UpdateRY(user){
 }
 export async function UpdateUser(user,bill){
 
+
   const formDataUser = new FormData();
   const formDataBill = new FormData();
 
@@ -308,7 +309,11 @@ export async function UpdateUser(user,bill){
   formDataBill.append("system_credit",bill.system_credit );
   formDataBill.append("sms_credit",bill.sms_credit );
   formDataBill.append("whatsapp_credit",bill.whatsapp_credit );
-  formDataBill.append("stateCode",bill.stateCode);
+  if(user.role_id === 5 || user.role_id === "5" ){
+    formDataBill.append("stateCode",bill.stateCode_id);
+  }else{
+    formDataBill.append("stateCode",bill.stateCode);
+  }
   formDataBill.append("gstNum",bill.gstNum);
   formDataBill.append("pan_card",bill.pan_card);
   formDataBill.append("kyc",bill.kyc);
@@ -321,6 +326,7 @@ export async function UpdateUser(user,bill){
   formDataBill.append("cin_number",bill.cin_number);
   formDataBill.append("shortname",bill.shortname);
   formDataBill.append("is_regdealer",bill.is_regdealer);
+  console.log(...formDataBill.values(),bill["stateCode_id"],user.role_id)
 
 
   try {
@@ -734,8 +740,9 @@ export async function AddMessageRequest(msg,id,typeMsg){
 
 
 }
-export async function AddInvoice (data){
+export async function AddInvoice_Series (data,series){
   const FormdataInvoice = new FormData();
+  const FormdataSeries = new FormData();
   FormdataInvoice.append("user_id",data.user_id);
   FormdataInvoice.append("is_logo_img",data.is_logo_img)
   FormdataInvoice.append("logo",data.Image)
@@ -752,6 +759,18 @@ export async function AddInvoice (data){
   FormdataInvoice.append("from_date",data.from_date)
   FormdataInvoice.append("till_date",data.till_date)
   FormdataInvoice.append("bank_def",data.bank_def)
-  console.log(...FormdataInvoice.values())
 
+
+  FormdataSeries.append("user_id",series.user_id);
+  FormdataSeries.append("invoice_id",series.invoice_id);
+  FormdataSeries.append("series_num",series.series_num);
+  FormdataSeries.append("name",series.name);
+  FormdataSeries.append("prefix_surfix_type",series.prefix_surfix_type);
+  FormdataSeries.append("sl_num",series.sl_num);
+  FormdataSeries.append("prefix_surfix",series.prefix_surfix);
+  FormdataSeries.append("primary_type",series.primary_type);
+  FormdataSeries.append("genrate_invoice",series.genrate_invoice);
+   console.log(...FormdataInvoice.values())
+
+   console.log(...FormdataSeries.values())
 }
