@@ -35,6 +35,7 @@ gst_shipping_address :true,
 from_date :"",
 till_date:"",
 bank_def :"",
+data:""
 });
   const [billseries, setbillseries] = useState({
     user_id :isAuthenticated().user.id,
@@ -69,8 +70,21 @@ bank_def :"",
       return fiscalyear
     }
   }  
-
-
+const getInvoiceDetails = async () => {
+  try {
+    const resp = await fetch(
+      `${API}bill/getInvoice/${isAuthenticated().user.id}`,
+      {
+        method: "GET",
+      }
+    );
+    const data = await resp.json();
+    setbillInvoice({ ...billInvoice, data });
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
   let icon1 = require("../../assets/images/blackPerson.png");
 
   const getBanks = async () => {
@@ -179,13 +193,13 @@ bank_def :"",
     }
   };
   function Currency() {
-    return (
+    return (//billInvoice.data[0].currency_id!=="" &&
       <Form.Group>
         <Form.Label className="RowBoxHeading">Currency: *</Form.Label>
         <Form.Select
           size="md"
           aria-label="Default select example"
-          value={values.cust_currency}
+          value={billInvoice.data!=="" && billInvoice.data[0].currency_id}
           onChange={handleChangeInvoice("currency")}
           // isInvalid={}
           // isValid={values.state !== ""}
@@ -225,6 +239,7 @@ bank_def :"",
           size="md"
           aria-label="Default select example"
           onChange={handleChangeInvoice("invoice_design_temp")}
+          value={billInvoice.data!=="" && billInvoice.data[0].invoice_design_temp_id}
           // isInvalid={}
           // isValid={values.state !== ""}
           required // a disbaled constion if again logged in !!!!
@@ -342,6 +357,7 @@ bank_def :"",
     // fetchGroup();
     getTemplates();
     // getExport();
+    getInvoiceDetails();
   }, []);
   return (
     <>
@@ -363,8 +379,8 @@ bank_def :"",
             onSubmit={(event) => {
               values.loading = true;
               const form = event.currentTarget;
-              AddInvoice_Series(billInvoice,billseries)
-              UpdateUser(values,manageValue)
+              AddInvoice_Series(billInvoice,billseries) // requires to setup API
+              UpdateUser(values,manageValue) // working
               if (form.checkValidity() === false) {
                 event.preventDefault(); // refresh problem is here
                 event.stopPropagation(); // Add Login Logout just like update componenet for new info updateon.
@@ -817,6 +833,445 @@ bank_def :"",
                                     <Image
                                       className="TopMargin"
                                       required
+                                      //src={`${billInvoice.ImageUrl}`}
+                                      src={billInvoice.data!=="" && billInvoice.data[0].logo}
+                                      height="150px"
+                                      width="150px"
+                                      style={{ border: "2px solid #4a4d9a" }}
+                                      xs={6}
+                                      md={4}
+                                    />
+                                  </>
+                                )}
+                              </Col>
+                            </>
+                          )}
+                          {(billInvoice.is_logo_img === "false" ||
+                            billInvoice.is_logo_img === false) && (
+                            <>
+                              <Col>
+                                <Form.Label className="RowBoxHeading TopMargin">
+                                  Logo Name
+                                </Form.Label>
+                                <Form.Control
+                            onChange={handleChangeInvoice("logo_text")} // add change condition and function call to check for uniqueness from backend.
+                            size="md"
+                            type="input"
+                            className="form-control"
+                            placeholder="2 Characters"
+                            isInvalid = {billInvoice.logo_text!=="" && billInvoice.logo_text.length>2}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Only 2 Characters allowed.                       </Form.Control.Feedback>
+
+                              </Col>
+                            </>
+                          )}
+                        </Row>
+                        <Row style={{ padding: "0 2vw 0 2vw" }}>
+                          <Col>
+                            <Form.Label className="RowBoxHeading TopMargin">
+                              Display name: *
+                            </Form.Label>
+                                <Form.Control
+                            onChange={handlechangeSeries("name")} // add change condition and function call to check for uniqueness from backend.
+                            size="md"
+                            type="input"
+                            className="form-control"
+                            placeholder="2 Characters"
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Only 2 Characters allowed.                       </Form.Control.Feedback>
+                          </Col>
+                          <Col>
+                            <Form.Label className="RowBoxHeading TopMargin">
+                              Prefix/Sufix: *
+                            </Form.Label>
+                            <Form.Check style={{transform:"scale(0.9)"}}
+                        inline
+                        value={true}
+                        label="Prefix"
+                        name="group10"
+                        type="radio"
+                        checked={
+                          billseries.prefix_surfix_type === "true" ||
+                          billseries.prefix_surfix_type === true
+                        }
+                        onChange={handlechangeSeries("prefix_surfix_type")}
+                        id={`inline-radio-1`}
+                      />
+                      <Form.Check style={{transform:"scale(0.9)"}}
+                        inline
+                        value={false}
+                        label="Suffix"
+                        name="group10"
+                        type="radio"
+                        checked={
+                          billseries.prefix_surfix_type === "false" ||
+                          billseries.prefix_surfix_type === false
+                        }
+                        onChange={handlechangeSeries("prefix_surfix_type")}
+                        id={`inline-radio-1`}
+                      />    
+                       <Form.Control
+                            onChange={handlechangeSeries("prefix_surfix")} // add change condition and function call to check for uniqueness from backend.
+                            size="md"
+                            type="input"
+                            className="form-control"
+                            disabled
+                            value={(billseries.prefix_surfix_type === "true" ||
+                            billseries.prefix_surfix_type === true )?fiscalyear("pref"):fiscalyear("suf")}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Only 2 Characters allowed.                       </Form.Control.Feedback>
+                          </Col>
+                          <Col>
+                            <Form.Label className="RowBoxHeading TopMargin">
+                              Starting Serial num: *
+                            </Form.Label>
+                            <Form.Control
+                            onChange={handlechangeSeries("sl_num")} // add change condition and function call to check for uniqueness from backend.
+                            size="md"
+                            type="input"
+                            className="form-control"
+                            placeholder="Serial Number"
+                            value={billseries.sl_num}
+                            isInvalid = {billseries.sl_num.length > 0 && !/^\d+$/.test(billseries.sl_num)}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Should be an Integer</Form.Control.Feedback>
+
+                          </Col>
+                        </Row>
+                        <Row style={{ padding: "0 2vw 0 2vw" }}>
+                          <Col>{templatesData && Template()}</Col>
+                          <Col>{CurrencyData && Currency()}</Col>
+                        </Row>
+                        <Row style={{ padding: "0 2vw 0 2vw" }}>
+                          <Col>
+                            <Form.Group
+                              className="mb-3"
+                              controlId="exampleForm.ControlTextarea1"
+                            >
+                              <Form.Label className="RowBoxHeading TopMargin">
+                                Terms & Conditions: * ({100})
+                              </Form.Label>
+                              <Form.Control
+                                as="textarea"
+                                rows={3}
+                                isInvalid={billInvoice.term_condition.length>100}
+                                onChange={handleChangeInvoice("term_condition")}
+                                value={billInvoice.data!=="" && billInvoice.data[0].term_condition}
+                              />
+                              <Form.Control.Feedback type="invalid">
+                            Maximum Character Length Reached!                      </Form.Control.Feedback>
+                            </Form.Group>
+                          </Col>
+                        </Row>
+                      </Row>
+                      <Row style={{ background: "#eee " }}>
+                        <Col className="TopMargin" xs={2}>
+                          <Form.Label className="RowBoxHeading">
+                            Additional Option : *
+                          </Form.Label>
+                        </Col>
+                        <Col
+                          xs={1}
+                          className="TopMargin"
+                          style={{ transform: "scale(0.9)" }}
+                        >
+                          <Form.Check
+                            inline
+                            value={true}
+                            label="Yes"
+                            name="group5"
+                            type="radio"
+                            checked={billInvoice.data!=="" && (billInvoice.data[0].additional_option_type === true ||  billInvoice.data[0].additional_option_type === "true")}
+                            onChange={handleChangeInvoice("additional_option_type")}
+                            id={`inline-radio-1`}
+                          />
+                        </Col>
+                        <Col
+                          xs={1}
+                          className="TopMargin"
+                          style={{ transform: "scale(0.9)" }}
+                        >
+                          <Form.Check
+                            inline
+                            value={false}
+                            label="No"
+                            name="group5"
+                            type="radio"
+                            checked={billInvoice.data!=="" && (billInvoice.data[0].additional_option_type === false ||  billInvoice.data[0].additional_option_type === "false")}
+                            onChange={handleChangeInvoice("additional_option_type")}
+                            id={`inline-radio-2`}
+                          />
+                        </Col>
+                      </Row>
+                      <Row style={{ background: "#eee " }}>
+                        <Form.Label className="RowBoxHeading TopMargin">
+                          Additional Description : *
+                        </Form.Label>
+                        <Row style={{ padding: "0px 3.3vw" }}>
+                          <Col>
+                            <Row>
+                              <Form.Label className="RowBoxHeading TopMargin">
+                                Are you a E-Commerce Trader * : *
+                              </Form.Label>
+                            </Row>
+                            <Row style={{ transform: "scale(0.9)" }}>
+                              <Col>
+                                <Form.Check
+                                  inline
+                                  value={true}
+                                  label="Yes"
+                                  name="group6"
+                                  type="radio"
+                                  checked={billInvoice.data!=="" && (billInvoice.data[0].ecommerce_trader === "true"|| billInvoice.data[0].ecommerce_trader === true)}
+                                  onChange={handleChangeInvoice("ecommerce_trader")}
+                                  id={`inline-radio-1`}
+                                />
+                              </Col>
+                              <Col>
+                                <Form.Check
+                                  inline
+                                  value={false}
+                                  label="No"
+                                  name="group6"
+                                  type="radio"
+                                  checked={billInvoice.data!=="" && (billInvoice.data[0].ecommerce_trader === "false"|| billInvoice.data[0].ecommerce_trader === false)}
+                                  onChange={handleChangeInvoice("ecommerce_trader")}
+                                  id={`inline-radio-2`}
+                                />
+                              </Col>
+                            </Row>
+                          </Col>
+                          <Col>
+                            <Row>
+                              <Form.Label className="RowBoxHeading TopMargin">
+                                Are you liable to reverse charge : *
+                              </Form.Label>
+                            </Row>
+                            <Row style={{ transform: "scale(0.9)" }}>
+                              <Col>
+                                <Form.Check
+                                  inline
+                                  value={true}
+                                  label="Yes"
+                                  name="group7"
+                                  type="radio"
+                                  checked={billInvoice.data!=="" && (billInvoice.data[0].reverse_charge === "true"|| billInvoice.data[0].reverse_charge===true)}
+                                  onChange={handleChangeInvoice(
+                                    "reverse_charge"
+                                  )}
+                                  id={`inline-radio-1`}
+                                />
+                              </Col>
+                              <Col>
+                                <Form.Check
+                                  inline
+                                  value={false}
+                                  label="No"
+                                  name="group7"
+                                  type="radio"
+                                  checked={billInvoice.data!=="" && (billInvoice.data[0].reverse_charge === "false"|| billInvoice.data[0].reverse_charge===false)}
+                                  onChange={handleChangeInvoice(
+                                    "reverse_charge"
+                                  )}
+                                  id={`inline-radio-2`}
+                                />
+                              </Col>
+                            </Row>
+                          </Col>
+                          <Col>
+                            <Row>
+                              <Form.Label className="RowBoxHeading TopMargin">
+                                Bill to / Ship to applicable : *
+                              </Form.Label>
+                            </Row>
+                            <Row style={{ transform: "scale(0.9)" }}>
+                              <Col>
+                                <Form.Check
+                                  inline
+                                  value={true}
+                                  label="Yes"
+                                  name="group8"
+                                  type="radio"
+                                  checked={billInvoice.data!=="" && (billInvoice.data[0].to_bill_ship_applicable === "true"|| billInvoice.data[0].to_bill_ship_applicable===true)}
+                                  onChange={handleChangeInvoice("to_bill_ship_applicable")}
+                                  id={`inline-radio-1`}
+                                />
+                              </Col>
+                              <Col>
+                                <Form.Check
+                                  inline
+                                  value={false}
+                                  label="No"
+                                  name="group8"
+                                  type="radio"
+                                  checked={billInvoice.data!=="" && (billInvoice.data[0].to_bill_ship_applicable === "false"|| billInvoice.data[0].to_bill_ship_applicable===false)}
+                                  onChange={handleChangeInvoice("to_bill_ship_applicable")}
+                                  id={`inline-radio-2`}
+                                />
+                              </Col>
+                            </Row>
+                          </Col>
+                          <Col>
+                            <Row>
+                              <Form.Label className="RowBoxHeading TopMargin">
+                                Charge GST on shipping address : *
+                              </Form.Label>
+                            </Row>
+                            <Row style={{ transform: "scale(0.9)" }}>
+                              <Col>
+                                <Form.Check
+                                  inline
+                                  value={true}
+                                  label="Yes"
+                                  name="group9"
+                                  type="radio"
+                                  checked={billInvoice.data!=="" && (billInvoice.data[0].gst_shipping_address === "true"|| billInvoice.data[0].gst_shipping_address===true)}
+                                  onChange={handleChangeInvoice("gst_shipping_address")}
+                                  id={`inline-radio-1`}
+                                />
+                              </Col>
+                              <Col>
+                                <Form.Check
+                                  inline
+                                  value={false}
+                                  label="No"
+                                  name="group9"
+                                  type="radio"
+                                  checked={billInvoice.data!=="" && (billInvoice.data[0].gst_shipping_address === "false"|| billInvoice.data[0].gst_shipping_address===false)}
+                                  onChange={handleChangeInvoice("gst_shipping_address")}
+                                  id={`inline-radio-2`}
+                                />
+                              </Col>
+                            </Row>
+                          </Col>
+                        </Row>
+                      </Row>
+                    </>
+                  )}
+                </>
+              )}
+              {/* {billInvoice === false && billseries === false && <>
+                  {isAuthenticated().user.last_login && (
+                    <>
+                      Log in not forst.
+                      <Row style={{ background: "#eee " }}>
+                        <Col className="TopMargin" xs={2}>
+                          <Form.Label className="RowBoxHeading">
+                            Bank Details: *
+                          </Form.Label>
+                        </Col>
+                        <Col xs={1} className="TopMargin">
+                          <Form.Check
+                            inline
+                            value={true}
+                            label="Yes"
+                            name="group3"
+                            type="radio"
+                            checked={
+                              Bank.isBank === "true" || Bank.isBank === true
+                            }
+                            onChange={handleChangeBank("isBank")}
+                            id={`inline-radio-1`}
+                          />
+                        </Col>
+                        <Col xs={1} className="TopMargin">
+                          <Form.Check
+                            inline
+                            value={false}
+                            label="No"
+                            name="group3"
+                            type="radio"
+                            checked={
+                              Bank.isBank === "false" || Bank.isBank === false
+                            }
+                            onChange={handleChangeBank("isBank")}
+                            id={`inline-radio-2`}
+                          />
+                        </Col>
+                      </Row>
+                      {(Bank.isBank === "true" || Bank.isBank === true) && (
+                        <Row style={{ background: "#eee " }}>
+                          {Bank.data && SelectBank()}
+                        </Row>
+                      )}
+                      <Row style={{ background: "#eee " }}>
+                        <Form.Label className="RowBoxHeading TopMargin">
+                          Invoice Details :
+                        </Form.Label>
+                      </Row>
+                      <Row
+                        style={{ background: "#eee " }}
+                        className="AddressContainer"
+                      >
+                        <Row style={{ padding: "0 2vw 0 2vw" }}>
+                          <Col>
+                            <Row>
+                              <Form.Label className="RowBoxHeading TopMargin">
+                                Want to Print *
+                              </Form.Label>
+                            </Row>
+                            <Row style={{ transform: "scale(0.9)" }}>
+                              <Col xs={3}>
+                                <Form.Check
+                                  inline
+                                  value={true}
+                                  label="Logo"
+                                  name="group4"
+                                  type="radio"
+                                  checked={
+                                    billInvoice.is_logo_img === "true" ||
+                                    billInvoice.is_logo_img === true
+                                  }
+                                  onChange={handleChangeInvoice("is_logo_img")}
+                                  id={`inline-radio-1`}
+                                />
+                              </Col>
+                              <Col xs={3}>
+                                <Form.Check
+                                  inline
+                                  value={false}
+                                  label="Text"
+                                  name="group4"
+                                  type="radio"
+                                  onChange={handleChangeInvoice("is_logo_img")}
+                                  id={`inline-radio-2`}
+                                />
+                              </Col>
+                            </Row>
+                          </Col>
+
+                          {(billInvoice.is_logo_img === "true" ||
+                            billInvoice.is_logo_img === true) && (
+                            <>
+                              <Col xs={4}>
+                                <Form.Label className="RowBoxHeading TopMargin">
+                                  Logo / Image: *
+                                </Form.Label>
+                                <Form.Control
+                                  style={{ marginTop: "1vh" }}
+                                  size="md"
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={handleChangeInvoice("Image")}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                  Image
+                                </Form.Control.Feedback>
+                              </Col>
+                              <Col xs={4}>
+                                <Form.Label className="RowBoxHeading TopMargin">
+                                  Image: *
+                                </Form.Label>
+                                {billInvoice.Image && billInvoice.ImageUrl && (
+                                  <>
+                                    <Image
+                                      className="TopMargin"
+                                      required
                                       src={`${billInvoice.ImageUrl}`}
                                       height="150px"
                                       width="150px"
@@ -944,6 +1399,7 @@ bank_def :"",
                                 rows={3}
                                 isInvalid={billInvoice.term_condition.length>100}
                                 onChange={handleChangeInvoice("term_condition")}
+                                value={billInvoice.data!=="" && billInvoice.data[0].term_condition}
                               />
                               <Form.Control.Feedback type="invalid">
                             Maximum Character Length Reached!                      </Form.Control.Feedback>
@@ -1130,9 +1586,7 @@ bank_def :"",
                       </Row>
                     </>
                   )}
-                </>
-              )}
-              {billInvoice === false && billseries === false && <></>}
+                </>} */}
 
               <Row className="ButtonsForm">
                 <Col xs={1}>
@@ -1150,13 +1604,20 @@ bank_def :"",
       <>...</>
       <FooterC />
       ..
-      <br /> {JSON.stringify(values)}
+      <br /> 
+      values
+      {JSON.stringify(values)}
       ..
-      <br /> {JSON.stringify(manageValue)}
+      <br /> 
+            manage values
+{JSON.stringify(manageValue)}
       ..
+      INVOICE
       <br /> {JSON.stringify(billInvoice)}
       ..
+      BANK
       <br /> {JSON.stringify(Bank)}
+      Bill series
       <br /> {JSON.stringify(billseries)}
 
     </>
