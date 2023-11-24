@@ -834,7 +834,7 @@ const getInvoiceDetails = async () => {
                                       className="TopMargin"
                                       required
                                       //src={`${billInvoice.ImageUrl}`}
-                                      src={billInvoice.data!=="" && billInvoice.data[0].logo}
+                                      src={billInvoice.data!=="" && 'http://127.0.0.1:8000/media/Invoice/20151003_081121.jpg'}
                                       height="150px"
                                       width="150px"
                                       style={{ border: "2px solid #4a4d9a" }}
