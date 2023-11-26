@@ -11,8 +11,6 @@ import Image from "react-bootstrap/Image";
 import { useNavigate } from "react-router-dom";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import EditProfileNew from "./editProfileNew";
-
 export default function EditProfile() {
   const nav = useNavigate();
   const [values, setvalues] = useState({...isAuthenticated().user,password:""});
@@ -72,21 +70,6 @@ data:""
       return fiscalyear
     }
   }  
-const getInvoiceDetails = async () => {
-  try {
-    const resp = await fetch(
-      `${API}bill/getInvoice`,
-      {
-        method: "GET",
-      }
-    );
-    const data = await resp.json();
-    setbillInvoice({ ...billInvoice, data });
-    return data;
-  } catch (err) {
-    console.log(err);
-  }
-};
   let icon1 = require("../../assets/images/blackPerson.png");
 
   const getBanks = async () => {
@@ -199,7 +182,6 @@ const getInvoiceDetails = async () => {
       <Form.Group>
         <Form.Label className="RowBoxHeading">Currency: *</Form.Label>
         <Form.Select
-        disabled
           size="md"
           aria-label="Default select example"
           value={billInvoice.data!=="" && billInvoice.data[0].currency_id}
@@ -240,7 +222,6 @@ const getInvoiceDetails = async () => {
         <Form.Label className="RowBoxHeading">Invoice Template: *</Form.Label>
         <Form.Select
           size="md"
-          disabled
           aria-label="Default select example"
           onChange={handleChangeInvoice("invoice_design_temp")}
           value={billInvoice.data!=="" && billInvoice.data[0].invoice_design_temp_id}
@@ -361,7 +342,6 @@ const getInvoiceDetails = async () => {
     // fetchGroup();
     getTemplates();
     // getExport();
-    getInvoiceDetails();
   }, []);
   return (
     <>
@@ -719,11 +699,11 @@ const getInvoiceDetails = async () => {
                   <div className="DealerSelectionf"> </div>
                 )}
               </Row>
-              {billInvoice !== false && billseries !== false && (
-                <>
+               {billInvoice === false && billseries === false && <>
                   {isAuthenticated().user.last_login && (
                     <>
-                      <Row  style={{ background: "#eee " }}>
+                      Log in not forst.
+                      <Row style={{ background: "#eee " }}>
                         <Col className="TopMargin" xs={2}>
                           <Form.Label className="RowBoxHeading">
                             Bank Details: *
@@ -732,7 +712,6 @@ const getInvoiceDetails = async () => {
                         <Col xs={1} className="TopMargin">
                           <Form.Check
                             inline
-                            disabled
                             value={true}
                             label="Yes"
                             name="group3"
@@ -746,7 +725,6 @@ const getInvoiceDetails = async () => {
                         </Col>
                         <Col xs={1} className="TopMargin">
                           <Form.Check
-                          disabled
                             inline
                             value={false}
                             label="No"
@@ -784,7 +762,6 @@ const getInvoiceDetails = async () => {
                             <Row style={{ transform: "scale(0.9)" }}>
                               <Col xs={3}>
                                 <Form.Check
-                                disabled
                                   inline
                                   value={true}
                                   label="Logo"
@@ -800,7 +777,6 @@ const getInvoiceDetails = async () => {
                               </Col>
                               <Col xs={3}>
                                 <Form.Check
-                                disabled
                                   inline
                                   value={false}
                                   label="Text"
@@ -816,7 +792,7 @@ const getInvoiceDetails = async () => {
                           {(billInvoice.is_logo_img === "true" ||
                             billInvoice.is_logo_img === true) && (
                             <>
-                              {/* <Col xs={4}>
+                              <Col xs={4}>
                                 <Form.Label className="RowBoxHeading TopMargin">
                                   Logo / Image: *
                                 </Form.Label>
@@ -830,18 +806,17 @@ const getInvoiceDetails = async () => {
                                 <Form.Control.Feedback type="invalid">
                                   Image
                                 </Form.Control.Feedback>
-                              </Col> */}
+                              </Col>
                               <Col xs={4}>
                                 <Form.Label className="RowBoxHeading TopMargin">
-                                  Image: * 
+                                  Image: *
                                 </Form.Label>
-                                {billInvoice.data!=="" && billInvoice.data[0].logo && (
+                                {billInvoice.Image && billInvoice.ImageUrl && (
                                   <>
                                     <Image
                                       className="TopMargin"
                                       required
-                                      disabled
-                                      src={billInvoice.data!=="" && billInvoice.data[0].logo }
+                                      src={`${billInvoice.ImageUrl}`}
                                       height="150px"
                                       width="150px"
                                       style={{ border: "2px solid #4a4d9a" }}
@@ -863,10 +838,9 @@ const getInvoiceDetails = async () => {
                                 <Form.Control
                             onChange={handleChangeInvoice("logo_text")} // add change condition and function call to check for uniqueness from backend.
                             size="md"
-                            disabled
                             type="input"
                             className="form-control"
-                            placeholder={`${billInvoice.data[0].logo_text}`}
+                            placeholder="2 Characters"
                             isInvalid = {billInvoice.logo_text!=="" && billInvoice.logo_text.length>2}
                           />
                           <Form.Control.Feedback type="invalid">
@@ -887,7 +861,6 @@ const getInvoiceDetails = async () => {
                             type="input"
                             className="form-control"
                             placeholder="2 Characters"
-                            disabled
                           />
                           <Form.Control.Feedback type="invalid">
                             Only 2 Characters allowed.                       </Form.Control.Feedback>
@@ -898,7 +871,6 @@ const getInvoiceDetails = async () => {
                             </Form.Label>
                             <Form.Check style={{transform:"scale(0.9)"}}
                         inline
-                        disabled
                         value={true}
                         label="Prefix"
                         name="group10"
@@ -912,7 +884,6 @@ const getInvoiceDetails = async () => {
                       />
                       <Form.Check style={{transform:"scale(0.9)"}}
                         inline
-                        disabled
                         value={false}
                         label="Suffix"
                         name="group10"
@@ -945,7 +916,6 @@ const getInvoiceDetails = async () => {
                             size="md"
                             type="input"
                             className="form-control"
-                            disabled
                             placeholder="Serial Number"
                             value={billseries.sl_num}
                             isInvalid = {billseries.sl_num.length > 0 && !/^\d+$/.test(billseries.sl_num)}
@@ -970,7 +940,6 @@ const getInvoiceDetails = async () => {
                               </Form.Label>
                               <Form.Control
                                 as="textarea"
-                                disabled
                                 rows={3}
                                 isInvalid={billInvoice.term_condition.length>100}
                                 onChange={handleChangeInvoice("term_condition")}
@@ -994,13 +963,12 @@ const getInvoiceDetails = async () => {
                           style={{ transform: "scale(0.9)" }}
                         >
                           <Form.Check
-                          disabled
                             inline
                             value={true}
                             label="Yes"
                             name="group5"
                             type="radio"
-                            checked={billInvoice.data!=="" && (billInvoice.data[0].additional_option_type === true ||  billInvoice.data[0].additional_option_type === "true")}
+                            checked={billInvoice.additional_option_type === "true" || billInvoice.additional_option_type === true}
                             onChange={handleChangeInvoice("additional_option_type")}
                             id={`inline-radio-1`}
                           />
@@ -1011,13 +979,11 @@ const getInvoiceDetails = async () => {
                           style={{ transform: "scale(0.9)" }}
                         >
                           <Form.Check
-                          disabled
                             inline
                             value={false}
                             label="No"
                             name="group5"
                             type="radio"
-                            checked={billInvoice.data!=="" && (billInvoice.data[0].additional_option_type === false ||  billInvoice.data[0].additional_option_type === "false")}
                             onChange={handleChangeInvoice("additional_option_type")}
                             id={`inline-radio-2`}
                           />
@@ -1038,12 +1004,11 @@ const getInvoiceDetails = async () => {
                               <Col>
                                 <Form.Check
                                   inline
-                                  disabled
                                   value={true}
                                   label="Yes"
                                   name="group6"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].ecommerce_trader === "true"|| billInvoice.data[0].ecommerce_trader === true)}
+                                  checked={billInvoice.ecommerce_trader === "true"|| billInvoice.ecommerce_trader === true}
                                   onChange={handleChangeInvoice("ecommerce_trader")}
                                   id={`inline-radio-1`}
                                 />
@@ -1051,12 +1016,10 @@ const getInvoiceDetails = async () => {
                               <Col>
                                 <Form.Check
                                   inline
-                                  disabled
                                   value={false}
                                   label="No"
                                   name="group6"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].ecommerce_trader === "false"|| billInvoice.data[0].ecommerce_trader === false)}
                                   onChange={handleChangeInvoice("ecommerce_trader")}
                                   id={`inline-radio-2`}
                                 />
@@ -1073,12 +1036,11 @@ const getInvoiceDetails = async () => {
                               <Col>
                                 <Form.Check
                                   inline
-                                  disabled
                                   value={true}
                                   label="Yes"
                                   name="group7"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].reverse_charge === "true"|| billInvoice.data[0].reverse_charge===true)}
+                                  checked={billInvoice.reverse_charge === "true"|| billInvoice.reverse_charge===true}
                                   onChange={handleChangeInvoice(
                                     "reverse_charge"
                                   )}
@@ -1088,12 +1050,10 @@ const getInvoiceDetails = async () => {
                               <Col>
                                 <Form.Check
                                   inline
-                                  disabled
                                   value={false}
                                   label="No"
                                   name="group7"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].reverse_charge === "false"|| billInvoice.data[0].reverse_charge===false)}
                                   onChange={handleChangeInvoice(
                                     "reverse_charge"
                                   )}
@@ -1112,12 +1072,11 @@ const getInvoiceDetails = async () => {
                               <Col>
                                 <Form.Check
                                   inline
-                                  disabled
                                   value={true}
                                   label="Yes"
                                   name="group8"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].to_bill_ship_applicable === "true"|| billInvoice.data[0].to_bill_ship_applicable===true)}
+                                  checked={billInvoice.to_bill_ship_applicable === "true"||billInvoice.to_bill_ship_applicable===true}
                                   onChange={handleChangeInvoice("to_bill_ship_applicable")}
                                   id={`inline-radio-1`}
                                 />
@@ -1125,12 +1084,10 @@ const getInvoiceDetails = async () => {
                               <Col>
                                 <Form.Check
                                   inline
-                                  disabled
                                   value={false}
                                   label="No"
                                   name="group8"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].to_bill_ship_applicable === "false"|| billInvoice.data[0].to_bill_ship_applicable===false)}
                                   onChange={handleChangeInvoice("to_bill_ship_applicable")}
                                   id={`inline-radio-2`}
                                 />
@@ -1147,12 +1104,11 @@ const getInvoiceDetails = async () => {
                               <Col>
                                 <Form.Check
                                   inline
-                                  disabled
                                   value={true}
                                   label="Yes"
                                   name="group9"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].gst_shipping_address === "true"|| billInvoice.data[0].gst_shipping_address===true)}
+                                  checked={billInvoice.gst_shipping_address === "true"|| billInvoice.gst_shipping_address===true}
                                   onChange={handleChangeInvoice("gst_shipping_address")}
                                   id={`inline-radio-1`}
                                 />
@@ -1160,12 +1116,10 @@ const getInvoiceDetails = async () => {
                               <Col>
                                 <Form.Check
                                   inline
-                                  disabled
                                   value={false}
                                   label="No"
                                   name="group9"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].gst_shipping_address === "false"|| billInvoice.data[0].gst_shipping_address===false)}
                                   onChange={handleChangeInvoice("gst_shipping_address")}
                                   id={`inline-radio-2`}
                                 />
@@ -1174,42 +1128,42 @@ const getInvoiceDetails = async () => {
                           </Col>
                         </Row>
                       </Row>
-                      <Row className="ButtonsForm">
-                <Col xs={1}>
-                <Button type="submit" onClick={()=>{nav(-1)}} >Back</Button>
-                </Col>
-                {/* <Col xs={1}>
-                <Button type="submit" >Save</Button> 
-                {/* {performNavigate()} }
-                </Col> */}
-              </Row>
                     </>
                   )}
-                </>
-              )}
-              {billInvoice === false && billseries === false && <>
-                  {isAuthenticated().user.last_login && (
-                    <>
-                    {EditProfileNew()}
-                                        </>
-                  )}
-                </>} 
+                </>}
 
-              {/* <Row className="ButtonsForm">
+              <Row className="ButtonsForm">
                 <Col xs={1}>
                 <Button type="submit" onClick={()=>{nav(-1)}} >Back</Button>
                 </Col>
                 <Col xs={1}>
                 <Button type="submit" >Save</Button> 
-                {/* {performNavigate()} }
+                {/* {performNavigate()} */}
                 </Col>
-              </Row> */}
+              </Row>
             </Container>
           </Form>
         </div>
       </div>
       <>...</>
       <FooterC />
+      ..
+      <br /> 
+      values
+      {JSON.stringify(values)}
+      ..
+      <br /> 
+            manage values
+{JSON.stringify(manageValue)}
+      ..
+      INVOICE
+      <br /> {JSON.stringify(billInvoice)}
+      ..
+      BANK
+      <br /> {JSON.stringify(Bank)}
+      Bill series
+      <br /> {JSON.stringify(billseries)}
+
     </>
   );
 }
