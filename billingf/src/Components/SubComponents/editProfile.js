@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import EditProfileNew from "./editProfileNew";
+import { isAccordionItemSelected } from "react-bootstrap/esm/AccordionContext";
 
 export default function EditProfile() {
   const nav = useNavigate();
@@ -82,6 +83,21 @@ const getInvoiceDetails = async () => {
     );
     const data = await resp.json();
     setbillInvoice({ ...billInvoice, data });
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+const getSeriesDetails = async () => {
+  try {
+    const resp = await fetch(
+      `${API}bill/getseries/${isAuthenticated().user.id}`,
+      {
+        method: "GET",
+      }
+    );
+    const data = await resp.json();
+    setbillseries({ ...billseries, data });
     return data;
   } catch (err) {
     console.log(err);
@@ -362,6 +378,7 @@ const getInvoiceDetails = async () => {
     getTemplates();
     // getExport();
     getInvoiceDetails();
+    getSeriesDetails();
   }, []);
   return (
     <>
@@ -886,7 +903,7 @@ const getInvoiceDetails = async () => {
                             size="md"
                             type="input"
                             className="form-control"
-                            placeholder="2 Characters"
+                            placeholder={billseries.data[0]!="" && billseries.data[0].name}
                             disabled
                           />
                           <Form.Control.Feedback type="invalid">
@@ -1178,10 +1195,10 @@ const getInvoiceDetails = async () => {
                 <Col xs={1}>
                 <Button type="submit" onClick={()=>{nav(-1)}} >Back</Button>
                 </Col>
-                {/* <Col xs={1}>
+                <Col xs={1}>
                 <Button type="submit" >Save</Button> 
-                {/* {performNavigate()} }
-                </Col> */}
+                {/* {performNavigate()} */}
+                </Col>
               </Row>
                     </>
                   )}
@@ -1210,6 +1227,8 @@ const getInvoiceDetails = async () => {
       </div>
       <>...</>
       <FooterC />
+      {JSON.stringify(billseries)}
+
     </>
   );
 }
