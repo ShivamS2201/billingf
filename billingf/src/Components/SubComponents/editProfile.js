@@ -2,107 +2,123 @@ import React, { useEffect, useState } from "react";
 import Navb from "../navbar";
 import FooterC from "../footer";
 import { SignoutNav } from "../../UserView/singoutnav";
-import {  AddInvoice_Series, UpdateUser, isAuthenticated, isAuthenticatedBilling } from "../../auth/authIndex";
+import {
+  AddInvoice_Series,
+  UpdateUser,
+  isAuthenticated,
+  isAuthenticatedBilling,
+} from "../../auth/authIndex";
 import { Button, Col, Container, Form, FormGroup, Row } from "react-bootstrap";
 import { API } from "../../backend";
 import Select from "react-select";
 import { Link } from "react-router-dom";
 import Image from "react-bootstrap/Image";
 import { useNavigate } from "react-router-dom";
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 import EditProfileNew from "./editProfileNew";
 import { isAccordionItemSelected } from "react-bootstrap/esm/AccordionContext";
 
 export default function EditProfile() {
   const nav = useNavigate();
-  const [values, setvalues] = useState({...isAuthenticated().user,password:""});
+  const [values, setvalues] = useState({
+    ...isAuthenticated().user,
+    password: "",
+  });
   const [manageValue, setManageVal] = useState(isAuthenticatedBilling());
   const [stateChoice, SetStatechoice] = useState();
 
   const [RegisterDtype, SetRegDealer] = useState();
   const [billInvoice, setbillInvoice] = useState({
-    user_id:isAuthenticated().user.id, 
-is_logo_img :true,
-logo: "",
-logo_text:"",
-invoice_design_temp:"",
-currency :"",
-term_condition:"",
-additional_option_type :true,
-option_values :"",
-ecommerce_trader :true,
-reverse_charge :true,
-to_bill_ship_applicable:true,
-gst_shipping_address :true,
-from_date :"",
-till_date:"",
-bank_def :"",
-data:""
-});
+    user_id: isAuthenticated().user.id,
+    is_logo_img: true,
+    logo: "",
+    logo_text: "",
+    invoice_design_temp: "",
+    currency: "",
+    term_condition: "",
+    additional_option_type: true,
+    option_values: "",
+    ecommerce_trader: true,
+    reverse_charge: true,
+    to_bill_ship_applicable: true,
+    gst_shipping_address: true,
+    from_date: "",
+    till_date: "",
+    bank_def: "",
+    data: "",
+  });
   const [billseries, setbillseries] = useState({
-    user_id :isAuthenticated().user.id,
-    invoice_id:"",//passed in authindex after call.
-    series_num :1,
-    name :"",
-    prefix_surfix_type:true,
-    sl_num :"",
-    prefix_surfix :fiscalyear("pref"),//Intially for Prefix as pref is true
-    primary_type :true,
-    genrate_invoice :false, });
+    user_id: isAuthenticated().user.id,
+    invoice_id: "", //passed in authindex after call.
+    series_num: 1,
+    name: "",
+    prefix_surfix_type: true,
+    sl_num: "",
+    prefix_surfix: fiscalyear("pref"), //Intially for Prefix as pref is true
+    primary_type: true,
+    genrate_invoice: false,
+  });
   const [CurrencyData, setCurrency] = useState();
   const [templatesData, settemplates] = useState();
   const [Bank, setBank] = useState({ isBank: false });
 
-  function fiscalyear(pre_suf){
+  function fiscalyear(pre_suf) {
     var fiscalyear = "";
     var today = new Date();
-    if (pre_suf === "pref"){
-    if ((today.getMonth() + 1) <= 3) {
-      fiscalyear = JSON.stringify(today.getFullYear() - 1) + "-" + JSON.stringify(today.getFullYear()).slice(-2)
-    } else {
-      return JSON.stringify(today.getFullYear()) + JSON.stringify(today.getFullYear()+1).slice(-2)
-    }
-   }
-    else if(pre_suf==="suf"){
-      if ((today.getMonth() + 1) <= 3) {
-        fiscalyear = JSON.stringify(today.getFullYear() - 1) + "-" + JSON.stringify(today.getFullYear()).slice(-2)
+    if (pre_suf === "pref") {
+      if (today.getMonth() + 1 <= 3) {
+        fiscalyear =
+          JSON.stringify(today.getFullYear() - 1) +
+          "-" +
+          JSON.stringify(today.getFullYear()).slice(-2);
       } else {
-        fiscalyear = JSON.stringify(today.getFullYear()) + JSON.stringify(today.getFullYear()+1).slice(-2)
+        return (
+          JSON.stringify(today.getFullYear()) +
+          JSON.stringify(today.getFullYear() + 1).slice(-2)
+        );
       }
-      return fiscalyear
+    } else if (pre_suf === "suf") {
+      if (today.getMonth() + 1 <= 3) {
+        fiscalyear =
+          JSON.stringify(today.getFullYear() - 1) +
+          "-" +
+          JSON.stringify(today.getFullYear()).slice(-2);
+      } else {
+        fiscalyear =
+          JSON.stringify(today.getFullYear()) +
+          JSON.stringify(today.getFullYear() + 1).slice(-2);
+      }
+      return fiscalyear;
     }
-  }  
-const getInvoiceDetails = async () => {
-  try {
-    const resp = await fetch(
-      `${API}bill/getInvoice`,
-      {
-        method: "GET",
-      }
-    );
-    const data = await resp.json();
-    setbillInvoice({ ...billInvoice, data });
-    return data;
-  } catch (err) {
-    console.log(err);
   }
-};
-const getSeriesDetails = async () => {
-  try {
-    const resp = await fetch(
-      `${API}bill/getseries/${isAuthenticated().user.id}`,
-      {
+  const getInvoiceDetails = async () => {
+    try {
+      const resp = await fetch(`${API}bill/getInvoice`, {
         method: "GET",
-      }
-    );
-    const data = await resp.json();
-    setbillseries({ ...billseries, data });
-    return data;
-  } catch (err) {
-    console.log(err);
-  }
-};
+      });
+      const data = await resp.json();
+      setbillInvoice({ ...billInvoice, data });
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getSeriesDetails = async () => {
+    try {
+      const resp = await fetch(
+        `${API}bill/getseries/${isAuthenticated().user.id}`,
+        {
+          method: "GET",
+        }
+      );
+      const data = await resp.json();
+      setbillseries({ ...billseries, data });
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
   let icon1 = require("../../assets/images/blackPerson.png");
 
   const getBanks = async () => {
@@ -121,43 +137,6 @@ const getSeriesDetails = async () => {
     }
   };
 
-  const SelectBank = () => {
-    return (
-      <>
-        <FormGroup>
-          <Form.Label className="RowBoxHeading TopMargin">
-            Select Bank: *
-            <Button
-              style={{
-                fontSize: "70%",
-                marginLeft: "1vw",
-                padding: "0 1.3vw 0 1.3vw",
-                borderRadius: "0",
-              }}
-              variant="danger"
-            >
-              
-              <Link
-                to="/user/dashboard/headOffice/addbank/"
-                style={{ textDecoration: "none", color: "white" }}
-              >
-                Add Bank
-              </Link>
-            </Button>
-          </Form.Label>
-        </FormGroup>
-        <Select
-          className="basic-single"
-          classNamePrefix="select"
-          isClearable={true}
-          isSearchable={true}
-          name="Bank"
-          options={Bank.data}
-          onChange={handleBank}
-        />
-      </>
-    );
-  };
 
   const getDealerType = async () => {
     try {
@@ -211,15 +190,15 @@ const getSeriesDetails = async () => {
     }
   };
   function Currency() {
-    return (//billInvoice.data[0].currency_id!=="" &&
+    return (
+      //billInvoice.data[0].currency_id!=="" &&
       <Form.Group>
         <Form.Label className="RowBoxHeading">Currency: *</Form.Label>
         <Form.Select
-        disabled
+          disabled
           size="md"
           aria-label="Default select example"
-          value={billInvoice.data!=="" && billInvoice.data[0].currency_id}
-          onChange={handleChangeInvoice("currency")}
+          value={billInvoice.data !== "" && billInvoice.data[0].currency_id}
           // isInvalid={}
           // isValid={values.state !== ""}
           required
@@ -258,8 +237,10 @@ const getSeriesDetails = async () => {
           size="md"
           disabled
           aria-label="Default select example"
-          onChange={handleChangeInvoice("invoice_design_temp")}
-          value={billInvoice.data!=="" && billInvoice.data[0].invoice_design_temp_id}
+          value={
+            billInvoice.data !== "" &&
+            billInvoice.data[0].invoice_design_temp_id
+          }
           // isInvalid={}
           // isValid={values.state !== ""}
           required // a disbaled constion if again logged in !!!!
@@ -280,33 +261,8 @@ const getSeriesDetails = async () => {
   const handleChangeManage = (name) => (event) => {
     setManageVal({ ...manageValue, [name]: event.target.value });
   };
-  const handleChangeInvoice = (name) => (event) => {
-    if (name === "Image") {
-      setbillInvoice({
-        ...billInvoice,
-        ImageUrl: URL.createObjectURL(event.target.files[0]),
-        Image: event.target.files[0],
-      });
-    }
-    else{
-      setbillInvoice({ ...billInvoice, [name]: event.target.value });
-    }
-  };
-  const handlechangeSeries = (name) => (event) =>{
-    if(name === "prefix_surfix_type") 
-    {
-      setbillseries({ ...billseries, [name]: event.target.value });
-    }
-    setbillseries({...billseries, [name]:event.target.value});
-  }
-  const handleBank = (selectedOption) => {
-    setbillInvoice({ ...billInvoice, ["bank_def"]: selectedOption.value });
-  };
   const handleChange = (name) => (event) => {
     setvalues({ ...values, [name]: event.target.value });
-  };
-  const handleChangeBank = (name) => (event) => {
-    setBank({ ...Bank, [name]: event.target.value });
   };
   const getState = async () => {
     try {
@@ -348,21 +304,26 @@ const getSeriesDetails = async () => {
       </Form.Group>
     );
   }
-  const Tool =()=>{
+  const Tool = () => {
     const renderTooltip = (props) => (
       <Tooltip id="button-tooltip" {...props}>
-        Provide old Password in case no new password is set.</Tooltip>
+        Provide old Password in case no new password is set.
+      </Tooltip>
     );
     return (
-      <>{!values.password &&  <OverlayTrigger
-        placement="right"
-        delay={{ show: 250, hide: 400 }}
-        overlay={renderTooltip}
-      >
-<i className="bi bi-info-circle"></i>
-      </OverlayTrigger>}</>
-    )
-  }
+      <>
+        {!values.password && (
+          <OverlayTrigger
+            placement="right"
+            delay={{ show: 250, hide: 400 }}
+            overlay={renderTooltip}
+          >
+            <i className="bi bi-info-circle"></i>
+          </OverlayTrigger>
+        )}
+      </>
+    );
+  };
   const [validated, setValidated] = useState(false);
 
   useEffect(() => {
@@ -382,7 +343,6 @@ const getSeriesDetails = async () => {
   }, []);
   return (
     <>
-      
       <div className="name__top">
         Welcome to Head Office {isAuthenticated().user.first_name}
       </div>
@@ -400,32 +360,15 @@ const getSeriesDetails = async () => {
             onSubmit={(event) => {
               values.loading = true;
               const form = event.currentTarget;
-              AddInvoice_Series(billInvoice,billseries) // requires to setup API
-              UpdateUser(values,manageValue) // working
+              AddInvoice_Series(billInvoice, billseries); // requires to setup API
+              UpdateUser(values, manageValue); // working
               if (form.checkValidity() === false) {
                 event.preventDefault(); // refresh problem is here
                 event.stopPropagation(); // Add Login Logout just like update componenet for new info updateon.
               } else {
                 event.preventDefault();
                 setValidated(true);
-                AddInvoice_Series(billInvoice)
-                // CustomerAdd(values,Limit_values).then((data) => {
-                //   if (data) {
-                //     console.log(data);
-                //     setvalues({
-                //       ...values,
-                //       didNavigate: true,
-                //       loading: false,
-                //     });
-                //     <Navigate to="/user/dashboard/headOffice/customer" />
-                //   } else {
-                //     console.log(data);
-                //     setvalues({ ...values, loading: false });
-                //   }
-                // })
-                // .catch((ee) => {
-                //   console.log(ee);
-                // });
+                //AddInvoice_Series(billInvoice);
               }
             }}
           >
@@ -451,22 +394,24 @@ const getSeriesDetails = async () => {
                   </Form.Group>
                 </Col>
                 <Col>
-                <Form.Group>
-                  <Form.Label className="RowBoxHeading TopMargin">New Password :</Form.Label>
-                  <Tool/>
-                  <Form.Control
-                    value={values.password}
-                    onChange={handleChange("password")} // add change condition and function call to check for uniqueness from backend.
-                    size="md"
-                    type="password"
-                    className="form-control"
-                    placeholder="Password"
-                    required
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Need Password
-                  </Form.Control.Feedback>
-                </Form.Group>
+                  <Form.Group>
+                    <Form.Label className="RowBoxHeading TopMargin">
+                      New Password :
+                    </Form.Label>
+                    <Tool />
+                    <Form.Control
+                      value={values.password}
+                      onChange={handleChange("password")} // add change condition and function call to check for uniqueness from backend.
+                      size="md"
+                      type="password"
+                      className="form-control"
+                      placeholder="Password"
+                      required
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Need Password
+                    </Form.Control.Feedback>
+                  </Form.Group>
                 </Col>
                 <Col>
                   <Form.Group>
@@ -740,7 +685,7 @@ const getSeriesDetails = async () => {
                 <>
                   {isAuthenticated().user.last_login && (
                     <>
-                      <Row  style={{ background: "#eee " }}>
+                      <Row style={{ background: "#eee " }}>
                         <Col className="TopMargin" xs={2}>
                           <Form.Label className="RowBoxHeading">
                             Bank Details: *
@@ -757,13 +702,12 @@ const getSeriesDetails = async () => {
                             checked={
                               Bank.isBank === "true" || Bank.isBank === true
                             }
-                            onChange={handleChangeBank("isBank")}
                             id={`inline-radio-1`}
                           />
                         </Col>
                         <Col xs={1} className="TopMargin">
                           <Form.Check
-                          disabled
+                            disabled
                             inline
                             value={false}
                             label="No"
@@ -772,14 +716,12 @@ const getSeriesDetails = async () => {
                             checked={
                               Bank.isBank === "false" || Bank.isBank === false
                             }
-                            onChange={handleChangeBank("isBank")}
                             id={`inline-radio-2`}
                           />
                         </Col>
                       </Row>
                       {(Bank.isBank === "true" || Bank.isBank === true) && (
                         <Row style={{ background: "#eee " }}>
-                          {Bank.data && SelectBank()}
                         </Row>
                       )}
                       <Row style={{ background: "#eee " }}>
@@ -801,7 +743,7 @@ const getSeriesDetails = async () => {
                             <Row style={{ transform: "scale(0.9)" }}>
                               <Col xs={3}>
                                 <Form.Check
-                                disabled
+                                  disabled
                                   inline
                                   value={true}
                                   label="Logo"
@@ -811,19 +753,17 @@ const getSeriesDetails = async () => {
                                     billInvoice.is_logo_img === "true" ||
                                     billInvoice.is_logo_img === true
                                   }
-                                  onChange={handleChangeInvoice("is_logo_img")}
                                   id={`inline-radio-1`}
                                 />
                               </Col>
                               <Col xs={3}>
                                 <Form.Check
-                                disabled
+                                  disabled
                                   inline
                                   value={false}
                                   label="Text"
                                   name="group4"
                                   type="radio"
-                                  onChange={handleChangeInvoice("is_logo_img")}
                                   id={`inline-radio-2`}
                                 />
                               </Col>
@@ -850,23 +790,26 @@ const getSeriesDetails = async () => {
                               </Col> */}
                               <Col xs={4}>
                                 <Form.Label className="RowBoxHeading TopMargin">
-                                  Image: * 
+                                  Image: *
                                 </Form.Label>
-                                {billInvoice.data!=="" && billInvoice.data[0].logo && (
-                                  <>
-                                    <Image
-                                      className="TopMargin"
-                                      required
-                                      disabled
-                                      src={billInvoice.data!=="" && billInvoice.data[0].logo }
-                                      height="150px"
-                                      width="150px"
-                                      style={{ border: "2px solid #4a4d9a" }}
-                                      xs={6}
-                                      md={4}
-                                    />
-                                  </>
-                                )}
+                                {billInvoice.data !== "" &&
+                                  billInvoice.data[0].logo && (
+                                    <>
+                                      <Image
+                                        className="TopMargin"
+                                        required
+                                        disabled
+                                        src={( billInvoice.data && billInvoice.data !== "")?
+                                        billInvoice.data[0].logo:icon1
+                                        }
+                                        height="150px"
+                                        width="150px"
+                                        style={{ border: "2px solid #4a4d9a" }}
+                                        xs={6}
+                                        md={4}
+                                      />
+                                    </>
+                                  )}
                               </Col>
                             </>
                           )}
@@ -878,17 +821,16 @@ const getSeriesDetails = async () => {
                                   Logo Name
                                 </Form.Label>
                                 <Form.Control
-                            onChange={handleChangeInvoice("logo_text")} // add change condition and function call to check for uniqueness from backend.
-                            size="md"
-                            disabled
-                            type="input"
-                            className="form-control"
-                            placeholder={`${billInvoice.data[0].logo_text}`}
-                            isInvalid = {billInvoice.logo_text!=="" && billInvoice.logo_text.length>2}
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            Only 2 Characters allowed.                       </Form.Control.Feedback>
-
+                                  size="md"
+                                  disabled
+                                  type="input"
+                                  className="form-control"
+                                  placeholder={`${billInvoice.data[0].logo_text}`}
+                                  isInvalid={
+                                    billInvoice.logo_text !== "" &&
+                                    billInvoice.logo_text.length > 2
+                                  }
+                                />{" "}
                               </Col>
                             </>
                           )}
@@ -898,78 +840,85 @@ const getSeriesDetails = async () => {
                             <Form.Label className="RowBoxHeading TopMargin">
                               Display name: *
                             </Form.Label>
-                                <Form.Control
-                            onChange={handlechangeSeries("name")} // add change condition and function call to check for uniqueness from backend.
-                            size="md"
-                            type="input"
-                            className="form-control"
-                            placeholder={billseries.data[0]!="" && billseries.data[0].name}
-                            disabled
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            Only 2 Characters allowed.                       </Form.Control.Feedback>
+                            <Form.Control
+                              size="md"
+                              type="input"
+                              className="form-control"
+                              placeholder={
+                                billseries.data &&
+                                billseries.data[0] != "" &&
+                                billseries.data[0].name
+                              }
+                              disabled
+                            />
                           </Col>
                           <Col>
                             <Form.Label className="RowBoxHeading TopMargin">
                               Prefix/Sufix: *
                             </Form.Label>
-                            <Form.Check style={{transform:"scale(0.9)"}}
-                        inline
-                        disabled
-                        value={true}
-                        label="Prefix"
-                        name="group10"
-                        type="radio"
-                        checked={
-                          billseries.prefix_surfix_type === "true" ||
-                          billseries.prefix_surfix_type === true
-                        }
-                        onChange={handlechangeSeries("prefix_surfix_type")}
-                        id={`inline-radio-1`}
-                      />
-                      <Form.Check style={{transform:"scale(0.9)"}}
-                        inline
-                        disabled
-                        value={false}
-                        label="Suffix"
-                        name="group10"
-                        type="radio"
-                        checked={
-                          billseries.prefix_surfix_type === "false" ||
-                          billseries.prefix_surfix_type === false
-                        }
-                        onChange={handlechangeSeries("prefix_surfix_type")}
-                        id={`inline-radio-1`}
-                      />    
-                       <Form.Control
-                            onChange={handlechangeSeries("prefix_surfix")} // add change condition and function call to check for uniqueness from backend.
-                            size="md"
-                            type="input"
-                            className="form-control"
-                            disabled
-                            value={(billseries.prefix_surfix_type === "true" ||
-                            billseries.prefix_surfix_type === true )?fiscalyear("pref"):fiscalyear("suf")}
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            Only 2 Characters allowed.                       </Form.Control.Feedback>
+                            <Form.Check
+                              style={{ transform: "scale(0.9)" }}
+                              inline
+                              disabled
+                              value={true}
+                              label="Prefix"
+                              name="group10"
+                              type="radio"
+                              checked={
+                                billseries.prefix_surfix_type === "true" ||
+                                billseries.prefix_surfix_type === true
+                              }
+                              id={`inline-radio-1`}
+                            />
+                            <Form.Check
+                              style={{ transform: "scale(0.9)" }}
+                              inline
+                              disabled
+                              value={false}
+                              label="Suffix"
+                              name="group10"
+                              type="radio"
+                              checked={
+                                billseries.prefix_surfix_type === "false" ||
+                                billseries.prefix_surfix_type === false
+                              }
+                              id={`inline-radio-1`}
+                            />
+                            <Form.Control
+                              size="md"
+                              type="input"
+                              className="form-control"
+                              disabled
+                              value={
+                                billseries.prefix_surfix_type === "true" ||
+                                billseries.prefix_surfix_type === true
+                                  ? fiscalyear("pref")
+                                  : fiscalyear("suf")
+                              }
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              Only 2 Characters allowed.{" "}
+                            </Form.Control.Feedback>
                           </Col>
                           <Col>
                             <Form.Label className="RowBoxHeading TopMargin">
                               Starting Serial num: *
                             </Form.Label>
                             <Form.Control
-                            onChange={handlechangeSeries("sl_num")} // add change condition and function call to check for uniqueness from backend.
-                            size="md"
-                            type="input"
-                            className="form-control"
-                            disabled
-                            placeholder="Serial Number"
-                            value={billseries.sl_num}
-                            isInvalid = {billseries.sl_num.length > 0 && !/^\d+$/.test(billseries.sl_num)}
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            Should be an Integer</Form.Control.Feedback>
-
+                              size="md"
+                              type="input"
+                              className="form-control"
+                              disabled
+                              placeholder="Serial Number"
+                              value={
+                                billseries.data &&
+                                billseries.data[0] != "" &&
+                                billseries.data[0].sl_num
+                              }
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              Should be an Integer
+                            </Form.Control.Feedback>
                           </Col>
                         </Row>
                         <Row style={{ padding: "0 2vw 0 2vw" }}>
@@ -989,12 +938,17 @@ const getSeriesDetails = async () => {
                                 as="textarea"
                                 disabled
                                 rows={3}
-                                isInvalid={billInvoice.term_condition.length>100}
-                                onChange={handleChangeInvoice("term_condition")}
-                                value={billInvoice.data!=="" && billInvoice.data[0].term_condition}
+                                isInvalid={
+                                  billInvoice.term_condition.length > 100
+                                }
+                                value={
+                                  billInvoice.data !== "" &&
+                                  billInvoice.data[0].term_condition
+                                }
                               />
                               <Form.Control.Feedback type="invalid">
-                            Maximum Character Length Reached!                      </Form.Control.Feedback>
+                                Maximum Character Length Reached!{" "}
+                              </Form.Control.Feedback>
                             </Form.Group>
                           </Col>
                         </Row>
@@ -1011,14 +965,19 @@ const getSeriesDetails = async () => {
                           style={{ transform: "scale(0.9)" }}
                         >
                           <Form.Check
-                          disabled
+                            disabled
                             inline
                             value={true}
                             label="Yes"
                             name="group5"
                             type="radio"
-                            checked={billInvoice.data!=="" && (billInvoice.data[0].additional_option_type === true ||  billInvoice.data[0].additional_option_type === "true")}
-                            onChange={handleChangeInvoice("additional_option_type")}
+                            checked={
+                              billInvoice.data !== "" &&
+                              (billInvoice.data[0].additional_option_type ===
+                                true ||
+                                billInvoice.data[0].additional_option_type ===
+                                  "true")
+                            }
                             id={`inline-radio-1`}
                           />
                         </Col>
@@ -1028,14 +987,19 @@ const getSeriesDetails = async () => {
                           style={{ transform: "scale(0.9)" }}
                         >
                           <Form.Check
-                          disabled
+                            disabled
                             inline
                             value={false}
                             label="No"
                             name="group5"
                             type="radio"
-                            checked={billInvoice.data!=="" && (billInvoice.data[0].additional_option_type === false ||  billInvoice.data[0].additional_option_type === "false")}
-                            onChange={handleChangeInvoice("additional_option_type")}
+                            checked={
+                              billInvoice.data !== "" &&
+                              (billInvoice.data[0].additional_option_type ===
+                                false ||
+                                billInvoice.data[0].additional_option_type ===
+                                  "false")
+                            }
                             id={`inline-radio-2`}
                           />
                         </Col>
@@ -1060,8 +1024,13 @@ const getSeriesDetails = async () => {
                                   label="Yes"
                                   name="group6"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].ecommerce_trader === "true"|| billInvoice.data[0].ecommerce_trader === true)}
-                                  onChange={handleChangeInvoice("ecommerce_trader")}
+                                  checked={
+                                    billInvoice.data !== "" &&
+                                    (billInvoice.data[0].ecommerce_trader ===
+                                      "true" ||
+                                      billInvoice.data[0].ecommerce_trader ===
+                                        true)
+                                  }
                                   id={`inline-radio-1`}
                                 />
                               </Col>
@@ -1073,8 +1042,13 @@ const getSeriesDetails = async () => {
                                   label="No"
                                   name="group6"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].ecommerce_trader === "false"|| billInvoice.data[0].ecommerce_trader === false)}
-                                  onChange={handleChangeInvoice("ecommerce_trader")}
+                                  checked={
+                                    billInvoice.data !== "" &&
+                                    (billInvoice.data[0].ecommerce_trader ===
+                                      "false" ||
+                                      billInvoice.data[0].ecommerce_trader ===
+                                        false)
+                                  }
                                   id={`inline-radio-2`}
                                 />
                               </Col>
@@ -1095,10 +1069,13 @@ const getSeriesDetails = async () => {
                                   label="Yes"
                                   name="group7"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].reverse_charge === "true"|| billInvoice.data[0].reverse_charge===true)}
-                                  onChange={handleChangeInvoice(
-                                    "reverse_charge"
-                                  )}
+                                  checked={
+                                    billInvoice.data !== "" &&
+                                    (billInvoice.data[0].reverse_charge ===
+                                      "true" ||
+                                      billInvoice.data[0].reverse_charge ===
+                                        true)
+                                  }
                                   id={`inline-radio-1`}
                                 />
                               </Col>
@@ -1110,10 +1087,13 @@ const getSeriesDetails = async () => {
                                   label="No"
                                   name="group7"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].reverse_charge === "false"|| billInvoice.data[0].reverse_charge===false)}
-                                  onChange={handleChangeInvoice(
-                                    "reverse_charge"
-                                  )}
+                                  checked={
+                                    billInvoice.data !== "" &&
+                                    (billInvoice.data[0].reverse_charge ===
+                                      "false" ||
+                                      billInvoice.data[0].reverse_charge ===
+                                        false)
+                                  }
                                   id={`inline-radio-2`}
                                 />
                               </Col>
@@ -1134,8 +1114,13 @@ const getSeriesDetails = async () => {
                                   label="Yes"
                                   name="group8"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].to_bill_ship_applicable === "true"|| billInvoice.data[0].to_bill_ship_applicable===true)}
-                                  onChange={handleChangeInvoice("to_bill_ship_applicable")}
+                                  checked={
+                                    billInvoice.data !== "" &&
+                                    (billInvoice.data[0]
+                                      .to_bill_ship_applicable === "true" ||
+                                      billInvoice.data[0]
+                                        .to_bill_ship_applicable === true)
+                                  }
                                   id={`inline-radio-1`}
                                 />
                               </Col>
@@ -1147,8 +1132,13 @@ const getSeriesDetails = async () => {
                                   label="No"
                                   name="group8"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].to_bill_ship_applicable === "false"|| billInvoice.data[0].to_bill_ship_applicable===false)}
-                                  onChange={handleChangeInvoice("to_bill_ship_applicable")}
+                                  checked={
+                                    billInvoice.data !== "" &&
+                                    (billInvoice.data[0]
+                                      .to_bill_ship_applicable === "false" ||
+                                      billInvoice.data[0]
+                                        .to_bill_ship_applicable === false)
+                                  }
                                   id={`inline-radio-2`}
                                 />
                               </Col>
@@ -1169,8 +1159,13 @@ const getSeriesDetails = async () => {
                                   label="Yes"
                                   name="group9"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].gst_shipping_address === "true"|| billInvoice.data[0].gst_shipping_address===true)}
-                                  onChange={handleChangeInvoice("gst_shipping_address")}
+                                  checked={
+                                    billInvoice.data !== "" &&
+                                    (billInvoice.data[0]
+                                      .gst_shipping_address === "true" ||
+                                      billInvoice.data[0]
+                                        .gst_shipping_address === true)
+                                  }
                                   id={`inline-radio-1`}
                                 />
                               </Col>
@@ -1182,8 +1177,13 @@ const getSeriesDetails = async () => {
                                   label="No"
                                   name="group9"
                                   type="radio"
-                                  checked={billInvoice.data!=="" && (billInvoice.data[0].gst_shipping_address === "false"|| billInvoice.data[0].gst_shipping_address===false)}
-                                  onChange={handleChangeInvoice("gst_shipping_address")}
+                                  checked={
+                                    billInvoice.data !== "" &&
+                                    (billInvoice.data[0]
+                                      .gst_shipping_address === "false" ||
+                                      billInvoice.data[0]
+                                        .gst_shipping_address === false)
+                                  }
                                   id={`inline-radio-2`}
                                 />
                               </Col>
@@ -1192,25 +1192,30 @@ const getSeriesDetails = async () => {
                         </Row>
                       </Row>
                       <Row className="ButtonsForm">
-                <Col xs={1}>
-                <Button type="submit" onClick={()=>{nav(-1)}} >Back</Button>
-                </Col>
-                <Col xs={1}>
-                <Button type="submit" >Save</Button> 
-                {/* {performNavigate()} */}
-                </Col>
-              </Row>
+                        <Col xs={1}>
+                          <Button
+                            type="submit"
+                            onClick={() => {
+                              nav(-1);
+                            }}
+                          >
+                            Back
+                          </Button>
+                        </Col>
+                        <Col xs={1}>
+                          <Button type="submit">Save</Button>
+                          {/* {performNavigate()} */}
+                        </Col>
+                      </Row>
                     </>
                   )}
                 </>
               )}
-              {billInvoice === false && billseries === false && <>
-                  {isAuthenticated().user.last_login && (
-                    <>
-                    {EditProfileNew()}
-                                        </>
-                  )}
-                </>} 
+              {billInvoice === false && billseries === false && (
+                <>
+                  {isAuthenticated().user.last_login && <>{EditProfileNew()}</>}
+                </>
+              )}
 
               {/* <Row className="ButtonsForm">
                 <Col xs={1}>
@@ -1225,10 +1230,7 @@ const getSeriesDetails = async () => {
           </Form>
         </div>
       </div>
-      <>...</>
       <FooterC />
-      {JSON.stringify(billseries)}
-
     </>
   );
 }
