@@ -195,7 +195,7 @@ useEffect(() => {
                 </div>
               </Link>
 
-              <Link id="linkerho" to={"bank"}>
+              <Link id="linkerho" to={"headOffice/InvoiceDesign"}>
                 <div className="divHO4">
                   <div className="iconHO">
                     <i className="bi bi-collection-fill"></i>
