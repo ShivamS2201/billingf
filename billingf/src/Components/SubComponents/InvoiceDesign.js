@@ -107,8 +107,8 @@ const InvoiceDesign  = ()=>{
       };
 
 
-    const [InvoiceHolderData,setInvoiceHolderData] = useState()
-    const [SeriersHolderData,setSeriersHolderData] = useState()
+    const [InvoiceHolderData,setInvoiceHolderData] = useState('')
+    const [SeriersHolderData,setSeriersHolderData] = useState('')
     
     useEffect(()=>{
         getInvoiceDetails();
