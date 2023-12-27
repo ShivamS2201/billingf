@@ -197,12 +197,16 @@ const SeriesHolder = (props) => {
       <div className="SeriesAllContainer">
         <div className="SeriesCard">{SeriesCardView()}</div>
       </div>
-      {JSON.stringify(props.series)}
-      <br />
-      <br />
-      <br />
     </>
   );
 };
 
 export default SeriesHolder;
+
+
+/*
+For Image :
+Retrieve image from backend and if it is to be changed store another one if it is unchanged let it be same in send list
+
+
+*/ 

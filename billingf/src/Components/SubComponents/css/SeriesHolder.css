@@ -1,5 +1,5 @@
 .SeriesHolderConatainer{
-    margin: 3vh 12vw;
+    margin: 3vh 5vw;
     border:2px solid crimson;
     margin-bottom: 12px;
     padding: 2px 2vw 4vh 2vw;
@@ -9,7 +9,7 @@
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(1, 1fr);
-    grid-column-gap: 8vw;
+    grid-column-gap: 11vw;
     grid-row-gap: 0;
     }
     
