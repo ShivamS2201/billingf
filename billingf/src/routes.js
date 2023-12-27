@@ -35,7 +35,8 @@ import TransferSales from "./Components/transfersales";
 import TransferHO from "./Components/trasnsferHO";
 import AddMessage from "./Components/addMessage";
 import EditProfile from "./Components/SubComponents/editProfile";
-
+import InvoiceDesign from "./Components/SubComponents/InvoiceDesign";
+import EditSeriesHolder from "./Components/SubComponents/SeriesHolderEdit";
 const RoutesD = () =>{
   return(
 
@@ -67,6 +68,9 @@ const RoutesD = () =>{
     <Route path="/user/dashboard/headOffice/customer/*" exact element={<PrivateRoutes component={Customer}/>} />
     <Route path="/user/dashboard/headOffice/addcustomer/*" exact element={<PrivateRoutes component={Addcustomer}/>} />
     <Route path="/user/dashboard/headOffice/editprofile" exact element={<PrivateRoutes component={EditProfile}/>} />
+    <Route path="/user/dashboard/headOffice/InvoiceDesign" exact element={<PrivateRoutes component={InvoiceDesign}/>} />
+    <Route path="/user/dashboard/headOffice/editSeriesHolder" exact element={<PrivateRoutes component={EditSeriesHolder}/>} />
+
 
 
 
