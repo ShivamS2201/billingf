@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { API } from "../../backend";
 import { Link } from "react-router-dom";
-import BootstrapTable from "react-bootstrap-table-next";
+// import BootstrapTable from "react-bootstrap-table-next";
 import { JdateGet, UpdateRY, getExpiry, isAuthenticated } from "../../auth/authIndex";
-import paginationFactory, {
-  PaginationListStandalone,
-} from "react-bootstrap-table2-paginator";
+// import paginationFactory, {
+//   PaginationListStandalone,
+// } from "react-bootstrap-table2-paginator";
 import { Button,Form } from "react-bootstrap";
 import "./css/tablesales.css";
-import ToolkitProvider, {
-  Search,
-} from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min";
-require("react-bootstrap-table-next/dist/react-bootstrap-table2.min.css");
+// import ToolkitProvider, {
+//   Search,
+// } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min";
+// require("react-bootstrap-table-next/dist/react-bootstrap-table2.min.css");
 
 export function OwnerHOTable() {
   const handleChange = (name,idx)=>(event)=>{
@@ -216,47 +216,47 @@ export function OwnerHOTable() {
 
 };
 
-  const options = {
-    paginationSize: 2,
-    pageStartIndex: 1,
-    // alwaysShowAllBtns: true, // Always show next and previous button
-    // withFirstAndLast: false, // Hide the going to First and Last page button
-    // hideSizePerPage: true, // Hide the sizePerPage dropdown always
-    hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
-    firstPageText: "First",
-    prePageText: "Back",
-    nextPageText: "Next",
-    lastPageText: "Last",
-    nextPageTitle: "First page",
-    prePageTitle: "Pre page",
-    firstPageTitle: "Next page",
-    lastPageTitle: "Last page",
-    showTotal: true,
-    disablePageTitle: true,
-    paginationTotalRenderer: customTotal,
-    sizePerPageList: [
-      {
-        text: "5",
-        value: 5,
-      },
-      {
-        text: "10",
-        value: 10,
-      },
-      {
-        text: "All",
-        value: TableValue ? TableValue.length : 0,
-      },
-    ], // A numeric array is also available. the purpose of above example is custom the text
-  };
-  const { SearchBar } = Search;
-  const selectRow = {
-    mode: "checkBox",
+  // const options = {
+  //   paginationSize: 2,
+  //   pageStartIndex: 1,
+  //   // alwaysShowAllBtns: true, // Always show next and previous button
+  //   // withFirstAndLast: false, // Hide the going to First and Last page button
+  //   // hideSizePerPage: true, // Hide the sizePerPage dropdown always
+  //   hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
+  //   firstPageText: "First",
+  //   prePageText: "Back",
+  //   nextPageText: "Next",
+  //   lastPageText: "Last",
+  //   nextPageTitle: "First page",
+  //   prePageTitle: "Pre page",
+  //   firstPageTitle: "Next page",
+  //   lastPageTitle: "Last page",
+  //   showTotal: true,
+  //   disablePageTitle: true,
+  //   paginationTotalRenderer: customTotal,
+  //   sizePerPageList: [
+  //     {
+  //       text: "5",
+  //       value: 5,
+  //     },
+  //     {
+  //       text: "10",
+  //       value: 10,
+  //     },
+  //     {
+  //       text: "All",
+  //       value: TableValue ? TableValue.length : 0,
+  //     },
+  //   ], // A numeric array is also available. the purpose of above example is custom the text
+  // };
+  // const { SearchBar } = Search;
+  // const selectRow = {
+  //   mode: "checkBox",
 
-    clickToSelect: true,
+  //   clickToSelect: true,
 
-    style: { background: "#def3ff" },
-  };
+  //   style: { background: "#def3ff" },
+  // };
 
   return (
     <>
@@ -265,7 +265,7 @@ export function OwnerHOTable() {
       </div>
       {TableValue && (
         <div className="TableContainer" style={{}}>
-          <ToolkitProvider
+          {/* <ToolkitProvider
             keyField="first_name"
             data={TableValue}
             columns={columns}
@@ -296,7 +296,7 @@ export function OwnerHOTable() {
                 </div>
               )
             }
-          </ToolkitProvider>
+          </ToolkitProvider> */}
         </div>
       )}
     </>

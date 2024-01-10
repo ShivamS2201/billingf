@@ -4,16 +4,16 @@ import { SignoutNav } from "../UserView/singoutnav";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { JdateGet, isAuthenticated } from "../auth/authIndex";
 import FooterC from "../Components/footer";
-import paginationFactory, {
-    PaginationListStandalone,
-  } from "react-bootstrap-table2-paginator";
+// import paginationFactory, {
+//     PaginationListStandalone,
+//   } from "react-bootstrap-table2-paginator";
   import { Form, Button } from "react-bootstrap";
   import "../Components/tables/css/tablesales.css";
   import "./css/bank.css";
-  import ToolkitProvider, {
-    Search,
-  } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min";
-  import BootstrapTable from "react-bootstrap-table-next";
+  // import ToolkitProvider, {
+  //   Search,
+  // } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min";
+  // import BootstrapTable from "react-bootstrap-table-next";
 
 export function CDebit (){
     const [CDstate, setBankSt] = useState({ credit: true, debit: false });
@@ -23,74 +23,74 @@ export function CDebit (){
     const nav = useNavigate();
     let icon1 = require("../assets/images/icon1.png");
     let icon2 = require("../assets/images/icon2.png");
-    const customTotal = (from, to, size) => (
-        <span className="react-bootstrap-table-pagination-total">
-          Showing {from} to {to} of {size} Results
-        </span>
-      );
-      const sortOption = {
-        sortCaret: (order, column) => {
-          const sortIcon = !order
-            ? icon1
-            : order === "asc"
-            ? icon1
-            : order === "desc"
-            ? icon2
-            : null;
-          if (sortIcon !== null) {
-            return (
-              <span>
-                {" "}
-                <img src={sortIcon} width="10" height="10" alt="sortIcon" />{" "}
-              </span>
-            );
-          }
-          return null;
-        },
-      };
-      const rowStyle = {};
+    // const customTotal = (from, to, size) => (
+    //     <span className="react-bootstrap-table-pagination-total">
+    //       Showing {from} to {to} of {size} Results
+    //     </span>
+    //   );
+    //   const sortOption = {
+    //     sortCaret: (order, column) => {
+    //       const sortIcon = !order
+    //         ? icon1
+    //         : order === "asc"
+    //         ? icon1
+    //         : order === "desc"
+    //         ? icon2
+    //         : null;
+    //       if (sortIcon !== null) {
+    //         return (
+    //           <span>
+    //             {" "}
+    //             <img src={sortIcon} width="10" height="10" alt="sortIcon" />{" "}
+    //           </span>
+    //         );
+    //       }
+    //       return null;
+    //     },
+    //   };
+    //   const rowStyle = {};
     
-      const options = {
-        paginationSize: 2,
-        pageStartIndex: 1,
-        // alwaysShowAllBtns: true, // Always show next and previous button
-        // withFirstAndLast: false, // Hide the going to First and Last page button
-        // hideSizePerPage: true, // Hide the sizePerPage dropdown always
-        hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
-        firstPageText: "First",
-        prePageText: "Back",
-        nextPageText: "Next",
-        lastPageText: "Last",
-        nextPageTitle: "First page",
-        prePageTitle: "Pre page",
-        firstPageTitle: "Next page",
-        lastPageTitle: "Last page",
-        showTotal: true,
-        disablePageTitle: true,
-        paginationTotalRenderer: customTotal,
-        sizePerPageList: [
-          {
-            text: "5",
-            value: 5,
-          },
-          {
-            text: "10",
-            value: 10,
-          },
-          {
-            text: "All",
-            value: CreditTable ? CreditTable.length : 0,
-          },
-        ], // A numeric array is also available. the purpose of above example is custom the text
-      };
-      const { SearchBar } = Search;
-      const selectRow = {
-        mode: "checkBox",
+    //   const options = {
+    //     paginationSize: 2,
+    //     pageStartIndex: 1,
+    //     // alwaysShowAllBtns: true, // Always show next and previous button
+    //     // withFirstAndLast: false, // Hide the going to First and Last page button
+    //     // hideSizePerPage: true, // Hide the sizePerPage dropdown always
+    //     hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
+    //     firstPageText: "First",
+    //     prePageText: "Back",
+    //     nextPageText: "Next",
+    //     lastPageText: "Last",
+    //     nextPageTitle: "First page",
+    //     prePageTitle: "Pre page",
+    //     firstPageTitle: "Next page",
+    //     lastPageTitle: "Last page",
+    //     showTotal: true,
+    //     disablePageTitle: true,
+    //     paginationTotalRenderer: customTotal,
+    //     sizePerPageList: [
+    //       {
+    //         text: "5",
+    //         value: 5,
+    //       },
+    //       {
+    //         text: "10",
+    //         value: 10,
+    //       },
+    //       {
+    //         text: "All",
+    //         value: CreditTable ? CreditTable.length : 0,
+    //       },
+    //     ], // A numeric array is also available. the purpose of above example is custom the text
+    //   };
+    //   const { SearchBar } = Search;
+    //   const selectRow = {
+    //     mode: "checkBox",
     
-        clickToSelect: true,
+    //     clickToSelect: true,
     
-        style: { background: "#def3ff" },
-      };  
+    //     style: { background: "#def3ff" },
+    //   };  
     const columnsdebit = [
         {
           sort: true,
@@ -264,7 +264,7 @@ export function CDebit (){
           </div>
           {CreditTable && (
             <div className="TableContainer" style={{}}>
-              <ToolkitProvider
+              {/* <ToolkitProvider
                 keyField="first_name"
                 data={CreditTable}
                 columns={columnscredit}
@@ -293,7 +293,7 @@ export function CDebit (){
                     </div>
                   </div>
                 )}
-              </ToolkitProvider>
+              </ToolkitProvider> */}
             </div>
           )}
         </div>}
@@ -309,7 +309,7 @@ export function CDebit (){
           </div>
           {DebitTable && (
             <div className="TableContainer" style={{}}>
-              <ToolkitProvider
+              {/* <ToolkitProvider
                 keyField="first_name"
                 data={DebitTable}
                 columns={columnsdebit}
@@ -340,7 +340,7 @@ export function CDebit (){
                   </div>
                   
                 )}
-              </ToolkitProvider>
+              </ToolkitProvider> */}
             </div>
           )}
         </div>}
