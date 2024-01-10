@@ -59,3 +59,18 @@ Making :
 - The Send Message service all over the system.
 - The final reciept model needs to be accomplished and finalised. 
 - The Models need to be configured and masters to be specialised. 
+
+-----------------------------------------------------------------------------------
+<br>
+Database has been hosted. 
+<br>
+Changed the table component to be able to be hosted onto the render application. 
+<br>Need to do asap.
+<br>
+:
+
+- Try hosting app on render after creating a build.
+- Change all table entries to have then react data table component remove purana code.
+- Start building documentation of the app.
+- Start tracking small things to be done on the app.
+ 
