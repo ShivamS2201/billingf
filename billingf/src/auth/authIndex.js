@@ -273,7 +273,7 @@ export async function UpdateMadeUserRq(user){
 export async function UpdateRY(user){
   const formDataUser = new FormData();
 
-  formDataUser.append("password",user.password)
+  // formDataUser.append("password",user.password)
   formDataUser.append("first_name",user.first_name)
   // formDataUser.append("user_name",user.user_name)
   formDataUser.append("email",user.email)

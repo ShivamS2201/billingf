@@ -284,38 +284,7 @@ export function OwnerDistTable() {
 
       {TableValue && (
         <div className="TableContainer" style={{}}>
-          het
           <TestTable datac={TableValue}/>
-          {/* <ToolkitProvider
-            keyField="first_name"
-            data={TableValue}
-            columns={columns}
-            search
-          >
-            {(props) => (
-              <div className="TableBarWrapper">
-                <div className="ButtonSearchCont">
-                  <SearchBar {...props.searchProps} />
-                </div>
-                <div className="TableWrapper">
-                  <BootstrapTable
-                    bootstrap4
-                    striped
-                    hover
-                    selectRow={selectRow}
-                    keyField="first_name"
-                    data={TableValue}
-                    columns={columns}
-                    pagination={paginationFactory(options)}
-                    sort={sortOption}
-                    noDataIndication={"Loading..."}
-                    {...props.baseProps}
-                    rowStyle={rowStyle}
-                  />
-                </div>
-              </div>
-            )}
-          </ToolkitProvider> */}
         </div>
       )}
     </>

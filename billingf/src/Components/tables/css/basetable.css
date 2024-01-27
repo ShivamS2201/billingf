@@ -1,0 +1,10 @@
+.tableOptions > .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+.element > i{
+    margin:0 0 0 2px;
+}
+  
