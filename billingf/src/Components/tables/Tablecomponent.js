@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import {Button} from 'react-bootstrap'
 import differenceBy from 'lodash/differenceBy';
-
+import { updateActiveStatus } from '../../auth/authIndex';
 function TableComponent({ columns, datac }) {
   const [selectedRows, setSelectedRows] = useState([]);
   const [toggleCleared, setToggleCleared] = useState(false);
@@ -16,23 +16,36 @@ function TableComponent({ columns, datac }) {
 	}, []);
 
 	const contextActions = React.useMemo(() => {
-		const handleDelete = () => {
-			
-			if (window.confirm(`Are you sure you want to delete:\r ${selectedRows.map(r => r.title)}?`)) {
+		const handleActivate = () => {
+			if (window.confirm(`Do you want to activate selected Distrib:\r ${selectedRows.map(r => r.title)}?`)) {
 				setToggleCleared(!toggleCleared);
-				console.log("DELETED",data,selectedRows)
+				console.log(selectedRows)
+				updateActiveStatus(selectedRows,true);
+				selectedRows.map((item)=>{
+					item["is_active"]=true;
+				})
 				setData(differenceBy(data, selectedRows, 'id'));
-				console.log("DELETED",data,selectedRows)
+			}
+		};
+		const handleDeactivate = () => {
+			if (window.confirm(`Do you want to deactivate selected Distrib:\r ${selectedRows.map(r => r.title)}?`)) {
+				setToggleCleared(!toggleCleared);
+				console.log(selectedRows)
+				updateActiveStatus(selectedRows,false);
+				selectedRows.map((item)=>{
+					item["is_active"]=false;
+				})
+				setData(differenceBy(data, selectedRows, 'id'));
 			}
 		};
 
 		return (<span>
-			<Button key="isActive" onClick={handleDelete} style={{ backgroundColor: 'red' }} icon>
-				Active
+			<Button key="isActive" onClick={handleActivate} style={{ border:"0",backgroundColor: 'rgba(11, 176, 92, 0.9)',padding:'5px',fontSize:'70%',margin:'0 8px 0 0' }} >
+				Activate
 			</Button>
 
-			<Button key="Renew Year" onClick={handleDelete} style={{ backgroundColor: 'red' }} icon>
-			Inactive
+			<Button key="Renew Year" onClick={handleDeactivate} style={{ border:"0",backgroundColor: 'rgb(125, 132, 138)',padding:'5px',fontSize:'70%',margin:'0 8px 0 0'}} >
+			Deactivate
 		</Button>
 		</span>
 		);

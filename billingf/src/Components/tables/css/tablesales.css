@@ -134,5 +134,19 @@ border-bottom: 1px solid #111;
   
   /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
   .show {display:block;}
-  .tableOptions{
+  .tableOptions > .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:0;
+
   }
+  
+.element > i{
+    margin:0 0 0 2px;
+}
+
+.form-select-sm{
+    font-size:10px;
+}
+  

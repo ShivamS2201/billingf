@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { API } from "../../backend";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-// import BootstrapTable from "react-bootstrap-table-next";
-import Dropdown from "react-bootstrap/Dropdown";
-import { JdateGet, UpdateRY,getExpiry,isAuthenticated } from "../../auth/authIndex";
-// import paginationFactory, {
-//   PaginationListStandalone,
-// } from "react-bootstrap-table2-paginator";
-import { Button, Form, Table } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { JdateGet, UpdateRY,expBR,getExpiry,isAuthenticated } from "../../auth/authIndex";
+import { Button, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 import "./css/tablesales.css";
 import TestTable from "./baseTable";
-// import ToolkitProvider, {
-//   Search,
-// } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min";
-// require("react-bootstrap-table-next/dist/react-bootstrap-table2.min.css");
-
 export function OwnerDistTable() {
+  const tooltip = <Tooltip id="tooltip">Renew Subscription</Tooltip>;
   const [TableValue, SetTableValue] = useState();
 
   const handleChange = (name,idx)=>(event)=>{
@@ -32,145 +23,127 @@ export function OwnerDistTable() {
   const nav = useNavigate();
   const columns = [
     {
-      sort: true,
-      dataField: "first_name",
-      text: "Name",
-      innerWidth:"2px"
+      sortable: true,
+      name: "Name",
+      selector: (row) => row.first_name,
     },
     {
-      sort: true,
-      dataField: "email",
-      text: "Email ID",
+      sortable: true,
+      name: "Email Id",
+      selector: (row) => row.email,
     },
     {
-      sort: true,
-      dataField: "bill_manage_info__landlineNUM",
-      text: "Contact No.",
+      sortable: true,
+      name: "Contact No.",
+      selector: (row) => row.bill_manage_info__landlineNUM,
     },
     {
-      sort: true,
-      dataField: "bill_manage_info__sms_credit",
-      text: "SMS",
-      formatter: (cell, row, rowIndex, extraData) => (
-        <div>
-          <span>
-            {cell}({JSON.stringify(row["bill_manage_info__sms_debit"])})
-          </span>
-        </div>
+      sortable: true,
+      name: "SMS",
+      selector: (row) => (
+        <span>
+          {row.bill_manage_info__sms_debit}
+          <span>({row.bill_manage_info__sms_credit})</span>
+        </span>
       ),
     },
     {
-      sort: true,
-      dataField: "bill_manage_info__system_credit",
-      text: "System",
-      formatter: (cell, row, rowIndex, extraData) => (
-        <div>
-          <span>
-            {cell}({JSON.stringify(row["bill_manage_info__system_debit"])})
-          </span>
-        </div>
+      sortable: true,
+      name: "System",
+      selector: (row) => (
+        <span>
+          {row.bill_manage_info__system_debit}
+          <span>({row.bill_manage_info__system_credit})</span>
+        </span>
       ),
     },
     {
-      sort: true,
-      dataField: "bill_manage_info__whatsapp_credit",
-      text: "Whatsapp",
-      formatter: (cell, row, rowIndex, extraData) => (
-        <div>
-          <span>
-            {cell}({JSON.stringify(row["bill_manage_info__whatsapp_debit"])})
-          </span>
-        </div>
+      sortable: true,
+      name: "Whatsapp",
+      selector: (row) => (
+        <span>
+          {row.bill_manage_info__whatsapp_debit}
+          <span>({row.bill_manage_info__whatsapp_credit})</span>
+        </span>
       ),
     },
     {
-      sort: true,
-      dataField: "joining_date",
-      text: "Joining Date",
-      formatter: (cell, row, rowIndex, extraData) => (
-        <div>
-          <span>
-            {JdateGet(row["joining_date"])}
-          </span>
-        </div>
-      ),
+      sortable: true,
+      name: "Joining Date",
+      selector: (row) => <span>{JdateGet(row["joining_date"])}</span>,
     },
-    ,
     {
-      sort: true,
-      dataField: "renew_year",
-      text: "Expiry Date",
-      formatter: (cell, row, rowIndex, extraData) => (
-        <div>
-          <span>
-            {getExpiry(row["joining_date"], row["renew_year"])}
-          </span>
-        </div>
+      sortable: true,
+      name: "Expiration Date",
+      selector: (row) => (
+        <span>{expBR(row["joining_date"], row["renew_year"])}</span>
       ),
     },
     {
-      sort: true,
-      dataField: "is_active",
-      text: "Actions",
-      formatter: (cell, row, rowIndex, extraData) => (
+      name: "User Actions",
+      selector: (row, rowIndex) => (
         <div>
           <span>
             {(row["is_active"] === true && (
               <div className="tableOptions">
-                <Button variant="success">
-                  {JSON.stringify(row["is_active"])}
-                </Button>
-                <i
-                  className="bi bi-pencil-fill"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    nav(`/user/dashboard/edit/user/${row.id}`);
-                  }}
-                >
-                </i>
-                <Form.Group>
-                  <Form.Select size="sm"
-                    aria-label="Default select example"
-                    value={TableValue.renew_year}
-                    onChange={handleChange("renew_year",rowIndex)}
-                    required
-                  >
-                   <option value="1">Renew</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                  </Form.Select>
-                </Form.Group>
+                <div className="container">
+                  <div className="element">
+                    <OverlayTrigger placement="top" overlay={tooltip}>
+                      <Form.Group>
+                        <Form.Select
+                          size="sm"
+                          aria-label="Default select example"
+                          value={row.renew_year}
+                          onChange={handleChange("renew_year", rowIndex)}
+                          required
+                        >
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                        </Form.Select>
+                      </Form.Group>
+                    </OverlayTrigger>
+                  </div>
+                  <div className="element">
+                    <i
+                      className="bi bi-pencil-fill"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        nav(`/user/dashboard/edit/user/${row.id}`);
+                      }}
+                    ></i>
+                  </div>
+                </div>
               </div>
             )) ||
               (row["is_active"] === false && (
                 <div className="tableOptions">
-                  <Button variant="light">
-                    {JSON.stringify(row["is_active"])}
-                  </Button>
-                  <i
-                    className="bi bi-pencil-fill"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      nav(`/user/dashboard/edit/user/${row.id}`);
-                    }}
-                  >
-                    {" "}
-                  </i>
+                  <div>
+                    <i
+                      className="bi bi-pencil-fill"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        nav(`/user/dashboard/edit/user/${row.id}`);
+                      }}
+                    >
+                      {" "}
+                    </i>
+                  </div>
                   <Form.Group>
-                  <Form.Select size="sm"
-                    aria-label="Default select example"
-                    value={TableValue.renew_year}
-                    onChange={handleChange("renew_year",rowIndex)}
-                    required
-                    title="Renew Year"
-                  >
-                    <option value="1">Renew</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                  </Form.Select>
-                </Form.Group>
+                    <Form.Select
+                      size="sm"
+                      aria-label="Default select example"
+                      value={row.renew_year}
+                      onChange={handleChange("renew_year", rowIndex)}
+                      required
+                      title="Renew Year"
+                    >
+                      <option value="1">Renew</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                    </Form.Select>
+                  </Form.Group>
                 </div>
               ))}
           </span>
@@ -178,8 +151,7 @@ export function OwnerDistTable() {
       ),
     },
   ];
-  let icon1 = require("../../assets/images/icon1.png");
-  let icon2 = require("../../assets/images/icon2.png");
+
   const DistTableData = async () => {
     await fetch(
       `${API}user/register/ownerdistributordata/${
@@ -202,75 +174,6 @@ export function OwnerDistTable() {
   useEffect(() => {
     DistTableData();
   }, []);
-  // const customTotal = (from, to, size) => (
-  //   <span className="react-bootstrap-table-pagination-total">
-  //     Showing {from} to {to} of {size} Results
-  //   </span>
-  // );
-  // const sortOption = {
-  //   sortCaret: (order, column) => {
-  //     const sortIcon = !order
-  //       ? icon1
-  //       : order === "asc"
-  //       ? icon1
-  //       : order === "desc"
-  //       ? icon2
-  //       : null;
-  //     if (sortIcon !== null) {
-  //       return (
-  //         <span>
-  //           {" "}
-  //           <img src={sortIcon} width="10" height="10" alt="sortIcon" />{" "}
-  //         </span>
-  //       );
-  //     }
-  //     return null;
-  //   },
-  // };
-  // const rowStyle = {};
-
-  // const options = {
-  //   paginationSize: 2,
-  //   pageStartIndex: 1,
-  //   // alwaysShowAllBtns: true, // Always show next and previous button
-  //   // withFirstAndLast: false, // Hide the going to First and Last page button
-  //   // hideSizePerPage: true, // Hide the sizePerPage dropdown always
-  //   hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
-  //   firstPageText: "First",
-  //   prePageText: "Back",
-  //   nextPageText: "Next",
-  //   lastPageText: "Last",
-  //   nextPageTitle: "First page",
-  //   prePageTitle: "Pre page",
-  //   firstPageTitle: "Next page",
-  //   lastPageTitle: "Last page",
-  //   showTotal: true,
-  //   disablePageTitle: true,
-  //   paginationTotalRenderer: customTotal,
-  //   sizePerPageList: [
-  //     {
-  //       text: "5",
-  //       value: 5,
-  //     },
-  //     {
-  //       text: "10",
-  //       value: 10,
-  //     },
-  //     {
-  //       text: "All",
-  //       value: TableValue ? TableValue.length : 0,
-  //     },
-  //   ], // A numeric array is also available. the purpose of above example is custom the text
-  // };
-  // const { SearchBar } = Search;
-  // const selectRow = {
-  //   mode: "checkBox",
-
-  //   clickToSelect: true,
-
-  //   style: { background: "#def3ff" },
-  // };
-
   return (
     <>
       <div className="ButtonTextWrapper">
@@ -284,7 +187,7 @@ export function OwnerDistTable() {
 
       {TableValue && (
         <div className="TableContainer" style={{}}>
-          <TestTable datac={TableValue}/>
+          <TestTable columns={columns} datac={TableValue}/>
         </div>
       )}
     </>

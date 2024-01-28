@@ -293,6 +293,35 @@ export async function UpdateRY(user){
   }
 
 }
+
+export async function updateActiveStatus(users,condition){
+  for (const idx in users){
+    
+  const formDataUser = new FormData();
+
+  formDataUser.append("first_name",users[idx].first_name)
+  formDataUser.append("email",users[idx].email)
+  formDataUser.append("role_id",users[idx].role_id)
+  if (condition){
+    formDataUser.append("is_active","True");
+  }
+  if(!condition){
+    formDataUser.append("is_active","False")
+  }
+  console.log(users[idx], "Updated")
+  try {
+    const resp = await fetch(`${API}user/update/${users[idx].id}`, {
+      method: "PUT",
+      body: formDataUser,
+      headers: { Authorization: null },
+      withCredentials: true,
+    });
+  }catch (err_1) {
+    console.log(err_1);
+  }
+
+  }
+}
 export async function UpdateUser(user,bill){
 
 
