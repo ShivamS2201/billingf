@@ -4,3 +4,5 @@
 
 As of Now:
 Backend and database are hosted on render. Tables were giving error which has been dealt with. try building this.
+
+Need to handle, Twilio Exceptions in the backend If number is invalid or exception occurs.
